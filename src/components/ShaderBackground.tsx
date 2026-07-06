@@ -20,7 +20,7 @@ export function ShaderBackground() {
       return
     }
 
-    // Shaders compilation
+    // Vertex Shader matching ShaderFromStitch.html exactly
     const vsSource = `
       attribute vec2 a_position;
       varying vec2 v_texCoord;
@@ -30,6 +30,7 @@ export function ShaderBackground() {
       }
     `
 
+    // Fragment Shader matching ShaderFromStitch.html exactly
     const fsSource = `
       precision highp float;
       uniform float u_time;
@@ -39,31 +40,33 @@ export function ShaderBackground() {
 
       void main() {
         vec2 uv = v_texCoord;
-        float t = u_time * 0.15; // Slowed down slightly for refined aesthetics
         
-        // Base dark layers
-        vec3 color1 = vec3(0.01, 0.02, 0.02); // Deep dark slate
-        vec3 color2 = vec3(0.0, 0.15, 0.08);  // Geospatial Green accent
-        vec3 color3 = vec3(0.08, 0.01, 0.15); // AI Purple accent
+        // Create a dynamic, multi-layered mesh/aurora effect
+        float t = u_time * 0.2;
+        
+        // Base gradient
+        vec3 color1 = vec3(0.0, 0.05, 0.05); // Deep dark
+        vec3 color2 = vec3(0.0, 0.2, 0.1);  // Geospatial green influence
+        vec3 color3 = vec3(0.1, 0.0, 0.2);  // AI Purple influence
         
         // Wave patterns
-        float noise1 = sin(uv.x * 8.0 + t) * sin(uv.y * 6.0 - t);
-        float noise2 = sin(uv.x * 12.0 - t * 0.6) * cos(uv.y * 10.0 + t * 0.4);
+        float noise1 = sin(uv.x * 10.0 + t) * sin(uv.y * 8.0 - t);
+        float noise2 = sin(uv.x * 15.0 - t * 0.5) * cos(uv.y * 12.0 + t * 0.3);
         
         float strength = (noise1 + noise2) * 0.5 + 0.5;
-        strength = pow(strength, 2.5); // Refined glow falloff
+        strength = pow(strength, 3.0); // Sharpen the "glow"
         
-        vec3 finalColor = mix(color1, color2, strength * 0.35);
+        vec3 finalColor = mix(color1, color2, strength * 0.4);
         finalColor = mix(finalColor, color3, strength * 0.2);
         
-        // Dynamic grid mapping
-        vec2 grid = fract(uv * 32.0);
-        float gridLine = smoothstep(0.0, 0.02, grid.x) * smoothstep(0.0, 0.02, grid.y);
-        finalColor += (1.0 - gridLine) * 0.015;
+        // Add a grid overlay
+        vec2 grid = fract(uv * 40.0);
+        float gridLine = smoothstep(0.0, 0.03, grid.x) * smoothstep(0.0, 0.03, grid.y);
+        finalColor += (1.0 - gridLine) * 0.02;
         
-        // Mouse coordinate interactions
+        // Subtle mouse interaction
         float dist = distance(uv, u_mouse / u_resolution);
-        finalColor += vec3(0.0, 0.9, 0.5) * smoothstep(0.25, 0.0, dist) * 0.06;
+        finalColor += vec3(0.0, 1.0, 0.5) * smoothstep(0.2, 0.0, dist) * 0.1;
         
         gl_FragColor = vec4(finalColor, 1.0);
       }
@@ -99,15 +102,13 @@ export function ShaderBackground() {
 
     gl.useProgram(program)
 
-    // Set positions buffer
+    // Set positions buffer (matches Triangle Strip from html)
     const positionBuffer = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
     const positions = new Float32Array([
       -1, -1,
        1, -1,
       -1,  1,
-      -1,  1,
-       1, -1,
        1,  1,
     ])
     gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW)
@@ -136,7 +137,7 @@ export function ShaderBackground() {
 
     window.addEventListener("mousemove", trackMouse)
 
-    // ResizeObserver sync
+    // Resize sync
     const resizeCanvas = () => {
       const w = canvas.clientWidth || window.innerWidth
       const h = canvas.clientHeight || window.innerHeight
@@ -151,7 +152,6 @@ export function ShaderBackground() {
     resizeObserver.observe(canvas)
     resizeCanvas()
 
-    // Performance Optimization: Pause loop on tab change
     const handleVisibilityChange = () => {
       isTabVisible = document.visibilityState === "visible"
     }
@@ -166,7 +166,7 @@ export function ShaderBackground() {
 
         gl.clearColor(0, 0, 0, 1)
         gl.clear(gl.COLOR_BUFFER_BIT)
-        gl.drawArrays(gl.TRIANGLES, 0, 6)
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
       }
       animationFrameId = requestAnimationFrame(render)
     }
@@ -190,10 +190,10 @@ export function ShaderBackground() {
   }, [])
 
   return (
-    <div className="fixed inset-0 -z-10 h-full w-full pointer-events-none overflow-hidden bg-black select-none">
+    <div className="fixed inset-0 z-0 h-full w-full pointer-events-none overflow-hidden select-none">
       <canvas
         ref={canvasRef}
-        className="block h-full w-full opacity-70"
+        className="block h-full w-full opacity-100"
       />
     </div>
   )
