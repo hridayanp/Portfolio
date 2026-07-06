@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react"
-import { useTheme } from "@/components/theme-provider"
-import { Sun, Moon, Terminal } from "@phosphor-icons/react"
+import { Terminal } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 export function Navbar() {
-  const { theme, setTheme } = useTheme()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isNavVisible, setIsNavVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -34,9 +32,6 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [lastScrollY])
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
-  }
 
   // Smooth scroll helper
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -120,14 +115,7 @@ export function Navbar() {
             <Terminal className="h-5 w-5" />
           </button>
 
-          {/* Theme Switcher Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="text-on-surface-variant hover:text-primary-container p-2 rounded-full hover:bg-muted/10 transition-all cursor-pointer"
-            aria-label={`Toggle theme: current is ${theme}`}
-          >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
+
 
           {/* Resume CTA */}
           <a

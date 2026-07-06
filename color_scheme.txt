@@ -1,0 +1,255 @@
+===========================================
+1. EMERALD MATRIX
+===========================================
+
+LIGHT
+
+Background           oklch(98.7% 0.006 160)
+Surface              oklch(100% 0 0)
+Surface Secondary    oklch(96.8% 0.008 165)
+
+Primary              oklch(75% 0.22 154)
+Secondary            oklch(61% 0.23 286)
+Accent               oklch(77% 0.16 220)
+
+Success              oklch(75% 0.22 154)
+Warning              oklch(79% 0.17 80)
+Danger               oklch(64% 0.22 25)
+
+Border               oklch(92% 0.01 240)
+
+Foreground           oklch(23% 0.02 250)
+Foreground Muted     oklch(46% 0.02 250)
+Muted                oklch(70% 0.015 250)
+
+Gradient
+Primary → Secondary
+
+
+DARK
+
+Background           oklch(14% 0.002 250)
+Surface              oklch(18% 0.003 250)
+Surface Secondary    oklch(22% 0.004 250)
+
+Primary              oklch(87% 0.26 150)
+Secondary            oklch(74% 0.22 295)
+Accent               oklch(84% 0.15 220)
+
+Success              oklch(87% 0.26 150)
+Warning              oklch(88% 0.17 90)
+Danger               oklch(73% 0.20 28)
+
+Border               oklch(29% 0.003 250)
+
+Foreground           oklch(98% 0 0)
+Foreground Muted     oklch(77% 0.01 250)
+Muted                oklch(57% 0.01 250)
+
+===========================================
+2. CYBER VIOLET
+===========================================
+
+LIGHT
+
+Background           oklch(99% 0.003 285)
+Surface              oklch(100% 0 0)
+Surface Secondary    oklch(97% 0.006 285)
+
+Primary              oklch(60% 0.25 290)
+Secondary            oklch(80% 0.17 220)
+Accent               oklch(71% 0.23 355)
+
+Success              oklch(75% 0.22 154)
+Warning              oklch(79% 0.17 80)
+Danger               oklch(64% 0.22 25)
+
+Border               oklch(92% 0.006 260)
+
+Foreground           oklch(20% 0.01 280)
+Foreground Muted     oklch(44% 0.01 280)
+
+
+DARK
+
+Background           oklch(15% 0.01 285)
+Surface              oklch(19% 0.01 285)
+Surface Secondary    oklch(23% 0.012 285)
+
+Primary              oklch(73% 0.22 295)
+Secondary            oklch(85% 0.14 220)
+Accent               oklch(77% 0.20 355)
+
+Success              oklch(87% 0.26 150)
+Warning              oklch(88% 0.17 90)
+Danger               oklch(74% 0.20 25)
+
+Border               oklch(30% 0.01 285)
+
+Foreground           oklch(98% 0 0)
+Foreground Muted     oklch(80% 0.01 285)
+
+===========================================
+3. OCEAN INTELLIGENCE
+===========================================
+
+LIGHT
+
+Background           oklch(98.5% 0.008 220)
+Surface              oklch(100% 0 0)
+Surface Secondary    oklch(96% 0.01 220)
+
+Primary              oklch(63% 0.22 250)
+Secondary            oklch(74% 0.17 230)
+Accent               oklch(77% 0.14 210)
+
+Success              oklch(75% 0.22 154)
+Warning              oklch(79% 0.17 80)
+Danger               oklch(64% 0.22 25)
+
+Border               oklch(92% 0.01 230)
+
+Foreground           oklch(22% 0.02 240)
+Foreground Muted     oklch(48% 0.02 240)
+
+
+DARK
+
+Background           oklch(17% 0.02 240)
+Surface              oklch(22% 0.02 240)
+Surface Secondary    oklch(27% 0.025 240)
+
+Primary              oklch(76% 0.18 245)
+Secondary            oklch(82% 0.14 225)
+Accent               oklch(85% 0.12 210)
+
+Success              oklch(87% 0.26 150)
+Warning              oklch(88% 0.17 90)
+Danger               oklch(73% 0.20 25)
+
+Border               oklch(33% 0.02 240)
+
+Foreground           oklch(98% 0 0)
+Foreground Muted     oklch(84% 0.02 240)
+
+===========================================
+4. NEON AI
+===========================================
+
+LIGHT
+
+Background           oklch(99% 0.003 240)
+Surface              oklch(100% 0 0)
+Surface Secondary    oklch(97% 0.004 240)
+
+Primary              oklch(76% 0.23 155)
+Secondary            oklch(66% 0.24 300)
+Accent               oklch(71% 0.23 10)
+Cyan                 oklch(77% 0.14 220)
+
+Border               oklch(92% 0.005 250)
+
+Foreground           oklch(23% 0.02 250)
+Foreground Muted     oklch(46% 0.02 250)
+
+
+DARK
+
+Background           oklch(11% 0.002 250)
+Surface              oklch(17% 0.003 250)
+Surface Secondary    oklch(22% 0.004 250)
+
+Primary              oklch(87% 0.26 150)
+Secondary            oklch(80% 0.20 305)
+Accent               oklch(77% 0.20 5)
+Cyan                 oklch(85% 0.14 220)
+
+Border               oklch(29% 0.003 250)
+
+Foreground           oklch(98% 0 0)
+Foreground Muted     oklch(83% 0.01 250)
+
+===========================================
+5. AURORA
+===========================================
+
+LIGHT
+
+Background           oklch(99% 0.003 250)
+Surface              oklch(100% 0 0)
+Surface Secondary    oklch(97% 0.005 250)
+
+Primary              oklch(61% 0.22 255)
+Secondary            oklch(66% 0.23 300)
+Accent               oklch(73% 0.14 185)
+Coral                oklch(73% 0.18 25)
+
+Border               oklch(92% 0.005 250)
+
+Foreground           oklch(23% 0.02 250)
+Foreground Muted     oklch(46% 0.02 250)
+
+
+DARK
+
+Background           oklch(13% 0.002 250)
+Surface              oklch(18% 0.003 250)
+Surface Secondary    oklch(23% 0.004 250)
+
+Primary              oklch(77% 0.16 250)
+Secondary            oklch(79% 0.18 300)
+Accent               oklch(81% 0.13 180)
+Coral                oklch(80% 0.16 25)
+
+Border               oklch(30% 0.003 250)
+
+Foreground           oklch(98% 0 0)
+Foreground Muted     oklch(84% 0.01 250)
+
+===========================================
+6. SYNTHETIC AI
+===========================================
+
+LIGHT
+
+Background           oklch(98.8% 0.006 165)
+Surface              oklch(100% 0 0)
+Surface Secondary    oklch(97% 0.008 165)
+
+Primary              oklch(66% 0.18 165)
+Secondary            oklch(61% 0.23 290)
+Accent               oklch(79% 0.16 220)
+Orange               oklch(79% 0.18 60)
+
+Border               oklch(92% 0.008 220)
+
+Foreground           oklch(23% 0.02 250)
+Foreground Muted     oklch(48% 0.02 250)
+
+
+DARK
+
+Background           oklch(13% 0.002 250)
+Surface              oklch(17% 0.003 250)
+Surface Secondary    oklch(22% 0.004 250)
+
+Primary              oklch(87% 0.26 150)
+Secondary            oklch(80% 0.18 295)
+Accent               oklch(84% 0.15 220)
+Orange               oklch(85% 0.16 60)
+
+Border               oklch(29% 0.003 250)
+
+Foreground           oklch(98% 0 0)
+Foreground Muted     oklch(84% 0.01 250)
+
+===========================================
+Recommended For
+
+Emerald Matrix      → AI, Maps, SaaS, DevTools
+Cyber Violet        → Framer, Linear, Dashboards
+Ocean Intelligence  → Enterprise, Analytics
+Neon AI             → Startups, Landing Pages
+Aurora              → Apple-style Products
+Synthetic AI        → Premium Portfolio, AI Platform
+===========================================
