@@ -3,7 +3,6 @@ import { SpotlightCard } from "./SpotlightCard"
 import { TechMarquee } from "./TechMarquee"
 import {
   Code,
-  Brain,
   Globe,
   Database,
   Archive,
@@ -18,7 +17,7 @@ export function ExpertiseSection() {
           Expertise <span className="text-primary-container font-light">&amp;</span> Skills
         </h2>
         <p className="font-sans text-base text-muted-foreground max-w-2xl leading-relaxed">
-          Architecting complete cloud architectures, AI pipelines, and spatial mapping layers with type safety and pixel precision.
+          Building complete digital products by combining modern frontend frameworks, backend API services, AI workflow automation, and geospatial pipelines.
         </p>
       </header>
 
@@ -28,7 +27,7 @@ export function ExpertiseSection() {
         {/* Card 1: Full Stack Systems */}
         <SpotlightCard
           glowColor="rgba(0, 228, 121, 0.12)"
-          className="lg:col-span-8 flex flex-col justify-between group"
+          className="lg:col-span-12 flex flex-col justify-between group"
         >
           <div className="flex justify-between items-start">
             <div>
@@ -68,44 +67,6 @@ export function ExpertiseSection() {
           </div>
         </SpotlightCard>
 
-        {/* Card 2: AI & Automation */}
-        <SpotlightCard
-          glowColor="rgba(207, 92, 255, 0.12)"
-          className="lg:col-span-4 flex flex-col justify-between group"
-        >
-          <div>
-            <div className="font-mono text-[10px] text-secondary mb-3 uppercase tracking-widest flex items-center gap-2">
-              <Brain className="h-4.5 w-4.5" />
-              Capability 02
-            </div>
-            <h3 className="font-sans text-2xl font-bold text-foreground mb-4">AI &amp; Automation</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Embedding generative LLM nodes, vector indexing architectures, and agentic task runners in cloud apps.
-            </p>
-          </div>
-
-          <div className="space-y-4 mt-6">
-            <div>
-              <div className="flex justify-between text-[9px] font-mono mb-1.5 uppercase tracking-wider text-muted-foreground">
-                <span>Agent Pipelines</span>
-                <span className="text-secondary font-bold">95%</span>
-              </div>
-              <div className="h-1.5 bg-muted/20 w-full rounded-full overflow-hidden">
-                <div className="h-full bg-secondary w-[95%] shadow-[0_0_8px_rgba(207,92,255,0.4)]" />
-              </div>
-            </div>
-            <div>
-              <div className="flex justify-between text-[9px] font-mono mb-1.5 uppercase tracking-wider text-muted-foreground">
-                <span>Vector Embeddings</span>
-                <span className="text-secondary font-bold">88%</span>
-              </div>
-              <div className="h-1.5 bg-muted/20 w-full rounded-full overflow-hidden">
-                <div className="h-full bg-secondary w-[88%] shadow-[0_0_8px_rgba(207,92,255,0.4)]" />
-              </div>
-            </div>
-          </div>
-        </SpotlightCard>
-
         {/* Card 3: Geospatial Systems */}
         <div className="relative lg:col-span-7 lg:row-span-2 rounded-2xl border border-outline-variant/30 overflow-hidden group select-none">
           {/* Spotlight Glow Overlay */}
@@ -124,7 +85,7 @@ export function ExpertiseSection() {
               </div>
               <h3 className="font-sans text-2xl font-bold text-foreground mb-3">Geospatial Systems</h3>
               <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
-                Analyzing raster satellite grids, rendering dynamic maps, and storing geospatial structures using PostGIS.
+                Ingesting climate datasets with Apache Airflow, processing spatial maps, and building decision-support layers like DiCRA.
               </p>
             </div>
 
@@ -194,10 +155,10 @@ export function ExpertiseSection() {
               PYTHON
             </div>
             <div className="py-2 border border-outline-variant/20 rounded-lg bg-background/25 hover:bg-muted/10 transition-colors">
-              DOCKER
+              LARAVEL
             </div>
             <div className="py-2 border border-outline-variant/20 rounded-lg bg-background/25 hover:bg-muted/10 transition-colors">
-              POSTGRES
+              NODE.JS
             </div>
           </div>
         </SpotlightCard>

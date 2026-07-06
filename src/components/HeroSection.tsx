@@ -33,12 +33,12 @@ export function HeroSection() {
               <span className="text-primary-container">Phukan</span>
             </h1>
             <p className="font-mono text-xs md:text-sm text-primary-container font-semibold tracking-[0.2em] uppercase opacity-90 animate-fade-in-up" style={{ animationDelay: "150ms" }}>
-              Full Stack • AI Systems • Geospatial Data
+              Full Stack • AI &amp; Automation • Data Engineering
             </p>
           </div>
           
           <p className="font-sans text-base text-muted-foreground max-w-lg leading-relaxed animate-fade-in-up" style={{ animationDelay: "300ms" }}>
-            Engineering high-performance software solutions, deep learning models, and real-time geographic data pipelines. Focused on scaling spatial infrastructure and intelligence.
+            Building modern, scalable web applications combined with workflow automation, AI integrations, and geospatial processing pipelines. Creating practical systems that solve real-world problems.
           </p>
 
           <div className="flex flex-wrap gap-4 mt-2 animate-fade-in-up" style={{ animationDelay: "450ms" }}>

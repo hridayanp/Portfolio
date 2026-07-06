@@ -12,30 +12,16 @@ interface Milestone {
 export function ExperienceSection() {
   const milestones: Milestone[] = [
     {
-      year: "2019 — 2020",
-      title: "The Foundation",
-      desc: "Deep dive into Computer Science fundamentals and competitive programming. Mastered C++, Python, and core data structures through rigorous algorithmic challenges.",
-      side: "left",
-      color: "primary",
-    },
-    {
-      year: "2020 — 2022",
-      title: "Market Expansion",
-      desc: "Built and deployed complex full-stack web applications for global clients. Specialized in React architecture and high-performance serverless cloud infrastructure.",
-      side: "right",
-      color: "secondary",
-    },
-    {
-      year: "2022 — 2023",
-      title: "AI & Prediction",
-      desc: "Strategic pivot to Machine Learning. Developed custom LLM orchestration and computer vision models for specialized industrial datasets and predictive logic.",
+      year: "2021 — 2022",
+      title: "Full Stack Web & SaaS Systems",
+      desc: "Built complete SaaS dashboards, portals, and business interfaces using React, Next.js, Node.js, and Laravel. Created robust REST APIs and database-driven workflows.",
       side: "left",
       color: "primary",
     },
     {
       year: "2023 — Present",
-      title: "Spatial Engineering",
-      desc: "Engineering advanced geospatial data lakes and real-time mapping platforms. Seamlessly integrating satellite intelligence with core enterprise business logic.",
+      title: "Geospatial Data & Climate Tech",
+      desc: "Pivot to geospatial engineering. Built automated ETL pipelines with Apache Airflow and PostGIS, processed satellite imagery, and worked on open data AgriTech solutions like DiCRA.",
       side: "right",
       color: "secondary",
     },
