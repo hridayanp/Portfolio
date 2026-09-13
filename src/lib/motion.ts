@@ -19,9 +19,11 @@ export const ease = {
 } as const
 
 export const duration = {
+  micro: 0.15,
   fast: 0.2,
   base: 0.3,
   slow: 0.4,
+  reveal: 0.5,
 } as const
 
 export const spring = {

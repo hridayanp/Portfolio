@@ -59,13 +59,13 @@
   --spacing-xl: 96px;   /* between heading block and content */
   --spacing-2xl: 192px; /* section rhythm — 8 × base */
 
-  /* ---- Radius (spec §3): the same doubling series ---------------------- */
+  /* ---- Radius: restrained architectural scale -------------------------- */
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 24px;
-  --radius-xl: 48px;
-  --radius-2xl: 96px;
-  --radius-pill: 999px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-pill: 9999px;
 
   /* ---- Type (spec §4) -------------------------------------------------
      Sizes step down a ladder at breakpoints rather than scaling fluidly,
@@ -295,7 +295,7 @@
   .card-surface {
     background: var(--c-surface);
     border: 1px solid var(--c-hairline);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
   }
 
   /* The 5% tint (spec §3). */

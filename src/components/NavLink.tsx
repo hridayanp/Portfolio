@@ -34,29 +34,30 @@ export function NavLink({
       href={href}
       onClick={onClick}
       data-cursor="link"
-      aria-current={isActive ? "true" : undefined}
+      aria-current={isActive ? "page" : undefined}
       initial="rest"
       whileHover="hover"
       whileFocus="hover"
       className={cn(
-        "text-label relative inline-block overflow-hidden px-md py-sm align-bottom normal-case tracking-normal transition-colors duration-300",
-        isActive ? "text-black" : "text-ink-2 hover:text-black",
+        "text-label relative inline-flex items-center rounded-pill px-md py-sm align-bottom normal-case tracking-normal transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none",
+        isActive ? "text-black font-medium" : "text-ink-2 hover:text-black",
         className
       )}
-      style={{ height: "calc(1.4em + var(--spacing-sm) * 2)" }}
     >
-      <motion.span
-        className="flex flex-col"
-        variants={{ rest: { y: "0%" }, hover: { y: "-50%" } }}
-        transition={{ duration: 0.3, ease: ease.out }}
-      >
-        <span className="block" style={{ lineHeight: "1.4em", height: "1.4em" }}>
-          {label}
-        </span>
-        <span aria-hidden className="block" style={{ lineHeight: "1.4em", height: "1.4em" }}>
-          {label}
-        </span>
-      </motion.span>
+      <span className="relative block h-[1.4em] overflow-hidden leading-[1.4em]">
+        <motion.span
+          className="flex flex-col"
+          variants={{ rest: { y: "0%" }, hover: { y: "-50%" } }}
+          transition={{ duration: 0.25, ease: ease.out }}
+        >
+          <span className="block h-[1.4em] leading-[1.4em] select-none">
+            {label}
+          </span>
+          <span aria-hidden className="block h-[1.4em] leading-[1.4em] select-none">
+            {label}
+          </span>
+        </motion.span>
+      </span>
     </motion.a>
   )
 }

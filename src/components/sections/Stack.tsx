@@ -54,16 +54,16 @@ function StackCard({ name, note, group }: { name: string; note: string; group: s
         onPointerLeave={() => setFlipped(false)}
         aria-label={`${name} — ${note}`}
         data-cursor="flip"
-        className="relative block size-full text-left"
+        className="relative block size-full rounded-lg text-left focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
       >
         <motion.div
           className="relative size-full"
           style={{ transformStyle: "preserve-3d" }}
           animate={{ rotateY: flipped && !reduced ? 180 : 0 }}
-          transition={{ duration: 0.4, ease: ease.out }}
+          transition={{ duration: 0.35, ease: ease.out }}
         >
           {/* Front — the 5% tint doing the work (spec §3). */}
-          <div className="flip-face card-surface tinted absolute inset-0 flex flex-col justify-between overflow-hidden p-md">
+          <div className="flip-face card-surface tinted absolute inset-0 flex flex-col justify-between overflow-hidden rounded-lg p-md">
             <span
               aria-hidden
               className="text-a1 pointer-events-none absolute right-2 bottom-1 text-[3rem] leading-none font-black opacity-20 select-none"
@@ -81,7 +81,7 @@ function StackCard({ name, note, group }: { name: string; note: string; group: s
 
           {/* Back */}
           <div
-            className="flip-face bg-black absolute inset-0 flex items-end overflow-hidden rounded-xl p-md"
+            className="flip-face bg-black border-hairline absolute inset-0 flex items-end overflow-hidden rounded-lg border p-md"
             style={{ transform: "rotateY(180deg)" }}
           >
             <p className="text-label text-ground normal-case tracking-normal">{note}</p>

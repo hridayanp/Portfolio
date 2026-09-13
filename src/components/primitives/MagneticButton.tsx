@@ -53,7 +53,7 @@ export function MagneticButton({
   }
 
   const base =
-    "text-btn relative inline-flex items-center justify-center gap-sm rounded-pill px-lg py-md font-medium transition-colors duration-300 select-none"
+    "text-btn relative inline-flex items-center justify-center gap-sm rounded-pill px-lg py-md font-medium transition-all duration-300 select-none focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
 
   const variants = {
     solid: "bg-black text-ground hover:bg-a1 hover:text-white",

@@ -79,7 +79,7 @@ export function Navbar() {
             <a
               href={contact.email ? `mailto:${contact.email}` : "#contact"}
               data-cursor="link"
-              className="text-label bg-black text-ground hover:bg-a1 hidden rounded-pill px-md py-sm tracking-normal normal-case transition-colors hover:text-white sm:inline-flex"
+              className="text-label bg-black text-ground hover:bg-a1 hidden rounded-pill px-md py-sm tracking-normal normal-case transition-all duration-300 hover:text-white active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none sm:inline-flex"
             >
               Get in touch
             </a>
@@ -88,7 +88,7 @@ export function Navbar() {
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className="border-hairline bg-surface text-ink grid size-11 place-items-center rounded-pill border lg:hidden"
+              className="border-hairline bg-surface text-ink hover:border-black active:scale-[0.95] grid size-11 place-items-center rounded-pill border transition-all focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none lg:hidden"
             >
               <List size={18} weight="bold" />
             </button>
@@ -119,7 +119,7 @@ function MobileMenu({ active, onClose }: { active: string; onClose: () => void }
         initial={{ clipPath: "inset(0 0 100% 0)" }}
         animate={{ clipPath: "inset(0 0 0% 0)" }}
         exit={{ clipPath: "inset(0 0 100% 0)" }}
-        transition={{ duration: 0.45, ease: ease.out }}
+        transition={{ duration: 0.4, ease: ease.out }}
         className="bg-ground absolute inset-0"
       />
 
@@ -131,7 +131,7 @@ function MobileMenu({ active, onClose }: { active: string; onClose: () => void }
             onClick={onClose}
             aria-label="Close menu"
             autoFocus
-            className="border-hairline text-ink grid size-11 place-items-center rounded-pill border"
+            className="border-hairline text-ink hover:border-black active:scale-[0.95] grid size-11 place-items-center rounded-pill border transition-all focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
           >
             <X size={18} weight="bold" />
           </button>
@@ -144,8 +144,8 @@ function MobileMenu({ active, onClose }: { active: string; onClose: () => void }
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  "border-hairline text-card flex items-baseline justify-between border-b py-md",
-                  active === item.id ? "text-black" : "text-ink-3"
+                  "border-hairline text-card flex items-baseline justify-between border-b py-md transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none",
+                  active === item.id ? "text-black font-semibold" : "text-ink-3 hover:text-black"
                 )}
               >
                 {item.label}
