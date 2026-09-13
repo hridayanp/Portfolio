@@ -1,49 +1,116 @@
+import { activeSocials, contact, identity, navItems, roles } from "@/content"
+import { Marquee } from "./primitives/Marquee"
 
-
+/**
+ * Footer — spec §6: padding 192 / 24 / 0, with the wordmark ticker.
+ * The wordmark is the page's only sub-1 line-height (0.9), because at that
+ * size it is a graphic rather than text (spec §4).
+ */
 export function Footer() {
+  const year = new Date().getFullYear()
+
   return (
-    <footer className="w-full bg-card-lowest/30 border-t border-outline-variant/15 py-12 px-6 md:px-16 mt-20 backdrop-blur-sm z-10 relative">
-      <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-        <div className="flex flex-col items-center md:items-start gap-2 select-none">
-          <div className="font-sans text-xl font-bold tracking-tighter text-foreground">
-            Hridayan
+    <footer className="border-hairline bg-sunk relative w-full border-t">
+      <div className="overflow-hidden pt-xl">
+        <Marquee
+          speed={-40}
+          ariaLabel={identity.fullName}
+          trackClassName="items-center"
+        >
+          <span className="text-wordmark text-black pr-[0.1em] font-black whitespace-nowrap opacity-[0.12]">
+            {identity.fullName}
+          </span>
+          <span className="text-wordmark text-a1 pr-[0.1em] font-black whitespace-nowrap opacity-[0.2]">
+            ·
+          </span>
+        </Marquee>
+      </div>
+
+      <div className="gutter pt-xl pb-xl">
+        <div className="mx-auto grid w-full max-w-[1400px] gap-lg md:grid-cols-[1.4fr_1fr_1fr]">
+          <div className="flex flex-col gap-sm">
+            <p className="text-card text-black">{identity.fullName}</p>
+            <p className="text-body-s text-ink-2 max-w-[34ch]">
+              {roles[0].title} · {roles[0].company}
+            </p>
+            <p className="text-label text-ink-3 normal-case tracking-normal">
+              {contact.location}
+            </p>
           </div>
-          <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
-            © 2026 Hridayan Phukan. Built with precision.
-          </p>
+
+          <nav className="flex flex-col gap-sm" aria-label="Footer">
+            <p className="eyebrow">Navigate</p>
+            <ul className="flex flex-col gap-xs">
+              {navItems.map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={item.href}
+                    data-cursor="link"
+                    className="text-body-s text-ink-2 hover:text-black transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="flex flex-col gap-sm">
+            <p className="eyebrow">Elsewhere</p>
+            <ul className="flex flex-col gap-xs">
+              {contact.email && (
+                <li>
+                  <a
+                    href={`mailto:${contact.email}`}
+                    data-cursor="link"
+                    className="text-body-s text-ink-2 hover:text-black transition-colors"
+                  >
+                    {contact.email}
+                  </a>
+                </li>
+              )}
+              {activeSocials.map((s) => (
+                <li key={s.id}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor="link"
+                    className="text-body-s text-ink-2 hover:text-black transition-colors"
+                  >
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+              {contact.resumeUrl && (
+                <li>
+                  <a
+                    href={contact.resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor="link"
+                    className="text-body-s text-ink-2 hover:text-black transition-colors"
+                  >
+                    Résumé
+                  </a>
+                </li>
+              )}
+              {!contact.email && activeSocials.length === 0 && !contact.resumeUrl && (
+                <li className="text-body-s text-ink-3">Links coming soon</li>
+              )}
+            </ul>
+          </div>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-8 font-mono text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary-container transition-colors min-h-[44px] flex items-center"
-          >
-            Github
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary-container transition-colors min-h-[44px] flex items-center"
-          >
-            LinkedIn
-          </a>
-          <a
-            href="https://x.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary-container transition-colors min-h-[44px] flex items-center"
-          >
-            Twitter
-          </a>
-          <a
-            href="mailto:hello@hridayan.dev"
-            className="hover:text-primary-container transition-colors min-h-[44px] flex items-center"
-          >
-            Email
-          </a>
+        <div className="bg-hairline mx-auto mt-xl h-px w-full max-w-[1400px]" />
+
+        <div className="mx-auto mt-md flex w-full max-w-[1400px] flex-col gap-sm sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-label text-ink-3 normal-case tracking-normal">
+            © {year} {identity.fullName}
+          </p>
+          <p className="text-label text-ink-3 normal-case tracking-normal">
+            Built with React, TypeScript and Framer Motion
+          </p>
         </div>
       </div>
     </footer>

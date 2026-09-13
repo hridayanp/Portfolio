@@ -1,65 +1,46 @@
-import { useEffect, useState } from "react"
-import { ShaderBackground } from "@/components/ShaderBackground"
 import { Navbar } from "@/components/Navbar"
-import { HeroSection } from "@/components/HeroSection"
-import { ExpertiseSection } from "@/components/ExpertiseSection"
-import { JournalSection } from "@/components/JournalSection"
-import { ExperienceSection } from "@/components/ExperienceSection"
-import { ContactSection } from "@/components/ContactSection"
+import { CustomCursor } from "@/components/CustomCursor"
+import { ScrollProgress } from "@/components/primitives/ScrollProgress"
+import { Hero } from "@/components/sections/Hero"
+import { About } from "@/components/sections/About"
+import { Stack } from "@/components/sections/Stack"
+import { Expertise } from "@/components/sections/Expertise"
+import { Projects } from "@/components/sections/Projects"
+import { Principles } from "@/components/sections/Principles"
+import { Contact } from "@/components/sections/Contact"
 import { Footer } from "@/components/Footer"
 
+/**
+ * Scroll budget, in viewport-heights (spec §10). The source spends 47.6% on
+ * Services and 10.3% on Projects; §21 says to keep the technique and move the
+ * weight, so Projects carries the largest budget here.
+ *
+ *   Hero        2.0    sticky hold
+ *   About       3.5    sticky stacking, 3 cards + lead-in
+ *   Stack       ~1.5   normal flow
+ *   Expertise   6.5    sticky hold, one viewport per service
+ *   Projects    7.0    sticky hold, one viewport per project  ← the weight
+ *   Principles  ~1.5   normal flow
+ *   Contact     ~1.5   normal flow
+ *   Footer      ~1.0
+ */
 export function App() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      // Use requestAnimationFrame for high performance rendering updates
-      window.requestAnimationFrame(() => {
-        setMousePos({ x: e.clientX, y: e.clientY })
-      })
-    }
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
-  }, [])
-
   return (
-    <div className="relative min-h-screen w-full bg-background text-foreground transition-colors duration-500 overflow-x-hidden">
-      {/* Noise background overlay texture */}
-      <div className="noise-overlay" />
-
-      {/* Dynamic interactive global cursor glow */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0 h-screen w-screen select-none"
-        style={{
-          background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(0, 255, 136, 0.045), transparent 70%)`,
-        }}
-      />
-
-      {/* WebGL aurora aurora backdrop */}
-      <ShaderBackground />
-
-      {/* Site Navigation */}
+    <div className="bg-ground text-ink relative min-h-screen w-full">
+      <ScrollProgress />
+      <CustomCursor />
       <Navbar />
 
-      {/* Main content layouts */}
-      <main className="relative z-10 w-full flex flex-col items-center">
-        {/* Section 1: Hero landing */}
-        <HeroSection />
-
-        {/* Section 2: Core capabilities */}
-        <ExpertiseSection />
-
-        {/* Section 3: Timeline roadmap */}
-        <ExperienceSection />
-
-        {/* Section 4: Projects & journal */}
-        <JournalSection />
-
-        {/* Section 5: Form collaborations */}
-        <ContactSection />
+      <main id="main">
+        <Hero />
+        <About />
+        <Stack />
+        <Expertise />
+        <Projects />
+        <Principles />
+        <Contact />
       </main>
 
-      {/* Site Footer */}
       <Footer />
     </div>
   )

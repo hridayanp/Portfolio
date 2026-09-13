@@ -1,131 +1,166 @@
-import React, { useState, useEffect } from "react"
-import { Terminal } from "@phosphor-icons/react"
+import { useEffect, useMemo, useState } from "react"
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react"
+import { List, X } from "@phosphor-icons/react"
+import { contact, identity, navItems } from "@/content"
+import { useActiveSection } from "@/hooks/useActiveSection"
+import { NavLink } from "./NavLink"
+import { ThemeToggle } from "./primitives/ThemeToggle"
+import { ease } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
+/**
+ * Fixed at top, 72px tall — spec §6.
+ * The active item is scroll-driven (spec §11): on a 20+ viewport page this is
+ * position feedback, not decoration.
+ */
 export function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isNavVisible, setIsNavVisible] = useState(true)
-  const [lastScrollY, setLastScrollY] = useState(0)
+  const [scrolled, setScrolled] = useState(false)
+  const [open, setOpen] = useState(false)
+  const { scrollY } = useScroll()
+
+  const sectionIds = useMemo(() => navItems.map((n) => n.id), [])
+  const active = useActiveSection(sectionIds)
+
+  useMotionValueEvent(scrollY, "change", (v) => {
+    const next = v > 24
+    setScrolled((prev) => (prev === next ? prev : next))
+  })
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY
-
-      // Change background opacity / padding on scroll
-      if (currentScrollY > 50) {
-        setIsScrolled(true)
-      } else {
-        setIsScrolled(false)
-      }
-
-      // Hide navbar when scrolling down, show when scrolling up
-      if (currentScrollY > lastScrollY && currentScrollY > 150) {
-        setIsNavVisible(false)
-      } else {
-        setIsNavVisible(true)
-      }
-
-      setLastScrollY(currentScrollY)
+    if (!open) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false)
+    window.addEventListener("keydown", onKey)
+    return () => {
+      document.body.style.overflow = prev
+      window.removeEventListener("keydown", onKey)
     }
-
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [lastScrollY])
-
-
-  // Smooth scroll helper
-  const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault()
-    const element = document.getElementById(id)
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
-    }
-  }
+  }, [open])
 
   return (
-    <header
-      className={cn(
-        "fixed left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-[1200px] transition-all duration-500",
-        isScrolled ? "top-4" : "top-6",
-        isNavVisible ? "translate-y-0 opacity-100" : "-translate-y-24 opacity-0 pointer-events-none"
-      )}
-    >
-      <nav
-        className={cn(
-          "flex items-center justify-between px-6 md:px-8 py-3 w-full rounded-full border transition-all duration-500",
-          isScrolled
-            ? "bg-card/75 border-outline-variant/35 shadow-2xl backdrop-blur-2xl py-3"
-            : "bg-card/45 border-outline-variant/15 shadow-lg backdrop-blur-xl py-4"
-        )}
+    <>
+      <a
+        href="#main"
+        className="bg-black text-ground sr-only rounded-pill px-md py-sm focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[110]"
       >
-        {/* Title / Logo */}
-        <a
-          href="#"
-          className="font-sans text-xl md:text-2xl font-bold tracking-tighter text-foreground hover:opacity-85 transition-opacity"
+        Skip to content
+      </a>
+
+      <header className="fixed inset-x-0 top-0 z-50 gutter pt-md">
+        <nav
+          className={cn(
+            "mx-auto flex h-[72px] items-center justify-between gap-md rounded-pill border px-md transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500",
+            scrolled
+              ? "border-hairline bg-[color-mix(in_oklab,var(--c-ground)_82%,transparent)] shadow-[var(--shadow-soft)] backdrop-blur-xl"
+              : "border-transparent bg-transparent"
+          )}
         >
-          Hridayan
-        </a>
+          <a
+            href="#home"
+            data-cursor="link"
+            className="text-label flex items-center gap-sm px-sm tracking-normal normal-case"
+          >
+            <span aria-hidden className="bg-a1 inline-block size-2 rounded-full" />
+            <span className="text-black font-semibold">{identity.firstName}</span>
+            <span className="text-ink-3">{identity.lastName}</span>
+          </a>
 
-        {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center gap-10 text-xs font-mono uppercase tracking-[0.15em]">
-          <a
-            onClick={(e) => handleScrollTo(e, "work")}
-            href="#work"
-            className="text-on-surface-variant hover:text-foreground transition-colors min-h-[44px] flex items-center"
-          >
-            Work
-          </a>
-          <a
-            onClick={(e) => handleScrollTo(e, "expertise")}
-            href="#expertise"
-            className="text-on-surface-variant hover:text-foreground transition-colors min-h-[44px] flex items-center"
-          >
-            Expertise
-          </a>
-          <a
-            onClick={(e) => handleScrollTo(e, "experience")}
-            href="#experience"
-            className="text-on-surface-variant hover:text-foreground transition-colors min-h-[44px] flex items-center"
-          >
-            Experience
-          </a>
-          <a
-            onClick={(e) => handleScrollTo(e, "contact")}
-            href="#contact"
-            className="text-on-surface-variant hover:text-foreground transition-colors min-h-[44px] flex items-center"
-          >
-            Contact
-          </a>
-        </div>
+          <ul className="hidden items-center lg:flex">
+            {navItems.map((item) => (
+              <li key={item.id}>
+                <NavLink label={item.label} href={item.href} isActive={active === item.id} />
+              </li>
+            ))}
+          </ul>
 
-        {/* CTAs */}
-        <div className="flex items-center gap-4">
-          {/* Quick terminal indicator link */}
+          <div className="flex items-center gap-sm">
+            <ThemeToggle />
+            <a
+              href={contact.email ? `mailto:${contact.email}` : "#contact"}
+              data-cursor="link"
+              className="text-label bg-black text-ground hover:bg-a1 hidden rounded-pill px-md py-sm tracking-normal normal-case transition-colors hover:text-white sm:inline-flex"
+            >
+              Get in touch
+            </a>
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={open}
+              className="border-hairline bg-surface text-ink grid size-11 place-items-center rounded-pill border lg:hidden"
+            >
+              <List size={18} weight="bold" />
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      <AnimatePresence>
+        {open && <MobileMenu active={active} onClose={() => setOpen(false)} />}
+      </AnimatePresence>
+    </>
+  )
+}
+
+function MobileMenu({ active, onClose }: { active: string; onClose: () => void }) {
+  return (
+    <motion.div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Site menu"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-[70] lg:hidden"
+    >
+      <motion.div
+        initial={{ clipPath: "inset(0 0 100% 0)" }}
+        animate={{ clipPath: "inset(0 0 0% 0)" }}
+        exit={{ clipPath: "inset(0 0 100% 0)" }}
+        transition={{ duration: 0.45, ease: ease.out }}
+        className="bg-ground absolute inset-0"
+      />
+
+      <div className="relative flex h-full flex-col gutter pt-md pb-xl">
+        <div className="flex h-[72px] items-center justify-between">
+          <span className="eyebrow">Menu</span>
           <button
-            onClick={() => {
-              const termInput = document.querySelector("input[aria-label='Terminal input prompt']") as HTMLInputElement
-              if (termInput) {
-                termInput.scrollIntoView({ behavior: "smooth", block: "center" })
-                setTimeout(() => termInput.focus(), 800)
-              }
-            }}
-            className="text-on-surface-variant hover:text-primary-container p-2 rounded-full hover:bg-muted/10 transition-all cursor-pointer"
-            aria-label="Scroll to Terminal Console"
+            type="button"
+            onClick={onClose}
+            aria-label="Close menu"
+            autoFocus
+            className="border-hairline text-ink grid size-11 place-items-center rounded-pill border"
           >
-            <Terminal className="h-5 w-5" />
+            <X size={18} weight="bold" />
           </button>
-
-
-
-          {/* Resume CTA */}
-          <a
-            href="#"
-            className="bg-foreground text-background font-mono text-xs font-bold px-5 py-2 rounded-full hover:scale-105 active:scale-95 transition-transform shadow-md hover:shadow-lg"
-          >
-            Resume
-          </a>
         </div>
-      </nav>
-    </header>
+
+        <ul className="mt-xl flex flex-1 flex-col">
+          {navItems.map((item, i) => (
+            <li key={item.id}>
+              <a
+                href={item.href}
+                onClick={onClose}
+                className={cn(
+                  "border-hairline text-card flex items-baseline justify-between border-b py-md",
+                  active === item.id ? "text-black" : "text-ink-3"
+                )}
+              >
+                {item.label}
+                <span className="text-label text-ink-3">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <p className="text-label text-ink-2 normal-case tracking-normal">
+          {identity.availability}
+        </p>
+      </div>
+    </motion.div>
   )
 }
