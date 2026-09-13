@@ -4,7 +4,7 @@ import { List, X } from "@phosphor-icons/react"
 import { contact, identity, navItems } from "@/content"
 import { useActiveSection } from "@/hooks/useActiveSection"
 import { NavLink } from "./NavLink"
-import { ThemeToggle } from "./primitives/ThemeToggle"
+import { PalettePicker } from "./primitives/PalettePicker"
 import { ease } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
@@ -75,7 +75,7 @@ export function Navbar() {
           </ul>
 
           <div className="flex items-center gap-sm">
-            <ThemeToggle />
+            <PalettePicker />
             <a
               href={contact.email ? `mailto:${contact.email}` : "#contact"}
               data-cursor="link"

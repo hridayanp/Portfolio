@@ -182,12 +182,12 @@
   --c-surface: #ffffff;
   --c-hairline: #e6e6e6;
 
-  --a-1: #6670ff;
+  --a-1: #3157FF;
   --a-2: #66ffd9;
   --a-2d: #00cc99;
   --a-3: #f94706;
-  --a-tint: rgba(102, 112, 255, 0.05);
-  --a-tint-2: rgba(102, 112, 255, 0.1);
+  --a-tint: color-mix(in srgb, var(--a-1) 5%, transparent);
+  --a-tint-2: color-mix(in srgb, var(--a-1) 10%, transparent);
 
   --shadow-soft: 0 5px 20px rgba(0, 0, 0, 0.05);
   --shadow-lift: 0 20px 20px rgba(0, 0, 0, 0.1);
@@ -209,12 +209,12 @@
   --c-surface: #17171b;
   --c-hairline: #2a2a30;
 
-  --a-1: #8b93ff;
+  --a-1: #6B83FF;
   --a-2: #66ffd9;
   --a-2d: #33e6b8;
   --a-3: #ff6a33;
-  --a-tint: rgba(139, 147, 255, 0.07);
-  --a-tint-2: rgba(139, 147, 255, 0.14);
+  --a-tint: color-mix(in srgb, var(--a-1) 8%, transparent);
+  --a-tint-2: color-mix(in srgb, var(--a-1) 15%, transparent);
 
   --shadow-soft: 0 5px 20px rgba(0, 0, 0, 0.4);
   --shadow-lift: 0 20px 20px rgba(0, 0, 0, 0.55);
