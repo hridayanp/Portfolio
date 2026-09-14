@@ -115,7 +115,7 @@ export function StackScene({
       {children.map((child, i) => (
         <div
           key={i}
-          className="sticky top-0 flex h-[100svh] w-full items-center"
+          className="sticky top-0 flex h-[100svh] w-full items-center justify-center pt-[96px] pb-6 sm:pb-8"
           style={{ zIndex: i + 1 }}
         >
           {child}

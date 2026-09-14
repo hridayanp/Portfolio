@@ -109,19 +109,19 @@ function AboutCard({
   className?: string
 }) {
   return (
-    <div className={cn("w-full gutter", className)}>
-      <article className="card-surface relative mx-auto flex max-h-[86svh] w-full flex-col justify-center overflow-hidden p-lg shadow-[var(--shadow-lift)] md:p-xl">
+    <div className={cn("w-full gutter max-w-[1200px] mx-auto", className)}>
+      <article className="card-surface relative mx-auto flex max-h-[calc(100svh-128px)] w-full flex-col justify-center overflow-hidden p-6 sm:p-8 md:p-10 shadow-[var(--shadow-lift)] rounded-2xl">
         <div className="pointer-events-none absolute -top-[6%] -right-[4%] opacity-90 md:opacity-100">
           {shape}
         </div>
 
-        <div className="relative flex max-w-[62ch] flex-col gap-md">
+        <div className="relative flex max-w-[62ch] flex-col gap-sm sm:gap-md">
           <div className="flex items-center gap-md">
             <span className="eyebrow">{eyebrow}</span>
             <span className="text-label text-ink-3">{index}</span>
           </div>
           <h2 className="text-h2 text-black max-w-[20ch]">{title}</h2>
-          <div className="flex flex-col gap-md">{children}</div>
+          <div className="flex flex-col gap-sm sm:gap-md">{children}</div>
         </div>
       </article>
     </div>

@@ -1,6 +1,5 @@
 import { useState } from "react"
 import {
-  AnimatePresence,
   motion,
   useMotionValueEvent,
   useReducedMotion,
@@ -132,40 +131,34 @@ function ExpertiseScene({ progress }: { progress: MotionValue<number> }) {
           </div>
 
           <div className="flex flex-col gap-md">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={service.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
-                transition={{ duration: 0.3, ease: ease.out }}
-                className="flex flex-col gap-md"
-              >
-                <h3 className="text-h2 text-black max-w-[18ch]">{service.title}</h3>
-                <p className="text-lead text-ink-2 max-w-[48ch]">{service.description}</p>
-                <ul className="flex flex-wrap gap-sm">
-                  {service.tags.map((t) => (
-                    <li key={t}>
-                      <Tag>{t}</Tag>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            </AnimatePresence>
+            <motion.div
+              key={service.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, ease: ease.out }}
+              className="flex flex-col gap-md"
+            >
+              <h3 className="text-h2 text-black max-w-[18ch]">{service.title}</h3>
+              <p className="text-lead text-ink-2 max-w-[48ch]">{service.description}</p>
+              <ul className="flex flex-wrap gap-sm">
+                {service.tags.map((t) => (
+                  <li key={t}>
+                    <Tag>{t}</Tag>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
           </div>
 
           <div className="hidden lg:block">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={service.id}
-                initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                exit={{ opacity: 0, scale: 0.8, rotate: 10 }}
-                transition={{ duration: 0.35, ease: ease.out }}
-              >
-                <Shape3D kind={visual.kind} color={visual.color} size={260} />
-              </motion.div>
-            </AnimatePresence>
+            <motion.div
+              key={service.id}
+              initial={{ opacity: 0, scale: 0.88 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2, ease: ease.out }}
+            >
+              <Shape3D kind={visual.kind} color={visual.color} size={260} />
+            </motion.div>
           </div>
         </div>
 

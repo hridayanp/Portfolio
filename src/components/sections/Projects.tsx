@@ -86,8 +86,8 @@ function ProjectsScene({
   const project = projects[index]
 
   return (
-    <div className="flex h-full w-full flex-col justify-center gutter pt-[96px] pb-md">
-      <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-md">
+    <div className="flex h-full w-full flex-col justify-between gutter pt-[104px] pb-6 sm:pb-8 max-h-[100svh] overflow-hidden">
+      <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-3 sm:gap-4 my-auto">
         <div className="flex items-baseline justify-between">
           <span className="eyebrow flex items-center gap-sm">
             <span aria-hidden className="bg-a1 inline-block size-[6px] rounded-full" />
@@ -103,18 +103,15 @@ function ProjectsScene({
           </span>
         </div>
 
-        <div className="grid gap-lg lg:grid-cols-[1fr_300px] lg:items-start">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.35, ease: ease.out }}
-            >
-              <ProjectCard project={project} onOpen={() => onOpen(project.id)} />
-            </motion.div>
-          </AnimatePresence>
+        <div className="grid gap-md lg:gap-lg lg:grid-cols-[1fr_300px] lg:items-center">
+          <motion.div
+            key={project.id}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, ease: ease.out }}
+          >
+            <ProjectCard project={project} onOpen={() => onOpen(project.id)} />
+          </motion.div>
 
           {/* Index rail. Doubles as the keyboard path through the section —
               the scroll narrative is never the only way in (spec §15). */}
@@ -171,7 +168,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
         data-cursor="view"
         className="group relative block w-full text-left focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
       >
-        <div className="relative aspect-[16/9] w-full overflow-hidden">
+        <div className="relative aspect-[16/9] sm:aspect-[2.2/1] max-h-[34svh] sm:max-h-[38svh] w-full overflow-hidden">
           <motion.div
             className="h-full w-full"
             animate={{ scale: hovered ? 1.03 : 1 }}
@@ -197,15 +194,15 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
           </motion.div>
         </div>
 
-        <div className="flex flex-col gap-sm p-md">
-          <div className="flex flex-wrap items-center gap-sm">
+        <div className="flex flex-col gap-xs sm:gap-sm p-3 sm:p-md">
+          <div className="flex flex-wrap items-center gap-xs sm:gap-sm">
             <Tag>{project.category}</Tag>
             {project.client && <Tag>{project.client}</Tag>}
             {project.year && <Tag>{project.year}</Tag>}
           </div>
           <h3 className="text-h3 text-black">{project.title}</h3>
-          <p className="text-body-s text-ink-2 max-w-[62ch]">{project.description}</p>
-          <ul className="flex flex-wrap gap-sm">
+          <p className="text-body-s text-ink-2 max-w-[62ch] line-clamp-2">{project.description}</p>
+          <ul className="flex flex-wrap gap-xs sm:gap-sm">
             {project.technologies.map((t) => (
               <li key={t}>
                 <Tag>{t}</Tag>
@@ -219,7 +216,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
           keyboard and touch users never see (spec §15) — so the same call to
           action also lives here, at rest. Links render only when the data
           carries a real URL: absent data removes the affordance (spec §8). */}
-      <div className="border-hairline flex flex-wrap items-center gap-md border-t px-md py-sm">
+      <div className="border-hairline flex flex-wrap items-center gap-md border-t px-3 sm:px-md py-xs sm:py-sm">
         <button
           type="button"
           onClick={onOpen}
