@@ -1,5 +1,5 @@
 import { useRef, type ReactNode } from "react"
-import { useReducedMotion, useScroll, type MotionValue } from "motion/react"
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "motion/react"
 import { cn } from "@/lib/utils"
 
 type StickySceneProps = {
@@ -77,21 +77,21 @@ export function StickyScene({
 
 /**
  * Pattern B (spec §10): sibling cards each pinned at top:0 inside one parent,
- * so each subsequent card scrolls up and covers the previous. Pure CSS — no
- * scroll listener, no rAF. The lead-in is why the parent is 3.5vh for three
- * cards rather than 3.0: half a viewport so the first card reads before
- * stacking begins.
+ * so each subsequent card scrolls up and covers the previous.
+ * Supports smooth scroll-driven tilt-to-straight arrival animation.
  */
 export function StackScene({
   id,
   children,
   leadIn = 0.5,
+  tilt = true,
   className,
   label,
 }: {
   id?: string
   children: ReactNode[]
   leadIn?: number
+  tilt?: boolean
   className?: string
   label?: string
 }) {
@@ -113,15 +113,63 @@ export function StackScene({
       style={{ height: `${(children.length + leadIn) * 100}svh` }}
     >
       {children.map((child, i) => (
-        <div
+        <StackCardItem
           key={i}
-          className="sticky top-0 flex h-[100svh] w-full items-center justify-center pt-[96px] pb-6 sm:pb-8"
-          style={{ zIndex: i + 1 }}
+          index={i}
+          total={children.length}
+          tilt={tilt}
         >
           {child}
-        </div>
+        </StackCardItem>
       ))}
     </section>
+  )
+}
+
+function StackCardItem({
+  children,
+  index,
+  total: _total,
+  tilt = true,
+}: {
+  children: ReactNode
+  index: number
+  total: number
+  tilt?: boolean
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const reduced = useReducedMotion()
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "start start"],
+  })
+
+  // Alternating tilt angle when entering from below
+  const initialTilt = index % 2 === 0 ? -5 : 5
+
+  const rotate = useTransform(scrollYProgress, [0, 1], [reduced || !tilt ? 0 : initialTilt, 0])
+  const scale = useTransform(scrollYProgress, [0, 1], [reduced || !tilt ? 1 : 0.94, 1])
+  const opacity = useTransform(scrollYProgress, [0, 0.35, 1], [reduced || !tilt ? 1 : 0.7, 0.95, 1])
+
+  return (
+    <div
+      ref={ref}
+      className="sticky top-0 flex h-[100svh] w-full items-center justify-center pt-[96px] pb-6 sm:pb-8"
+      style={{ zIndex: index + 1 }}
+    >
+      <motion.div
+        style={{
+          rotate,
+          scale,
+          opacity,
+          transformOrigin: "center center",
+        }}
+        className="w-full flex justify-center"
+      >
+        {children}
+      </motion.div>
+    </div>
   )
 }
 

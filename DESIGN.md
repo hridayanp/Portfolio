@@ -175,15 +175,15 @@ Three layered cards that stack on top of each other during vertical scroll:
 
 ---
 
-### 3.5 Expertise & Services (Pattern A: Discrete Sticky Hold)
-- **Header**: Eyebrow `03 / EXPERTISE`, Heading `What I bring to teams and platforms.`
-- **6 Discrete Services (Pinned sequence with changing 3D wireframe visuals)**:
-  1. `01 / Frontend Engineering`: Production React applications built to survive their second year. (Tags: ReactJS, TypeScript, Tailwind CSS).
-  2. `02 / Geospatial Web Applications`: Map-centric interfaces over raster and vector data. (Tags: Leaflet, MapLibreGL, Georaster).
-  3. `03 / Data Visualisation & Dashboards`: Charts, tables, and real-time parameter tracking. (Tags: ChartJS, React-Table, Time-series).
-  4. `04 / Performance Engineering`: Diagnosing and fixing re-render costs, payload size, map clustering. (Tags: Profiling, State design, Virtualisation).
-  5. `05 / API & Data Pipeline Integration`: Connecting frontends to backend pipelines and alerting systems. (Tags: REST APIs, Node.js, Express.js).
-  6. `06 / Containerised Delivery`: Building and shipping containerised applications. (Tags: Docker, Kubernetes, Skaffold).
+### 3.5 Expertise & Services (Pattern B: Sticky Stacking Cards with Dynamic Tilt)
+- **Architecture**: 6 stacked cards matching the About section styling, with scroll-driven dynamic tilt (`±5°` rotation when out of bounds gradually straightening to `0°` as each card pins into place).
+- **6 Discrete Service Cards**:
+  1. `01 / Frontend Engineering`: Production React applications built to survive their second year. (Tags: ReactJS, TypeScript, Tailwind CSS | 3D Shape: Electric Cobalt Cube `#3157FF`).
+  2. `02 / Geospatial Web Applications`: Map-centric interfaces over raster and vector data. (Tags: Leaflet, MapLibreGL, Georaster | 3D Shape: Hot Coral Sphere `#FF5A5F`).
+  3. `03 / Data Visualisation & Dashboards`: Charts, tables, and real-time parameter tracking. (Tags: ChartJS, React-Table, Time-series | 3D Shape: Emerald Cylinder `#10B981`).
+  4. `04 / Performance Engineering`: Diagnosing and fixing re-render costs, payload size, map clustering. (Tags: Profiling, State design, Virtualisation | 3D Shape: Vibrant Tangerine Cone `#F97316`).
+  5. `05 / API & Data Pipeline Integration`: Connecting frontends to backend pipelines and alerting systems. (Tags: REST APIs, Node.js, Express.js | 3D Shape: Hyper Violet Torus `#7C3AED`).
+  6. `06 / Containerised Delivery`: Building and shipping containerised frontend applications. (Tags: Docker, Kubernetes, Skaffold | 3D Shape: Cyan Capsule `#06B6D4`).
 
 ---
 
