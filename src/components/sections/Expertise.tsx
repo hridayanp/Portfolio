@@ -29,12 +29,12 @@ import { ease } from "@/lib/motion"
  * wasted when only the index is read.
  */
 const visuals: { kind: ShapeKind; color: string }[] = [
-  { kind: "cube", color: "var(--a-1)" },
-  { kind: "sphere", color: "var(--a-2d)" },
-  { kind: "cylinder", color: "var(--a-3)" },
-  { kind: "cone", color: "var(--a-1)" },
-  { kind: "torus", color: "var(--a-2d)" },
-  { kind: "capsule", color: "var(--a-3)" },
+  { kind: "cube", color: "#3157FF" },
+  { kind: "sphere", color: "#FF5A5F" },
+  { kind: "cylinder", color: "#10B981" },
+  { kind: "cone", color: "#F97316" },
+  { kind: "torus", color: "#7C3AED" },
+  { kind: "capsule", color: "#06B6D4" },
 ]
 
 export function Expertise() {
@@ -69,9 +69,9 @@ function ExpertiseList() {
                 key={service.id}
                 className="border-hairline flex items-start gap-md border-t py-lg sm:gap-lg"
               >
-                <span className="text-card text-ink-3 tabular-nums">{service.index}</span>
+                <span className="text-h3 text-ink-3 tabular-nums">{service.index}</span>
                 <div className="flex flex-1 flex-col gap-sm">
-                  <h3 className="text-card text-black">{service.title}</h3>
+                  <h3 className="text-h3 text-black">{service.title}</h3>
                   <p className="text-body-s text-ink-2 max-w-[54ch]">{service.description}</p>
                   <ul className="flex flex-wrap gap-sm">
                     {service.tags.map((t) => (
@@ -113,7 +113,13 @@ function ExpertiseScene({ progress }: { progress: MotionValue<number> }) {
             Expertise
           </span>
           <h2 className="sr-only">Expertise</h2>
-          <span className="eyebrow" aria-live="polite">
+          {/* Step counter — machine-status feedback, so it carries the
+              progress token rather than the neutral ramp (§3, §14). */}
+          <span
+            className="eyebrow font-mono tabular"
+            aria-live="polite"
+            style={{ color: "var(--ds-progress)" }}
+          >
             {service.index} / {String(services.length).padStart(2, "0")}
           </span>
         </div>
@@ -121,7 +127,7 @@ function ExpertiseScene({ progress }: { progress: MotionValue<number> }) {
         <div className="grid items-center gap-lg lg:grid-cols-[auto_1fr_auto]">
           {/* The numeral: 200px, breakpoint-invariant, rolling behind a mask
               edge rather than appearing from nowhere (spec §4). */}
-          <div className="text-numeral text-black overflow-hidden font-extrabold tabular-nums">
+          <div className="text-numeral text-black tabular overflow-hidden font-medium">
             <RollingLine value={service.index} />
           </div>
 
@@ -167,7 +173,7 @@ function ExpertiseScene({ progress }: { progress: MotionValue<number> }) {
             reports position within a section. */}
         <div className="bg-hairline h-px w-full">
           <motion.div
-            className="bg-black h-px origin-left"
+            className="h-px origin-left bg-[var(--ds-progress)]"
             style={{ scaleX: progress }}
           />
         </div>

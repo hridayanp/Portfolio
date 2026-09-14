@@ -94,7 +94,11 @@ function ProjectsScene({
             Projects
           </span>
           <h2 className="sr-only">Projects</h2>
-          <span className="eyebrow" aria-live="polite">
+          <span
+            className="eyebrow font-mono tabular"
+            aria-live="polite"
+            style={{ color: "var(--ds-progress)" }}
+          >
             {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
           </span>
         </div>
@@ -130,7 +134,7 @@ function ProjectsScene({
                     <span
                       aria-hidden
                       className="size-2 shrink-0 rounded-full transition-colors duration-300"
-                      style={{ backgroundColor: i === index ? p.fill : "var(--c-hairline)" }}
+                      style={{ backgroundColor: i === index ? p.color : "var(--c-hairline)" }}
                     />
                     <span className="text-body-s flex-1 leading-tight">{p.title}</span>
                     <span className="text-label text-ink-3">
@@ -144,7 +148,7 @@ function ProjectsScene({
         </div>
 
         <div className="bg-hairline h-px w-full">
-          <motion.div className="bg-black h-px origin-left" style={{ scaleX: progress }} />
+          <motion.div className="h-px origin-left bg-[var(--ds-progress)]" style={{ scaleX: progress }} />
         </div>
       </div>
     </div>
@@ -153,26 +157,24 @@ function ProjectsScene({
 
 function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void }) {
   const [hovered, setHovered] = useState(false)
-  const reduced = useReducedMotion()
 
   return (
-    <article className="card-surface group overflow-hidden">
+    <div className="card-surface tinted relative flex flex-col overflow-hidden rounded-lg">
       <button
         type="button"
         onClick={onOpen}
-        onPointerEnter={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
         onFocus={() => setHovered(true)}
         onBlur={() => setHovered(false)}
-        data-cursor="view"
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
         aria-label={`Open case study: ${project.title}`}
-        className="block w-full text-left focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none rounded-lg"
+        data-cursor="view"
+        className="group relative block w-full text-left focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
       >
-        {/* Photo area, ≈3:2 as measured (spec §5). */}
-        <div className="relative aspect-[3/2] max-h-[46svh] overflow-hidden">
+        <div className="relative aspect-[16/9] w-full overflow-hidden">
           <motion.div
-            className="absolute inset-0"
-            animate={{ scale: hovered && !reduced ? 1.03 : 1 }}
+            className="h-full w-full"
+            animate={{ scale: hovered ? 1.03 : 1 }}
             transition={{ duration: 0.35, ease: ease.out }}
           >
             <ProjectField project={project} hovered={hovered} />
@@ -181,12 +183,15 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
           {/* Overlay: 0 → 1 on hover, exactly as the source. */}
           <motion.div
             aria-hidden
-            className="absolute inset-0 flex items-center justify-center bg-black/45 backdrop-blur-[2px]"
+            className="absolute inset-0 flex items-center justify-center bg-[color-mix(in_srgb,var(--ds-bg)_72%,transparent)]"
             initial={false}
             animate={{ opacity: hovered ? 1 : 0 }}
             transition={{ duration: 0.25, ease: ease.out }}
           >
-            <span className="text-btn text-ground inline-flex items-center gap-sm rounded-pill border border-white/40 bg-black/30 backdrop-blur-sm px-lg py-sm shadow-sm">
+            <span
+              className="text-btn font-mono inline-flex items-center gap-sm rounded-none px-lg py-sm text-white"
+              style={{ backgroundColor: project.color }}
+            >
               Read the case study <ArrowUpRight size={16} weight="bold" />
             </span>
           </motion.div>
@@ -198,7 +203,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
             {project.client && <Tag>{project.client}</Tag>}
             {project.year && <Tag>{project.year}</Tag>}
           </div>
-          <h3 className="text-card text-black">{project.title}</h3>
+          <h3 className="text-h3 text-black">{project.title}</h3>
           <p className="text-body-s text-ink-2 max-w-[62ch]">{project.description}</p>
           <ul className="flex flex-wrap gap-sm">
             {project.technologies.map((t) => (
@@ -218,7 +223,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
         <button
           type="button"
           onClick={onOpen}
-          className="text-label text-black inline-flex items-center gap-xs normal-case tracking-normal underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none rounded-sm"
+          className="text-label font-mono inline-flex items-center gap-xs normal-case tracking-normal text-[var(--ds-accent)] underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none rounded-sm"
         >
           Read the case study <ArrowUpRight size={13} weight="bold" />
         </button>
@@ -228,7 +233,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="link"
-            className="text-label text-ink-2 hover:text-black inline-flex items-center gap-xs normal-case tracking-normal underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none rounded-sm"
+            className="text-label text-[var(--ds-link)] hover:text-[var(--ds-link)] hover:brightness-125 inline-flex items-center gap-xs normal-case tracking-normal underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none rounded-sm"
           >
             Live site <ArrowUpRight size={13} weight="bold" />
           </a>
@@ -239,13 +244,13 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="link"
-            className="text-label text-ink-2 hover:text-black inline-flex items-center gap-xs normal-case tracking-normal underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none rounded-sm"
+            className="text-label text-[var(--ds-link)] hover:text-[var(--ds-link)] hover:brightness-125 inline-flex items-center gap-xs normal-case tracking-normal underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none rounded-sm"
           >
             <GithubLogo size={14} weight="bold" /> Source
           </a>
         )}
       </div>
-    </article>
+    </div>
   )
 }
 
@@ -282,7 +287,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
         aria-label="Close case study"
         tabIndex={-1}
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 cursor-default bg-[color-mix(in_srgb,var(--ds-bg)_80%,transparent)]"
       />
 
       <motion.div
@@ -293,7 +298,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 16, opacity: 0 }}
         transition={{ duration: 0.3, ease: ease.out }}
-        className="bg-ground border-hairline relative max-h-[92svh] w-full max-w-[900px] overflow-y-auto rounded-t-xl border shadow-2xl sm:rounded-xl"
+        className="bg-[var(--ds-bg-elevated)] border-hairline relative max-h-[92svh] w-full max-w-[900px] overflow-y-auto rounded-t-md border sm:rounded-md"
       >
         <div className="relative aspect-[3/2] max-h-[40svh] overflow-hidden">
           <ProjectField project={project} />
@@ -303,7 +308,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
             onClick={onClose}
             aria-label="Close"
             data-cursor="link"
-            className="absolute top-md right-md grid size-11 place-items-center rounded-pill bg-black/45 text-white backdrop-blur-sm transition-all hover:bg-black/70 active:scale-95 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+            className="absolute top-md right-md grid size-11 place-items-center rounded-md border border-[var(--ds-border-strong)] bg-[color-mix(in_srgb,var(--ds-bg)_70%,transparent)] text-[var(--ds-text-primary)] transition-colors duration-200 hover:border-[var(--ds-border-hover)] hover:bg-[var(--ds-bg)] active:scale-95"
           >
             <X size={18} weight="bold" />
           </button>
@@ -342,7 +347,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-btn bg-black text-ground hover:bg-a1 hover:text-white inline-flex items-center gap-sm rounded-pill px-lg py-sm transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
+                  className="text-btn font-mono inline-flex items-center gap-sm rounded-none bg-[var(--ds-accent)] px-lg py-sm text-[var(--ds-text-inverse)] transition-colors hover:bg-[var(--ds-accent-hover)] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
                 >
                   Visit live site <ArrowUpRight size={15} weight="bold" />
                 </a>
@@ -352,7 +357,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-btn border-hairline bg-surface text-ink hover:border-black inline-flex items-center gap-sm rounded-pill border px-lg py-sm transition-all active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
+                  className="text-btn font-mono border-hairline text-ink inline-flex items-center gap-sm rounded-none border bg-transparent px-lg py-sm transition-colors hover:border-[var(--ds-border-hover)] hover:bg-[var(--ds-accent-subtle)] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
                 >
                   <GithubLogo size={16} weight="bold" /> View source
                 </a>

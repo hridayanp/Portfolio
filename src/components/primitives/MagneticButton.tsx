@@ -53,12 +53,22 @@ export function MagneticButton({
   }
 
   const base =
-    "text-btn relative inline-flex items-center justify-center gap-sm rounded-pill px-lg py-md font-medium transition-all duration-300 select-none focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
+    "text-btn font-mono relative inline-flex items-center justify-center gap-sm rounded-none px-md py-sm transition-colors duration-200 select-none focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
 
+  /**
+   * Achilles §11: the primary CTA INVERTS the palette — a light fill on a dark
+   * page — because that is the only way to get an unmistakable action button
+   * without introducing a saturated brand hue. Secondary actions rely on a
+   * border rather than a fill, matching the border-over-shadow surface
+   * philosophy (§12). Hover brightens the fill or the border and never
+   * introduces a new hue (§14).
+   */
   const variants = {
-    solid: "bg-black text-ground hover:bg-a1 hover:text-white",
-    outline: "border border-hairline bg-surface text-ink hover:border-black",
-    ghost: "text-ink hover:bg-sunk",
+    solid:
+      "bg-[var(--ds-accent)] text-[var(--ds-text-inverse)] hover:bg-[var(--ds-accent-hover)] active:bg-[var(--ds-accent-active)]",
+    outline:
+      "border border-[var(--ds-border-strong)] bg-transparent text-ink hover:border-[var(--ds-border-hover)] hover:bg-[var(--ds-accent-subtle)] hover:text-[var(--ds-accent-hover)]",
+    ghost: "text-ink-2 hover:bg-[var(--ds-accent-subtle)] hover:text-ink",
   } as const
 
   const shared = {

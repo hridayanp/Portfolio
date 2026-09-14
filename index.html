@@ -1,10 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light dark" />
+    <!-- Dark-only. The reference is dark-first with no light mode. -->
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#080808" />
     <title>Hridayan Phukan — Frontend Software Engineer</title>
     <meta
       name="description"
@@ -12,47 +14,17 @@
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      The exact three families getachilles.framer.ai loads, at the exact
+      weights its @font-face rules request:
+        Geist Mono   400,500  - headings / display
+        Inter        400,500  - body / UI
+        JetBrains Mono 500    - labels, eyebrows, buttons (bundled locally)
+    -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <script>
-      // Apply the stored theme & accent before first paint to avoid a flash.
-      (function () {
-        try {
-          var stored = localStorage.getItem("theme")
-          var dark =
-            stored === "dark" ||
-            (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches)
-          document.documentElement.classList.toggle("dark", dark)
-
-          var storedAccent = localStorage.getItem("accentTheme") || "electric-cobalt"
-          var themes = {
-            "electric-cobalt": { light: "#3157FF", dark: "#6B83FF" },
-            "vivid-azure": { light: "#007AFF", dark: "#4DA3FF" },
-            "deep-indigo": { light: "#5146E5", dark: "#8B83FF" },
-            "hyper-violet": { light: "#7C3AED", dark: "#A78BFA" },
-            "electric-magenta": { light: "#D946EF", dark: "#F472E8" },
-            "hot-coral": { light: "#FF5A5F", dark: "#FF7A7F" },
-            "vibrant-tangerine": { light: "#F97316", dark: "#FF9A52" },
-            "amber": { light: "#F59E0B", dark: "#FFC857" },
-            "acid-lime": { light: "#84CC16", dark: "#A3E635" },
-            "emerald": { light: "#10B981", dark: "#34D399" },
-            "teal": { light: "#0D9488", dark: "#2DD4BF" },
-            "cyan": { light: "#06B6D4", dark: "#22D3EE" },
-            "sky-blue": { light: "#0284C7", dark: "#38BDF8" },
-            "electric-red": { light: "#EF4444", dark: "#FF6B6B" },
-            "crimson": { light: "#DC2626", dark: "#FF5757" },
-            "rose": { light: "#E11D48", dark: "#FB7185" }
-          }
-          var theme = themes[storedAccent] || themes["electric-cobalt"]
-          var color = dark ? theme.dark : theme.light
-          document.documentElement.style.setProperty("--a-1", color)
-          document.documentElement.style.setProperty("--a-tint", "color-mix(in srgb, " + color + " " + (dark ? "8%" : "5%") + ", transparent)")
-          document.documentElement.style.setProperty("--a-tint-2", "color-mix(in srgb, " + color + " " + (dark ? "15%" : "10%") + ", transparent)")
-        } catch (e) {}
-      })()
-    </script>
   </head>
   <body>
     <div id="root"></div>

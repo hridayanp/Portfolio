@@ -17,10 +17,10 @@ export function Footer() {
           ariaLabel={identity.fullName}
           trackClassName="items-center"
         >
-          <span className="text-wordmark text-black pr-[0.1em] font-black whitespace-nowrap opacity-[0.12]">
+          <span className="text-wordmark text-black pr-[0.1em] font-medium whitespace-nowrap opacity-[0.09]">
             {identity.fullName}
           </span>
-          <span className="text-wordmark text-a1 pr-[0.1em] font-black whitespace-nowrap opacity-[0.2]">
+          <span className="text-wordmark pr-[0.1em] font-medium whitespace-nowrap text-[var(--ds-text-disabled)] opacity-60">
             ·
           </span>
         </Marquee>
@@ -29,7 +29,7 @@ export function Footer() {
       <div className="gutter pt-xl pb-xl">
         <div className="mx-auto grid w-full max-w-[1400px] gap-lg md:grid-cols-[1.4fr_1fr_1fr]">
           <div className="flex flex-col gap-sm">
-            <p className="text-card text-black">{identity.fullName}</p>
+            <p className="text-h3 text-black">{identity.fullName}</p>
             <p className="text-body-s text-ink-2 max-w-[34ch]">
               {roles[0].title} · {roles[0].company}
             </p>
@@ -63,7 +63,7 @@ export function Footer() {
                   <a
                     href={`mailto:${contact.email}`}
                     data-cursor="link"
-                    className="text-body-s text-ink-2 hover:text-black transition-colors"
+                    className="text-body-s text-[var(--ds-link)] hover:text-[var(--ds-link)] hover:brightness-125 transition-colors"
                   >
                     {contact.email}
                   </a>
@@ -76,7 +76,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     data-cursor="link"
-                    className="text-body-s text-ink-2 hover:text-black transition-colors"
+                    className="text-body-s text-[var(--ds-link)] hover:text-[var(--ds-link)] hover:brightness-125 transition-colors"
                   >
                     {s.label}
                   </a>
@@ -89,7 +89,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     data-cursor="link"
-                    className="text-body-s text-ink-2 hover:text-black transition-colors"
+                    className="text-body-s text-[var(--ds-link)] hover:text-[var(--ds-link)] hover:brightness-125 transition-colors"
                   >
                     Résumé
                   </a>

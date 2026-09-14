@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "motion/react"
 import { stackGroups } from "@/content"
 import { Section } from "@/components/primitives/Section"
 import { SectionHeading } from "@/components/primitives/SectionHeading"
+import { getColorForIndex } from "@/lib/palette"
 import { ease } from "@/lib/motion"
 
 /**
@@ -30,8 +31,8 @@ export function Stack() {
         />
 
         <ul className="grid grid-cols-2 gap-md sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-          {cards.map((tech) => (
-            <StackCard key={tech.name} {...tech} />
+          {cards.map((tech, index) => (
+            <StackCard key={tech.name} index={index} {...tech} />
           ))}
         </ul>
       </div>
@@ -39,9 +40,20 @@ export function Stack() {
   )
 }
 
-function StackCard({ name, note, group }: { name: string; note: string; group: string }) {
+function StackCard({
+  name,
+  note,
+  group,
+  index,
+}: {
+  name: string
+  note: string
+  group: string
+  index: number
+}) {
   const [flipped, setFlipped] = useState(false)
   const reduced = useReducedMotion()
+  const color = getColorForIndex(index)
 
   return (
     <li className="flip-scene aspect-[384/400]">
@@ -54,7 +66,8 @@ function StackCard({ name, note, group }: { name: string; note: string; group: s
         onPointerLeave={() => setFlipped(false)}
         aria-label={`${name} — ${note}`}
         data-cursor="flip"
-        className="relative block size-full rounded-lg text-left focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
+        className="relative block size-full rounded-lg text-left focus-visible:ring-2 focus-visible:outline-none"
+        style={{ ["--ring-color" as string]: color.main }}
       >
         <motion.div
           className="relative size-full"
@@ -62,15 +75,20 @@ function StackCard({ name, note, group }: { name: string; note: string; group: s
           animate={{ rotateY: flipped && !reduced ? 180 : 0 }}
           transition={{ duration: 0.35, ease: ease.out }}
         >
-          {/* Front — the 5% tint doing the work (spec §3). */}
+          {/* Front */}
           <div className="flip-face card-surface tinted absolute inset-0 flex flex-col justify-between overflow-hidden rounded-lg p-md">
             <span
               aria-hidden
-              className="text-a1 pointer-events-none absolute right-2 bottom-1 text-[3rem] leading-none font-black opacity-20 select-none"
+              className="tabular pointer-events-none absolute right-2 bottom-1 text-[3rem] leading-none font-medium select-none"
+              style={{ color: color.main, opacity: 0.18 }}
             >
               {name.slice(0, 2)}
             </span>
-            <span aria-hidden className="bg-a1 size-2 rounded-full" />
+            <span
+              aria-hidden
+              className="size-2 rounded-full"
+              style={{ backgroundColor: color.main }}
+            />
             <div className="relative flex flex-col gap-xs">
               <span className="text-body-s text-black leading-tight font-semibold">{name}</span>
               <span className="text-label text-ink-2 normal-case tracking-normal">
@@ -81,10 +99,13 @@ function StackCard({ name, note, group }: { name: string; note: string; group: s
 
           {/* Back */}
           <div
-            className="flip-face bg-black border-hairline absolute inset-0 flex items-end overflow-hidden rounded-lg border p-md"
-            style={{ transform: "rotateY(180deg)" }}
+            className="flip-face absolute inset-0 flex items-end overflow-hidden rounded-lg p-md"
+            style={{
+              backgroundColor: color.main,
+              transform: "rotateY(180deg)",
+            }}
           >
-            <p className="text-label text-ground normal-case tracking-normal">{note}</p>
+            <p className="text-label text-white normal-case tracking-normal">{note}</p>
           </div>
         </motion.div>
       </button>

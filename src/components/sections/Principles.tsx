@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Quotes } from "@phosphor-icons/react"
 import { principles } from "@/content"
 import { Section } from "@/components/primitives/Section"
 import { SectionHeading } from "@/components/primitives/SectionHeading"
+import { getColorForIndex } from "@/lib/palette"
 import { ease, viewportOnce } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
@@ -68,35 +69,42 @@ export function Principles() {
           variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
           className="flex snap-x snap-mandatory gap-md overflow-x-auto scroll-smooth pb-md [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          {principles.map((p) => (
-            <motion.li
-              key={p.id}
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: ease.out } },
-              }}
-              className="w-[86%] shrink-0 snap-start sm:w-[58%] lg:w-[40%]"
-            >
-              <figure className="card-surface tinted flex h-full flex-col justify-between gap-lg p-lg">
-                <Quotes size={28} weight="fill" aria-hidden className="text-a1" />
-                <blockquote className="text-lead text-black">"{p.quote}"</blockquote>
-                <figcaption className="eyebrow">{p.context}</figcaption>
-              </figure>
-            </motion.li>
-          ))}
+          {principles.map((p, i) => {
+            const color = getColorForIndex(i + 3)
+            return (
+              <motion.li
+                key={p.id}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: ease.out } },
+                }}
+                className="w-[86%] shrink-0 snap-start sm:w-[58%] lg:w-[40%]"
+              >
+                <figure className="card-surface tinted flex h-full flex-col justify-between gap-lg p-lg">
+                  <Quotes size={28} weight="fill" aria-hidden style={{ color: color.main }} />
+                  <blockquote className="text-lead text-black">"{p.quote}"</blockquote>
+                  <figcaption className="eyebrow">{p.context}</figcaption>
+                </figure>
+              </motion.li>
+            )
+          })}
         </motion.ul>
 
         <div className="flex items-center gap-sm">
-          {principles.map((p, i) => (
-            <span
-              key={p.id}
-              aria-hidden
-              className={cn(
-                "h-1 rounded-pill transition-all duration-500",
-                i === index ? "bg-black w-8" : "bg-hairline w-3"
-              )}
-            />
-          ))}
+          {principles.map((p, i) => {
+            const color = getColorForIndex(i + 3)
+            return (
+              <span
+                key={p.id}
+                aria-hidden
+                className={cn(
+                  "h-1 rounded-pill transition-all duration-500",
+                  i === index ? "w-8" : "bg-hairline w-3"
+                )}
+                style={i === index ? { backgroundColor: color.main } : undefined}
+              />
+            )
+          })}
           <span className="sr-only">
             Showing item {index + 1} of {principles.length}
           </span>

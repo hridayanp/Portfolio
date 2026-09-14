@@ -17,15 +17,15 @@ import { ease } from "@/lib/motion"
  * Colour arrives on the page almost entirely through these (spec §13).
  */
 const shapes: FloatingShape[] = [
-  { kind: "cone", color: "var(--a-3)", size: 160, top: "8%", left: "4%", depth: 0.8, rotate: 14, desktopOnly: true },
-  { kind: "sphere", color: "var(--a-1)", size: 140, top: "12%", left: "82%", depth: 1, desktopOnly: true },
-  { kind: "cylinder", color: "var(--a-2d)", size: 150, top: "62%", left: "88%", depth: 0.65, rotate: -12, desktopOnly: true },
-  { kind: "star", color: "var(--a-2)", size: 110, top: "70%", left: "8%", depth: 0.9, desktopOnly: true },
-  { kind: "cube", color: "var(--c-ink)", size: 96, top: "70%", left: "26%", depth: 0.45, rotate: -8, desktopOnly: true },
-  { kind: "torus", color: "var(--a-1)", size: 104, top: "6%", left: "58%", depth: 0.55, rotate: 20, desktopOnly: true },
+  { kind: "cone", color: "#3157FF", size: 160, top: "8%", left: "4%", depth: 0.8, rotate: 14, desktopOnly: true },
+  { kind: "sphere", color: "#FF5A5F", size: 140, top: "12%", left: "82%", depth: 1, desktopOnly: true },
+  { kind: "cylinder", color: "#06B6D4", size: 150, top: "62%", left: "88%", depth: 0.65, rotate: -12, desktopOnly: true },
+  { kind: "star", color: "#F97316", size: 110, top: "70%", left: "8%", depth: 0.9, desktopOnly: true },
+  { kind: "cube", color: "#7C3AED", size: 96, top: "70%", left: "26%", depth: 0.45, rotate: -8, desktopOnly: true },
+  { kind: "torus", color: "#84CC16", size: 104, top: "6%", left: "58%", depth: 0.55, rotate: 20, desktopOnly: true },
   /* Phone keeps two, in gutters the text never occupies. */
-  { kind: "sphere", color: "var(--a-1)", size: 72, top: "6%", left: "72%", depth: 0.8, mobileOnly: true },
-  { kind: "cone", color: "var(--a-3)", size: 56, top: "78%", left: "78%", depth: 0.6, rotate: 12, mobileOnly: true },
+  { kind: "sphere", color: "#007AFF", size: 72, top: "6%", left: "72%", depth: 0.8, mobileOnly: true },
+  { kind: "cone", color: "#D946EF", size: 56, top: "78%", left: "78%", depth: 0.6, rotate: 12, mobileOnly: true },
 ]
 
 export function Hero() {
@@ -46,7 +46,7 @@ function HeroScene({ progress }: { progress: MotionValue<number> }) {
   const tickerShift = useTransform(progress, [0, 1], ["0%", reduced ? "0%" : "-8%"])
 
   return (
-    <div className="relative flex h-full w-full flex-col justify-between overflow-hidden pt-[96px] pb-md">
+    <div className="relative flex h-full w-full flex-col justify-between overflow-hidden pt-20 sm:pt-[96px] pb-4 sm:pb-md">
       <FloatingShapes shapes={shapes} />
 
       {/* The name ticker runs edge to edge BEHIND the composition. Spec §5:
@@ -59,10 +59,10 @@ function HeroScene({ progress }: { progress: MotionValue<number> }) {
         aria-hidden
       >
         <Marquee speed={60} trackClassName="items-center">
-          <span className="text-display text-black pr-[0.12em] font-black whitespace-nowrap opacity-[0.07]">
+          <span className="text-display text-black pr-[0.12em] font-medium whitespace-nowrap opacity-[0.06]">
             {identity.fullName.toUpperCase()}
           </span>
-          <span className="text-display text-a1 pr-[0.12em] font-black whitespace-nowrap opacity-[0.1]">
+          <span className="text-display pr-[0.12em] font-medium whitespace-nowrap text-[var(--ds-text-disabled)] opacity-70">
             ·
           </span>
         </Marquee>
@@ -70,9 +70,9 @@ function HeroScene({ progress }: { progress: MotionValue<number> }) {
 
       <motion.div
         style={{ y: lift, opacity: fade }}
-        className="relative flex flex-1 flex-col justify-center gutter"
+        className="relative flex flex-1 flex-col justify-center gutter py-2 sm:py-0"
       >
-        <div className="mx-auto flex w-full max-w-[1100px] flex-col items-center gap-lg text-center">
+        <div className="mx-auto flex w-full max-w-[1100px] flex-col items-center gap-3 sm:gap-4 md:gap-5 text-center">
           <motion.span
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -80,8 +80,8 @@ function HeroScene({ progress }: { progress: MotionValue<number> }) {
             className="border-hairline bg-surface flex items-center gap-sm rounded-pill border py-xs pr-md pl-sm"
           >
             <span className="relative flex size-2">
-              <span className="bg-a2d absolute inline-flex size-full animate-ping rounded-full opacity-70" />
-              <span className="bg-a2d relative inline-flex size-2 rounded-full" />
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-[var(--ds-success)] opacity-70" />
+              <span className="relative inline-flex size-2 rounded-full bg-[var(--ds-success)]" />
             </span>
             <span className="eyebrow">{identity.availabilityShort}</span>
           </motion.span>
@@ -95,7 +95,7 @@ function HeroScene({ progress }: { progress: MotionValue<number> }) {
             trigger="mount"
             delay={0.25}
             text={identity.headline}
-            className="text-h1 text-black max-w-[16ch] font-bold"
+            className="text-h1 text-black max-w-[16ch]"
           />
 
           {/* Centre-anchored card, at the composition's optical centre.
@@ -105,14 +105,14 @@ function HeroScene({ progress }: { progress: MotionValue<number> }) {
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: ease.out, delay: 0.35 }}
-            className="card-surface tinted flex size-[280px] shrink-0 flex-col justify-between p-md text-left shadow-[var(--shadow-soft)]"
+            className="card-surface tinted flex size-[200px] sm:size-[220px] md:size-[240px] shrink-0 flex-col justify-between p-4 sm:p-md text-left shadow-[var(--shadow-soft)]"
           >
             <span className="eyebrow">{identity.role}</span>
             <div className="flex flex-col gap-xs">
-              <span className="text-card text-black leading-none font-semibold">
+              <span className="text-h3 text-black leading-none font-semibold">
                 {identity.firstName}
               </span>
-              <span className="text-card text-ink-3 leading-none font-semibold">
+              <span className="text-h3 text-ink-3 leading-none font-semibold">
                 {identity.lastName}
               </span>
             </div>
@@ -125,18 +125,18 @@ function HeroScene({ progress }: { progress: MotionValue<number> }) {
 
           {/* Discipline badges — the equivalent of the source's expertise row,
               populated from real content. */}
-          <ul className="flex flex-wrap items-center justify-center gap-sm">
+          <ul className="flex flex-wrap items-center justify-center gap-xs sm:gap-sm">
             {identity.disciplines.map((d) => (
               <li
                 key={d}
-                className="text-label border-hairline bg-surface text-ink-2 rounded-pill border px-md py-sm normal-case tracking-normal"
+                className="text-label border-hairline bg-surface text-ink-2 rounded-pill border px-3 sm:px-md py-1 sm:py-sm normal-case tracking-normal"
               >
                 {d}
               </li>
             ))}
           </ul>
 
-          <div className="flex flex-wrap items-center justify-center gap-sm">
+          <div className="flex flex-wrap items-center justify-center gap-sm pt-1">
             <MagneticButton href="#work">
               See the work
               <ArrowUpRight size={16} weight="bold" />

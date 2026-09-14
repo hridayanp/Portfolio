@@ -13,10 +13,10 @@ export function Tag({
   return (
     <span
       className={cn(
-        "text-label inline-flex items-center rounded-sm border px-sm py-xs leading-none whitespace-nowrap",
+        "text-label font-mono inline-flex items-center rounded-sm border px-sm py-xs leading-none whitespace-nowrap",
         tone === "default"
-          ? "border-hairline bg-surface text-ink-2"
-          : "border-white/30 bg-white/10 text-white",
+          ? "border-hairline bg-[var(--ds-surface-2)] text-ink-2"
+          : "border-[var(--ds-border-strong)] bg-[var(--ds-surface-2)] text-ink",
         className
       )}
     >

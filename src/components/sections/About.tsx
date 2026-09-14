@@ -26,7 +26,7 @@ export function About() {
           index="01"
           eyebrow="About"
           title="Taking messy data and making it something someone can decide from."
-          shape={<Shape3D kind="cube" color="var(--a-1)" size={220} />}
+          shape={<Shape3D kind="cube" color="#3157FF" size={220} />}
         >
           <p className="text-lead text-ink max-w-[44ch]">
             That's the thread running through every platform I've worked on — satellite imagery,
@@ -45,13 +45,13 @@ export function About() {
           index="02"
           eyebrow="Experience"
           title="Owning frontend delivery end to end."
-          shape={<Shape3D kind="cylinder" color="var(--a-2d)" size={220} />}
+          shape={<Shape3D kind="cylinder" color="#F97316" size={220} />}
         >
           <ul className="flex flex-col gap-md">
             {roles.map((role) => (
               <li key={role.id} className="border-hairline flex flex-col gap-xs border-t pt-md">
                 <span className="eyebrow">{role.period}</span>
-                <span className="text-card text-black">{role.title}</span>
+                <span className="text-h3 text-black">{role.title}</span>
                 <span className="text-body-s text-ink-2">{role.company}</span>
                 <p className="text-body-s text-ink-2 max-w-[46ch]">{role.summary}</p>
                 {role.clients && (
@@ -69,12 +69,12 @@ export function About() {
           index="03"
           eyebrow="Education"
           title="Formal grounding in the infrastructure side, not just the UI layer."
-          shape={<Shape3D kind="torus" color="var(--a-3)" size={220} />}
+          shape={<Shape3D kind="torus" color="#10B981" size={220} />}
         >
           <ul className="flex flex-col gap-md">
             {education.map((e) => (
               <li key={e.id} className="border-hairline flex flex-col gap-xs border-t pt-md">
-                <span className="text-card text-black">
+                <span className="text-h3 text-black">
                   {e.qualification}, {e.field}
                 </span>
                 <span className="text-body-s text-ink-2">

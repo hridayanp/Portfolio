@@ -6,9 +6,9 @@ import { MaskedText } from "@/components/primitives/MaskedText"
 import { Section } from "@/components/primitives/Section"
 
 const shapes: FloatingShape[] = [
-  { kind: "sphere", color: "var(--a-3)", size: 120, top: "10%", left: "84%", depth: 0.8, desktopOnly: true },
-  { kind: "torus", color: "var(--a-1)", size: 96, top: "64%", left: "6%", depth: 0.6, rotate: 18, desktopOnly: true },
-  { kind: "star", color: "var(--a-2)", size: 72, top: "18%", left: "8%", depth: 1, desktopOnly: true },
+  { kind: "sphere", color: "#007AFF", size: 120, top: "10%", left: "84%", depth: 0.8, desktopOnly: true },
+  { kind: "torus", color: "#D946EF", size: 96, top: "64%", left: "6%", depth: 0.6, rotate: 18, desktopOnly: true },
+  { kind: "star", color: "#84CC16", size: 72, top: "18%", left: "8%", depth: 1, desktopOnly: true },
 ]
 
 export function Contact() {
@@ -24,7 +24,7 @@ export function Contact() {
         <MaskedText
           as="h2"
           text="Let's build something worth looking at."
-          className="text-h1 text-black max-w-[16ch] font-bold"
+          className="text-h1 text-black max-w-[16ch]"
         />
 
         <p className="text-lead text-ink-2 max-w-[46ch]">
@@ -37,7 +37,7 @@ export function Contact() {
           <a
             href={`mailto:${contact.email}`}
             data-cursor="link"
-            className="text-h2 text-black hover:decoration-a1 inline-block underline decoration-[var(--c-hairline)] decoration-2 underline-offset-[0.18em] transition-colors"
+            className="text-h2 inline-block text-[var(--ds-link)] underline decoration-[var(--ds-border-strong)] decoration-2 underline-offset-[0.18em] transition-colors hover:decoration-[var(--ds-link)]"
           >
             {contact.email}
           </a>

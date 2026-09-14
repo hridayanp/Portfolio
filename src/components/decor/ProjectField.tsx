@@ -51,7 +51,7 @@ export function ProjectField({
           not a label sitting on top of an image. */}
       <span
         aria-hidden
-        className="text-wordmark absolute -bottom-[0.18em] -left-[0.04em] font-black whitespace-nowrap select-none"
+        className="text-wordmark absolute -bottom-[0.18em] -left-[0.04em] font-medium whitespace-nowrap select-none"
         style={{ color: onFill, opacity: light ? 0.16 : 0.14 }}
       >
         {project.title}
@@ -66,7 +66,7 @@ export function ProjectField({
       >
         <Shape3D
           kind={project.shape}
-          color={light ? "#1a1a1a" : "#ffffff"}
+          color={project.color || (light ? "#1a1a1a" : "#3157FF")}
           size={140}
           className="opacity-90"
         />

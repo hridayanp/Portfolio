@@ -4,7 +4,6 @@ import { List, X } from "@phosphor-icons/react"
 import { contact, identity, navItems } from "@/content"
 import { useActiveSection } from "@/hooks/useActiveSection"
 import { NavLink } from "./NavLink"
-import { PalettePicker } from "./primitives/PalettePicker"
 import { ease } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
@@ -52,7 +51,7 @@ export function Navbar() {
           className={cn(
             "mx-auto flex h-[72px] items-center justify-between gap-md rounded-pill border px-md transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500",
             scrolled
-              ? "border-hairline bg-[color-mix(in_oklab,var(--c-ground)_82%,transparent)] shadow-[var(--shadow-soft)] backdrop-blur-xl"
+              ? "border-hairline bg-[var(--ds-bg-elevated)]"
               : "border-transparent bg-transparent"
           )}
         >
@@ -75,11 +74,10 @@ export function Navbar() {
           </ul>
 
           <div className="flex items-center gap-sm">
-            <PalettePicker />
             <a
               href={contact.email ? `mailto:${contact.email}` : "#contact"}
               data-cursor="link"
-              className="text-label bg-black text-ground hover:bg-a1 hidden rounded-pill px-md py-sm tracking-normal normal-case transition-all duration-300 hover:text-white active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none sm:inline-flex"
+              className="text-label font-mono hidden rounded-none bg-[var(--ds-accent)] px-md py-sm normal-case tracking-normal text-[var(--ds-text-inverse)] transition-colors duration-200 hover:bg-[var(--ds-accent-hover)] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none sm:inline-flex"
             >
               Get in touch
             </a>
@@ -144,7 +142,7 @@ function MobileMenu({ active, onClose }: { active: string; onClose: () => void }
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  "border-hairline text-card flex items-baseline justify-between border-b py-md transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none",
+                  "border-hairline text-h3 flex items-baseline justify-between border-b py-md transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none",
                   active === item.id ? "text-black font-semibold" : "text-ink-3 hover:text-black"
                 )}
               >
