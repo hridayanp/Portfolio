@@ -146,11 +146,52 @@
 }
 
 /* --------------------------------------------------------------------------
-   3. NO LIGHT VARIANT.
-   The reference is dark-only: it ships one palette and no theme control.
-   `html` carries `class="dark"` permanently so Tailwind's `dark:` variant
-   still resolves, but there is exactly one set of values.
+   3. LIGHT VARIANT.
    -------------------------------------------------------------------------- */
+html.light,
+:root[data-theme="light"],
+.light {
+  color-scheme: light;
+
+  /* Foundations — Carbon UI Gray 10 architecture */
+  --ds-bg: #f4f4f4;
+  --ds-bg-elevated: #ffffff;
+  --ds-surface: #ffffff;
+  --ds-surface-2: #e8e8e8;
+  --ds-terminal-bg: #eaeaea;
+
+  /* Text — high-contrast dark ink */
+  --ds-text-primary: #161616;
+  --ds-text-secondary: #525252;
+  --ds-text-muted: #757575;
+  --ds-text-disabled: #8d8d8d;
+  --ds-text-placeholder: #a8a8a8;
+  --ds-text-inverse: #ffffff;
+
+  /* Borders — subtle clean hairlines */
+  --ds-border: rgba(0, 0, 0, 0.09);
+  --ds-border-subtle: rgba(0, 0, 0, 0.05);
+  --ds-border-strong: rgba(0, 0, 0, 0.18);
+  --ds-border-hover: rgba(0, 0, 0, 0.28);
+  --ds-border-accent: rgba(49, 87, 255, 0.40);
+
+  /* Primary Accent — Electric Cobalt */
+  --ds-accent: #3157FF;
+  --ds-accent-hover: #1e40db;
+  --ds-accent-active: #142bb5;
+  --ds-accent-subtle: rgba(49, 87, 255, 0.08);
+  --ds-accent-glow: rgba(49, 87, 255, 0.16);
+  --ds-accent-disabled: rgba(0, 0, 0, 0.06);
+  --ds-link: #3157FF;
+
+  /* Status */
+  --ds-success: #059669;
+  --ds-progress: #3157FF;
+  --ds-error: #DC2626;
+
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --shadow-lift: 0 12px 32px rgba(0, 0, 0, 0.06);
+}
 
 /* --------------------------------------------------------------------------
    4. TYPE SCALE — §15.

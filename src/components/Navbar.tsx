@@ -4,6 +4,7 @@ import { List, X } from "@phosphor-icons/react"
 import { contact, identity, navItems } from "@/content"
 import { useActiveSection } from "@/hooks/useActiveSection"
 import { NavLink } from "./NavLink"
+import { ThemeToggle } from "./primitives/ThemeToggle"
 import { ease } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
@@ -51,7 +52,7 @@ export function Navbar() {
           className={cn(
             "mx-auto flex h-[72px] items-center justify-between gap-md rounded-pill border px-md transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500",
             scrolled
-              ? "border-hairline bg-[var(--ds-bg-elevated)]"
+              ? "border-hairline bg-[var(--ds-bg-elevated)] backdrop-blur-md"
               : "border-transparent bg-transparent"
           )}
         >
@@ -74,6 +75,7 @@ export function Navbar() {
           </ul>
 
           <div className="flex items-center gap-sm">
+            <ThemeToggle />
             <a
               href={contact.email ? `mailto:${contact.email}` : "#contact"}
               data-cursor="link"
@@ -124,15 +126,18 @@ function MobileMenu({ active, onClose }: { active: string; onClose: () => void }
       <div className="relative flex h-full flex-col gutter pt-md pb-xl">
         <div className="flex h-[72px] items-center justify-between">
           <span className="eyebrow">Menu</span>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close menu"
-            autoFocus
-            className="border-hairline text-ink hover:border-black active:scale-[0.95] grid size-11 place-items-center rounded-pill border transition-all focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
-          >
-            <X size={18} weight="bold" />
-          </button>
+          <div className="flex items-center gap-sm">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close menu"
+              autoFocus
+              className="border-hairline text-ink hover:border-black active:scale-[0.95] grid size-11 place-items-center rounded-pill border transition-all focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
+            >
+              <X size={18} weight="bold" />
+            </button>
+          </div>
         </div>
 
         <ul className="mt-xl flex flex-1 flex-col">
