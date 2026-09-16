@@ -38,10 +38,13 @@ export function Hero() {
     >
       {/* ---- Ambient field: light orbs + dot mesh ---- */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="animate-pulse-glow absolute top-12 left-1/4 size-[500px] rounded-full bg-blue-100/50 blur-[120px]" />
         <div
-          className="animate-pulse-glow absolute top-1/3 right-1/4 size-[450px] rounded-full bg-emerald-100/40 blur-[100px]"
-          style={{ animationDelay: "2s" }}
+          className="animate-pulse-glow absolute top-12 left-1/4 size-[500px] rounded-full blur-[120px]"
+          style={{ backgroundColor: "var(--ds-orb-blue)" }}
+        />
+        <div
+          className="animate-pulse-glow absolute top-1/3 right-1/4 size-[450px] rounded-full blur-[100px]"
+          style={{ backgroundColor: "var(--ds-orb-emerald)", animationDelay: "2s" }}
         />
         <div className="bg-mesh absolute inset-0" />
       </div>
@@ -51,7 +54,10 @@ export function Hero() {
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center overflow-hidden select-none"
       >
-        <span className="text-display font-display font-extrabold whitespace-nowrap text-[rgba(15,23,42,0.032)] uppercase">
+        <span
+          className="text-display font-display font-extrabold whitespace-nowrap uppercase"
+          style={{ color: "var(--ds-watermark)" }}
+        >
           {identity.fullName}
         </span>
       </div>
@@ -96,7 +102,7 @@ export function Hero() {
         {/* Availability badge */}
         <motion.div
           {...rise(0.05)}
-          className="border-hairline mb-6 inline-flex items-center gap-2.5 rounded-pill border bg-white/90 px-4 py-1.5 shadow-[var(--shadow-xs)] backdrop-blur-md transition-colors hover:border-emerald-300"
+          className="border-hairline mb-6 inline-flex items-center gap-2.5 rounded-pill border bg-[var(--ds-surface)]/90 px-4 py-1.5 shadow-[var(--shadow-xs)] backdrop-blur-md transition-colors hover:border-emerald-300"
         >
           <span className="relative flex size-2">
             {!reduced && (
@@ -204,7 +210,7 @@ export function Hero() {
           {identity.disciplines.map((d) => (
             <li
               key={d}
-              className="border-hairline text-body-s cursor-default rounded-pill border bg-white/95 px-3.5 py-1.5 font-medium text-[var(--ds-text-secondary)] shadow-[var(--shadow-xs)] transition-all hover:scale-105 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)]"
+              className="border-hairline text-body-s cursor-default rounded-pill border bg-[var(--ds-surface)]/95 px-3.5 py-1.5 font-medium text-[var(--ds-text-secondary)] shadow-[var(--shadow-xs)] transition-all hover:scale-105 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)]"
             >
               {d}
             </li>
@@ -231,7 +237,7 @@ export function Hero() {
           <a
             href={contact.email ? `mailto:${contact.email}` : "#contact"}
             data-cursor="link"
-            className="text-btn border-[var(--ds-border-strong)] flex w-full items-center justify-center rounded-lg border bg-white/80 px-7 py-3 text-[var(--ds-text-body)] shadow-[var(--shadow-xs)] transition-all hover:border-[var(--ds-border-hover)] hover:bg-white active:scale-95 sm:w-auto"
+            className="text-btn border-[var(--ds-border)] flex w-full items-center justify-center rounded-lg border bg-[var(--ds-surface)]/80 px-7 py-3 text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:border-[var(--ds-border-hover)] hover:bg-[var(--ds-surface)] active:scale-95 sm:w-auto"
           >
             Get in touch
           </a>

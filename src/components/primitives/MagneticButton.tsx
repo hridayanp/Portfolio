@@ -64,7 +64,7 @@ export function MagneticButton({
     solid:
       "bg-[var(--ds-accent)] text-[var(--ds-text-inverse)] shadow-[var(--shadow-electric)] hover:-translate-y-0.5 hover:bg-[var(--ds-accent-hover)] hover:shadow-[var(--shadow-electric-hover)] active:translate-y-0 active:bg-[var(--ds-accent-active)]",
     outline:
-      "border border-[var(--ds-border)] bg-white text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] hover:shadow-[var(--shadow-md)] active:translate-y-0",
+      "border border-[var(--ds-border)] bg-[var(--ds-surface)] text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] hover:shadow-[var(--shadow-md)] active:translate-y-0",
     ghost: "text-[var(--ds-text-secondary)] hover:bg-[var(--ds-accent-subtle)] hover:text-[var(--ds-accent)]",
   } as const
 

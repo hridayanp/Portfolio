@@ -305,7 +305,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
             onClick={onClose}
             aria-label="Close"
             data-cursor="link"
-            className="absolute top-md right-md grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-white/90 text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] backdrop-blur-md transition-all duration-200 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-95"
+            className="absolute top-md right-md grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-[var(--ds-surface)]/90 text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] backdrop-blur-md transition-all duration-200 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-95"
           >
             <X size={18} weight="bold" />
           </button>
@@ -354,7 +354,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-btn inline-flex items-center gap-sm rounded-xl border border-[var(--ds-border)] bg-white px-lg py-sm font-semibold text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:-translate-y-0.5 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] hover:shadow-[var(--shadow-md)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+                  className="text-btn inline-flex items-center gap-sm rounded-xl border border-[var(--ds-border)] bg-[var(--ds-surface)] px-lg py-sm font-semibold text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:-translate-y-0.5 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] hover:shadow-[var(--shadow-md)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
                 >
                   <GithubLogo size={16} weight="bold" /> View source
                 </a>

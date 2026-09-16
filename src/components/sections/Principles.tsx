@@ -129,7 +129,7 @@ function SliderButton({
       onClick={onClick}
       aria-label={label}
       data-cursor="link"
-      className="grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-white text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all duration-200 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+      className="grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-[var(--ds-surface)] text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all duration-200 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
     >
       {children}
     </button>

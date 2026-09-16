@@ -15,7 +15,7 @@ export function Tag({
       className={cn(
         "text-label inline-flex items-center rounded-pill border px-sm py-xs leading-none whitespace-nowrap tracking-normal normal-case",
         tone === "default"
-          ? "border-[var(--ds-border)] bg-white/95 text-[var(--ds-text-secondary)] shadow-[var(--shadow-xs)]"
+          ? "border-[var(--ds-border)] bg-[var(--ds-surface)]/95 text-[var(--ds-text-secondary)] shadow-[var(--shadow-xs)]"
           : "border-[var(--ds-accent-border)] bg-[var(--ds-accent-subtle)] text-[var(--ds-accent)]",
         className
       )}

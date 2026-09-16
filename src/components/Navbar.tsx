@@ -4,6 +4,7 @@ import { List, X } from "@phosphor-icons/react"
 import { contact, identity, navItems } from "@/content"
 import { useActiveSection } from "@/hooks/useActiveSection"
 import { NavLink } from "./NavLink"
+import { ThemeToggle } from "./ThemeToggle"
 import { ease } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
@@ -51,7 +52,7 @@ export function Navbar() {
           className={cn(
             "mx-auto flex h-[72px] items-center justify-between gap-md rounded-pill border px-md transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500",
             scrolled
-              ? "border-[var(--ds-border)] bg-white/80 shadow-[var(--shadow-md)] backdrop-blur-xl"
+              ? "border-[var(--ds-border)] bg-[var(--ds-nav-bg)] shadow-[var(--shadow-md)] backdrop-blur-xl"
               : "border-transparent bg-transparent"
           )}
         >
@@ -77,6 +78,7 @@ export function Navbar() {
           </ul>
 
           <div className="flex items-center gap-sm">
+            <ThemeToggle />
             <a
               href={contact.email ? `mailto:${contact.email}` : "#contact"}
               data-cursor="link"
@@ -89,7 +91,7 @@ export function Navbar() {
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className="grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-white text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-[0.95] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none lg:hidden"
+              className="grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-[var(--ds-surface)] text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-[0.95] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none lg:hidden"
             >
               <List size={18} weight="bold" />
             </button>
@@ -127,15 +129,18 @@ function MobileMenu({ active, onClose }: { active: string; onClose: () => void }
       <div className="relative flex h-full flex-col gutter pt-md pb-xl">
         <div className="flex h-[72px] items-center justify-between">
           <span className="eyebrow">Menu</span>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close menu"
-            autoFocus
-            className="grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-white text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-[0.95] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
-          >
-            <X size={18} weight="bold" />
-          </button>
+          <div className="flex items-center gap-sm">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close menu"
+              autoFocus
+              className="grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-[var(--ds-surface)] text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-[0.95] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+            >
+              <X size={18} weight="bold" />
+            </button>
+          </div>
         </div>
 
         <ul className="mt-xl flex flex-1 flex-col">
