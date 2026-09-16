@@ -4,14 +4,13 @@ import { List, X } from "@phosphor-icons/react"
 import { contact, identity, navItems } from "@/content"
 import { useActiveSection } from "@/hooks/useActiveSection"
 import { NavLink } from "./NavLink"
-import { ThemeToggle } from "./primitives/ThemeToggle"
 import { ease } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
 /**
- * Fixed at top, 72px tall — spec §6.
- * The active item is scroll-driven (spec §11): on a 20+ viewport page this is
- * position feedback, not decoration.
+ * Fixed at top, 72px tall. Light surface, electric-blue CTA — matched to the
+ * new hero's visual language: pill brand mark, soft hairline border, and a
+ * rounded-xl accent button rather than the old square/mono treatment.
  */
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -42,7 +41,7 @@ export function Navbar() {
     <>
       <a
         href="#main"
-        className="bg-black text-ground sr-only rounded-pill px-md py-sm focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[110]"
+        className="sr-only rounded-pill bg-[var(--ds-accent)] px-md py-sm text-[var(--ds-text-inverse)] focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[110]"
       >
         Skip to content
       </a>
@@ -52,18 +51,21 @@ export function Navbar() {
           className={cn(
             "mx-auto flex h-[72px] items-center justify-between gap-md rounded-pill border px-md transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500",
             scrolled
-              ? "border-hairline bg-[var(--ds-bg-elevated)] backdrop-blur-md"
+              ? "border-[var(--ds-border)] bg-white/80 shadow-[var(--shadow-md)] backdrop-blur-xl"
               : "border-transparent bg-transparent"
           )}
         >
           <a
             href="#home"
             data-cursor="link"
-            className="text-label flex items-center gap-sm px-sm tracking-normal normal-case"
+            className="text-label group flex items-center gap-sm px-sm tracking-normal normal-case"
           >
-            <span aria-hidden className="bg-a1 inline-block size-2 rounded-full" />
-            <span className="text-black font-semibold">{identity.firstName}</span>
-            <span className="text-ink-3">{identity.lastName}</span>
+            <span
+              aria-hidden
+              className="inline-block size-2 rounded-full bg-[var(--ds-accent)] shadow-[0_0_0_4px_var(--ds-accent-tint)] transition-transform duration-300 group-hover:scale-125"
+            />
+            <span className="font-semibold text-[var(--ds-text-primary)]">{identity.firstName}</span>
+            <span className="text-[var(--ds-text-muted)]">{identity.lastName}</span>
           </a>
 
           <ul className="hidden items-center lg:flex">
@@ -75,11 +77,10 @@ export function Navbar() {
           </ul>
 
           <div className="flex items-center gap-sm">
-            <ThemeToggle />
             <a
               href={contact.email ? `mailto:${contact.email}` : "#contact"}
               data-cursor="link"
-              className="text-label font-mono hidden rounded-none bg-[var(--ds-accent)] px-md py-sm normal-case tracking-normal text-[var(--ds-text-inverse)] transition-colors duration-200 hover:bg-[var(--ds-accent-hover)] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none sm:inline-flex"
+              className="text-label hidden rounded-xl bg-[var(--ds-accent)] px-md py-sm font-semibold tracking-normal normal-case text-[var(--ds-text-inverse)] shadow-[var(--shadow-electric)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--ds-accent-hover)] hover:shadow-[var(--shadow-electric-hover)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none sm:inline-flex"
             >
               Get in touch
             </a>
@@ -88,7 +89,7 @@ export function Navbar() {
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className="border-hairline bg-surface text-ink hover:border-black active:scale-[0.95] grid size-11 place-items-center rounded-pill border transition-all focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none lg:hidden"
+              className="grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-white text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-[0.95] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none lg:hidden"
             >
               <List size={18} weight="bold" />
             </button>
@@ -120,24 +121,21 @@ function MobileMenu({ active, onClose }: { active: string; onClose: () => void }
         animate={{ clipPath: "inset(0 0 0% 0)" }}
         exit={{ clipPath: "inset(0 0 100% 0)" }}
         transition={{ duration: 0.4, ease: ease.out }}
-        className="bg-ground absolute inset-0"
+        className="absolute inset-0 bg-[var(--ds-bg)]"
       />
 
       <div className="relative flex h-full flex-col gutter pt-md pb-xl">
         <div className="flex h-[72px] items-center justify-between">
           <span className="eyebrow">Menu</span>
-          <div className="flex items-center gap-sm">
-            <ThemeToggle />
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close menu"
-              autoFocus
-              className="border-hairline text-ink hover:border-black active:scale-[0.95] grid size-11 place-items-center rounded-pill border transition-all focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
-            >
-              <X size={18} weight="bold" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close menu"
+            autoFocus
+            className="grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-white text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-[0.95] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+          >
+            <X size={18} weight="bold" />
+          </button>
         </div>
 
         <ul className="mt-xl flex flex-1 flex-col">
@@ -147,12 +145,14 @@ function MobileMenu({ active, onClose }: { active: string; onClose: () => void }
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  "border-hairline text-h3 flex items-baseline justify-between border-b py-md transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none",
-                  active === item.id ? "text-black font-semibold" : "text-ink-3 hover:text-black"
+                  "text-h3 flex items-baseline justify-between border-b border-[var(--ds-border)] py-md transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none",
+                  active === item.id
+                    ? "font-semibold text-[var(--ds-accent)]"
+                    : "text-[var(--ds-text-secondary)] hover:text-[var(--ds-accent)]"
                 )}
               >
                 {item.label}
-                <span className="text-label text-ink-3">
+                <span className="text-label font-mono text-[var(--ds-text-faint)]">
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </a>
@@ -160,7 +160,7 @@ function MobileMenu({ active, onClose }: { active: string; onClose: () => void }
           ))}
         </ul>
 
-        <p className="text-label text-ink-2 normal-case tracking-normal">
+        <p className="text-label text-[var(--ds-text-muted)] tracking-normal normal-case">
           {identity.availability}
         </p>
       </div>

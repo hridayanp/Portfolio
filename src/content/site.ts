@@ -38,6 +38,10 @@ export const identity = {
     "Performance",
   ],
   location: "India",
+  locationFlag: "🇮🇳",
+  /** Shown in the hero signature card. */
+  timezone: "IST (UTC+5:30)",
+  remoteAvailability: "Available for Global Remote Roles",
   careerStart: 2021,
   /** Stated experience. Deliberately the figure from MYSELF.md rather than a
    *  computed one, so the site never claims more than the source document. */
@@ -48,6 +52,21 @@ export const identity = {
 } as const
 
 export const experienceYears = identity.experienceLabel
+
+/** The three-up micro-dashboard in the hero signature card. */
+export type HeroMetric = { value: string; label: string; tone: "ink" | "accent" | "success" }
+
+export const heroMetrics: HeroMetric[] = [
+  { value: `${identity.experienceLabel} Yrs`, label: "Experience", tone: "ink" },
+  { value: "UNDP", label: "Enterprise", tone: "accent" },
+  { value: "Maps & UI", label: "Geospatial", tone: "success" },
+]
+
+/** Bottom-left scroll cue / bottom-right credit line in the hero. */
+export const heroFooter = {
+  scrollLabel: "SCROLL",
+  credit: `Design & Code by ${identity.fullName}`,
+}
 
 export const contact = {
   // TODO(hridayan): replace with your real address, e.g. "you@domain.com"

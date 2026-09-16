@@ -52,7 +52,7 @@ export function ProjectField({
       <span
         aria-hidden
         className="text-wordmark absolute -bottom-[0.18em] -left-[0.04em] font-medium whitespace-nowrap select-none"
-        style={{ color: onFill, opacity: light ? 0.16 : 0.14 }}
+        style={{ color: onFill, opacity: light ? 0.1 : 0.14 }}
       >
         {project.title}
       </span>
@@ -66,7 +66,7 @@ export function ProjectField({
       >
         <Shape3D
           kind={project.shape}
-          color={project.color || (light ? "#1a1a1a" : "#3157FF")}
+          hue={project.hue}
           size={140}
           className="opacity-90"
         />

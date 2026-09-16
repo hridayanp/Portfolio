@@ -6,9 +6,9 @@ import { MaskedText } from "@/components/primitives/MaskedText"
 import { Section } from "@/components/primitives/Section"
 
 const shapes: FloatingShape[] = [
-  { kind: "sphere", color: "#007AFF", size: 120, top: "10%", left: "84%", depth: 0.8, desktopOnly: true },
-  { kind: "torus", color: "#D946EF", size: 96, top: "64%", left: "6%", depth: 0.6, rotate: 18, desktopOnly: true },
-  { kind: "star", color: "#84CC16", size: 72, top: "18%", left: "8%", depth: 1, desktopOnly: true },
+  { kind: "sphere", hue: "blue", size: 120, top: "10%", left: "84%", depth: 0.8, desktopOnly: true },
+  { kind: "torus", hue: "violet", size: 96, top: "64%", left: "6%", depth: 0.6, rotate: 18, desktopOnly: true },
+  { kind: "star", hue: "orange", size: 72, top: "18%", left: "8%", depth: 1, desktopOnly: true },
 ]
 
 export function Contact() {

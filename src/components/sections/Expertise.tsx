@@ -1,17 +1,17 @@
 import type { ReactNode } from "react"
 import { services } from "@/content"
 import { StackScene } from "@/components/primitives/StickyScene"
-import { Shape3D, type ShapeKind } from "@/components/decor/Shape3D"
+import { Shape3D, type ShapeHue, type ShapeKind } from "@/components/decor/Shape3D"
 import { Tag } from "@/components/primitives/Tag"
 import { cn } from "@/lib/utils"
 
-const visuals: { kind: ShapeKind; color: string }[] = [
-  { kind: "cube", color: "#3157FF" },
-  { kind: "sphere", color: "#FF5A5F" },
-  { kind: "cylinder", color: "#10B981" },
-  { kind: "cone", color: "#F97316" },
-  { kind: "torus", color: "#7C3AED" },
-  { kind: "capsule", color: "#06B6D4" },
+const visuals: { kind: ShapeKind; hue: ShapeHue }[] = [
+  { kind: "cube", hue: "blue" },
+  { kind: "sphere", hue: "red" },
+  { kind: "cylinder", hue: "green" },
+  { kind: "cone", hue: "orange" },
+  { kind: "torus", hue: "violet" },
+  { kind: "capsule", hue: "cyan" },
 ]
 
 export function Expertise() {
@@ -27,7 +27,7 @@ export function Expertise() {
             title={service.title}
             description={service.description}
             tags={service.tags}
-            shape={<Shape3D kind={v.kind} color={v.color} size={220} />}
+            shape={<Shape3D kind={v.kind} hue={v.hue} size={220} />}
           />
         )
       })}

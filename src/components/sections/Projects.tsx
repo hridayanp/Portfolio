@@ -41,7 +41,7 @@ export function Projects() {
         <section id="work" aria-label="Projects" className="w-full gutter section-y">
           <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-lg">
             <span className="eyebrow flex items-center gap-sm">
-              <span aria-hidden className="bg-a1 inline-block size-[6px] rounded-full" />
+              <span aria-hidden className="inline-block size-[6px] rounded-full bg-[var(--ds-accent)]" />
               Projects
             </span>
             <h2 className="text-h2 text-black max-w-[20ch]">
@@ -90,7 +90,7 @@ function ProjectsScene({
       <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-3 sm:gap-4 my-auto">
         <div className="flex items-baseline justify-between">
           <span className="eyebrow flex items-center gap-sm">
-            <span aria-hidden className="bg-a1 inline-block size-[6px] rounded-full" />
+            <span aria-hidden className="inline-block size-[6px] rounded-full bg-[var(--ds-accent)]" />
             Projects
           </span>
           <h2 className="sr-only">Projects</h2>
@@ -124,7 +124,7 @@ function ProjectsScene({
                     onClick={() => onOpen(p.id)}
                     data-cursor="view"
                     className={cn(
-                      "border-hairline flex w-full items-center gap-md border-t py-sm text-left transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none rounded-sm",
+                      "border-hairline flex w-full items-center gap-md border-t py-sm text-left transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none rounded-sm",
                       i === index ? "text-black font-semibold" : "text-ink-3 hover:text-ink-2"
                     )}
                   >
@@ -166,7 +166,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
         onPointerLeave={() => setHovered(false)}
         aria-label={`Open case study: ${project.title}`}
         data-cursor="view"
-        className="group relative block w-full text-left focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none"
+        className="group relative block w-full text-left focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
       >
         <div className="relative aspect-[16/9] sm:aspect-[2.2/1] max-h-[34svh] sm:max-h-[38svh] w-full overflow-hidden">
           <motion.div
@@ -186,7 +186,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
             transition={{ duration: 0.25, ease: ease.out }}
           >
             <span
-              className="text-btn font-mono inline-flex items-center gap-sm rounded-none px-lg py-sm text-white"
+              className="text-btn inline-flex items-center gap-sm rounded-xl px-lg py-sm font-semibold text-white shadow-[var(--shadow-md)]"
               style={{ backgroundColor: project.color }}
             >
               Read the case study <ArrowUpRight size={16} weight="bold" />
@@ -220,7 +220,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
         <button
           type="button"
           onClick={onOpen}
-          className="text-label font-mono inline-flex items-center gap-xs normal-case tracking-normal text-[var(--ds-accent)] underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none rounded-sm"
+          className="text-label inline-flex items-center gap-xs rounded-sm font-semibold tracking-normal normal-case text-[var(--ds-accent)] underline-offset-4 transition-colors hover:text-[var(--ds-accent-hover)] hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
         >
           Read the case study <ArrowUpRight size={13} weight="bold" />
         </button>
@@ -230,7 +230,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="link"
-            className="text-label text-[var(--ds-link)] hover:text-[var(--ds-link)] hover:brightness-125 inline-flex items-center gap-xs normal-case tracking-normal underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none rounded-sm"
+            className="text-label text-[var(--ds-link)] hover:text-[var(--ds-link)] hover:brightness-125 inline-flex items-center gap-xs normal-case tracking-normal underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none rounded-sm"
           >
             Live site <ArrowUpRight size={13} weight="bold" />
           </a>
@@ -241,7 +241,7 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="link"
-            className="text-label text-[var(--ds-link)] hover:text-[var(--ds-link)] hover:brightness-125 inline-flex items-center gap-xs normal-case tracking-normal underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none rounded-sm"
+            className="text-label text-[var(--ds-link)] hover:text-[var(--ds-link)] hover:brightness-125 inline-flex items-center gap-xs normal-case tracking-normal underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none rounded-sm"
           >
             <GithubLogo size={14} weight="bold" /> Source
           </a>
@@ -295,7 +295,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 16, opacity: 0 }}
         transition={{ duration: 0.3, ease: ease.out }}
-        className="bg-[var(--ds-bg-elevated)] border-hairline relative max-h-[92svh] w-full max-w-[900px] overflow-y-auto rounded-t-md border sm:rounded-md"
+        className="relative max-h-[92svh] w-full max-w-[900px] overflow-y-auto rounded-t-2xl border border-[var(--ds-border)] bg-[var(--ds-surface)] shadow-[var(--shadow-card)] sm:rounded-2xl"
       >
         <div className="relative aspect-[3/2] max-h-[40svh] overflow-hidden">
           <ProjectField project={project} />
@@ -305,7 +305,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
             onClick={onClose}
             aria-label="Close"
             data-cursor="link"
-            className="absolute top-md right-md grid size-11 place-items-center rounded-md border border-[var(--ds-border-strong)] bg-[color-mix(in_srgb,var(--ds-bg)_70%,transparent)] text-[var(--ds-text-primary)] transition-colors duration-200 hover:border-[var(--ds-border-hover)] hover:bg-[var(--ds-bg)] active:scale-95"
+            className="absolute top-md right-md grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-white/90 text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] backdrop-blur-md transition-all duration-200 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-95"
           >
             <X size={18} weight="bold" />
           </button>
@@ -344,7 +344,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-btn font-mono inline-flex items-center gap-sm rounded-none bg-[var(--ds-accent)] px-lg py-sm text-[var(--ds-text-inverse)] transition-colors hover:bg-[var(--ds-accent-hover)] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+                  className="text-btn inline-flex items-center gap-sm rounded-xl bg-[var(--ds-accent)] px-lg py-sm font-semibold text-[var(--ds-text-inverse)] shadow-[var(--shadow-electric)] transition-all hover:-translate-y-0.5 hover:bg-[var(--ds-accent-hover)] hover:shadow-[var(--shadow-electric-hover)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
                 >
                   Visit live site <ArrowUpRight size={15} weight="bold" />
                 </a>
@@ -354,7 +354,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-btn font-mono border-hairline text-ink inline-flex items-center gap-sm rounded-none border bg-transparent px-lg py-sm transition-colors hover:border-[var(--ds-border-hover)] hover:bg-[var(--ds-accent-subtle)] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+                  className="text-btn inline-flex items-center gap-sm rounded-xl border border-[var(--ds-border)] bg-white px-lg py-sm font-semibold text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:-translate-y-0.5 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] hover:shadow-[var(--shadow-md)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
                 >
                   <GithubLogo size={16} weight="bold" /> View source
                 </a>

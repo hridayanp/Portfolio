@@ -17,7 +17,7 @@ export function Footer() {
           ariaLabel={identity.fullName}
           trackClassName="items-center"
         >
-          <span className="text-wordmark text-black pr-[0.1em] font-medium whitespace-nowrap opacity-[0.09]">
+          <span className="text-wordmark text-black pr-[0.1em] font-medium whitespace-nowrap opacity-[0.05]">
             {identity.fullName}
           </span>
           <span className="text-wordmark pr-[0.1em] font-medium whitespace-nowrap text-[var(--ds-text-disabled)] opacity-60">

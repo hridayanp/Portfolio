@@ -53,22 +53,19 @@ export function MagneticButton({
   }
 
   const base =
-    "text-btn font-mono relative inline-flex items-center justify-center gap-sm rounded-none px-md py-sm transition-colors duration-200 select-none focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+    "text-btn relative inline-flex items-center justify-center gap-sm rounded-xl px-lg py-sm font-semibold transition-all duration-200 select-none focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
 
   /**
-   * Achilles §11: the primary CTA INVERTS the palette — a light fill on a dark
-   * page — because that is the only way to get an unmistakable action button
-   * without introducing a saturated brand hue. Secondary actions rely on a
-   * border rather than a fill, matching the border-over-shadow surface
-   * philosophy (§12). Hover brightens the fill or the border and never
-   * introduces a new hue (§14).
+   * Primary CTA = electric-blue fill with the lift shadow, matching the hero's
+   * `.btn-electric`. Secondary relies on a white surface + hairline border so
+   * it reads as the quieter of the pair without a second hue.
    */
   const variants = {
     solid:
-      "bg-[var(--ds-accent)] text-[var(--ds-text-inverse)] hover:bg-[var(--ds-accent-hover)] active:bg-[var(--ds-accent-active)]",
+      "bg-[var(--ds-accent)] text-[var(--ds-text-inverse)] shadow-[var(--shadow-electric)] hover:-translate-y-0.5 hover:bg-[var(--ds-accent-hover)] hover:shadow-[var(--shadow-electric-hover)] active:translate-y-0 active:bg-[var(--ds-accent-active)]",
     outline:
-      "border border-[var(--ds-border-strong)] bg-transparent text-ink hover:border-[var(--ds-border-hover)] hover:bg-[var(--ds-accent-subtle)] hover:text-[var(--ds-accent-hover)]",
-    ghost: "text-ink-2 hover:bg-[var(--ds-accent-subtle)] hover:text-ink",
+      "border border-[var(--ds-border)] bg-white text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] hover:shadow-[var(--shadow-md)] active:translate-y-0",
+    ghost: "text-[var(--ds-text-secondary)] hover:bg-[var(--ds-accent-subtle)] hover:text-[var(--ds-accent)]",
   } as const
 
   const shared = {

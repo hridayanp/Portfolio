@@ -5,127 +5,134 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ==========================================================================
-   VISUAL DESIGN SYSTEM — Achilles (artifact d79de382)
-   ==========================================================================
-   The artifact is the single source of truth for colour, typography, surface
-   and interaction. It explicitly scopes ITSELF out of layout, grid and
-   components ("Out of scope: Layout · Grid · Components"), so the existing
-   application's layout architecture, spacing scale and component structure are
-   preserved unchanged and only the visual language is replaced.
+   DESIGN TOKENS
+   Taken from the supplied hero design (code.html + screenshot): a light,
+   editorial surface with an electric-blue accent, Inter / JetBrains Mono /
+   Plus Jakarta Sans, soft shadows and colourful 3D accents.
 
-   Token flow, per the artifact's §15/§16 "single source of truth" rule:
-
-       --ds-*  (artifact canonical name, the only place a hex is written)
-            ↓
-       --c-* / --a-*  (this application's existing token names)
-            ↓
-       Tailwind utilities already used by components (bg-ground, text-ink, …)
-
-   No component writes a raw hex. Changing a value here changes it everywhere.
+   Token flow — the only place a raw value is written:
+       --ds-*   canonical (prefixed so it cannot collide with Tailwind v4's
+                own --color-* / --text-* theme namespaces)
+          ↓
+       --c-* / --a-*   this application's existing token names
+          ↓
+       Tailwind utilities already used by components
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   1. DESIGN TOKENS — MEASURED from getachilles.framer.ai, not estimated.
-
-   The reconstruction document that seeded this file said plainly that its
-   values were estimates to "refine against the live site in your own browser
-   inspector". They were refined. Where the estimate and the live site
-   disagree, the live site wins — and it disagreed on the most important
-   point of all: the accent is NOT a desaturated off-white, it is a saturated
-   terminal green. Values below are read off Framer's own published colour
-   tokens and computed styles.
-   -------------------------------------------------------------------------- */
 :root {
-  /* Foundations — Carbon UI Gray 100 / Gray 90 architecture */
-  --ds-bg: #161616;
-  --ds-bg-elevated: #262626;
-  --ds-surface: #222222;
-  --ds-surface-2: #2d2d2d;
-  --ds-terminal-bg: #121212;
+  /* Surfaces */
+  --ds-bg: #fafbfd;
+  --ds-bg-elevated: #ffffff;
+  --ds-surface: #ffffff;
+  --ds-surface-2: #f8fafc;
+  --ds-surface-sunken: #f1f5f9;
 
-  /* Text — high-contrast Carbon typography ramp */
-  --ds-text-primary: #f4f4f4;
-  --ds-text-secondary: #c6c6c6;
-  --ds-text-muted: #8d8d8d;
-  --ds-text-disabled: #525252;
-  --ds-text-placeholder: #6f6f6f;
+  /* Text — slate ramp */
+  --ds-text-primary: #0f172a;
+  --ds-text-body: #1e293b;
+  --ds-text-secondary: #475569;
+  --ds-text-muted: #64748b;
+  --ds-text-faint: #94a3b8;
+  --ds-text-disabled: #cbd5e1;
+  --ds-text-placeholder: #94a3b8;
   --ds-text-inverse: #ffffff;
 
-  /* Borders — clean Carbon layer hairlines */
-  --ds-border: rgba(255, 255, 255, 0.10);
-  --ds-border-subtle: rgba(255, 255, 255, 0.06);
-  --ds-border-strong: rgba(255, 255, 255, 0.20);
-  --ds-border-hover: rgba(255, 255, 255, 0.30);
-  --ds-border-accent: rgba(49, 87, 255, 0.4);
+  /* Borders */
+  --ds-border: #e2e8f0;
+  --ds-border-subtle: #f1f5f9;
+  --ds-border-strong: #cbd5e1;
+  --ds-border-hover: #94a3b8;
+  --ds-border-accent: rgba(37, 99, 235, 0.45);
 
-  /* Primary Accent — Electric Cobalt */
-  --ds-accent: #3157FF;
-  --ds-accent-hover: #6B83FF;
-  --ds-accent-active: #5146E5;
-  --ds-accent-subtle: rgba(49, 87, 255, 0.16);
-  --ds-accent-glow: rgba(49, 87, 255, 0.24);
-  --ds-accent-disabled: rgba(255, 255, 255, 0.08);
-  --ds-link: #4DA3FF;
+  /* Accent — electric blue */
+  --ds-accent: #2563eb;
+  --ds-accent-hover: #1d4ed8;
+  --ds-accent-active: #1e40af;
+  --ds-accent-light: #3b82f6;
+  --ds-accent-subtle: #eff6ff;
+  --ds-accent-tint: rgba(37, 99, 235, 0.08);
+  --ds-accent-border: #dbeafe;
+  --ds-indigo: #4f46e5;
+  --ds-link: #2563eb;
 
   /* Status */
-  --ds-success: #10B981;
-  --ds-progress: #3157FF;
-  --ds-error: #EF4444;
+  --ds-success: #10b981;
+  --ds-success-light: #34d399;
+  --ds-success-deep: #059669;
+  --ds-progress: #2563eb;
+  --ds-error: #dc2626;
 
-  /* Fonts — measured: Geist Mono headings, Inter body, JetBrains Mono labels */
-  --font-display-stack: "Geist Mono", ui-monospace, SFMono-Regular, Menlo,
-    monospace;
+  /* Decorative 3D accent hues */
+  --ds-solid-blue: #2563eb;
+  --ds-solid-green: #16a34a;
+  --ds-solid-red: #dc2626;
+  --ds-solid-orange: #ea580c;
+  --ds-solid-violet: #7c3aed;
+  --ds-solid-cyan: #0891b2;
+
+  /* Fonts */
   --font-sans-stack: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Helvetica, Arial, sans-serif;
+  --font-display-stack: "Plus Jakarta Sans", "Inter", -apple-system, sans-serif;
   --font-mono-stack: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace,
     SFMono-Regular, Menlo, monospace;
 
-  /* Weights — measured: h1 500, h2 400, body 400, labels/buttons 500 */
+  /* Weights */
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
-  --weight-bold: 600;
+  --weight-bold: 700;
+  --weight-black: 800;
 
-  /* Tracking — measured −1.6px on 40px and −1.28px on 32px = −0.04em */
-  --tracking-tight: -0.04em;
-  --tracking-heading: -0.04em;
+  /* Tracking */
+  --tracking-display: -0.04em;
+  --tracking-tight: -0.035em;
+  --tracking-heading: -0.03em;
+  --tracking-h3: -0.02em;
   --tracking-normal: 0em;
-  --tracking-button: -0.04em;
-  --tracking-wide: 0.02em;
+  --tracking-wide: 0.05em;
+  --tracking-wider: 0.1em;
 
-  /* Leading — measured 1.2 almost everywhere, 1.3 at 14px and 12px */
-  --leading-display: 1.2;
-  --leading-h1: 1.2;
-  --leading-h2: 1.2;
-  --leading-h3: 1.2;
-  --leading-body: 1.2;
-  --leading-relaxed: 1.3;
-  --leading-small: 1.3;
-  --leading-caption: 1.3;
-  --leading-label: 1.3;
+  /* Leading */
+  --leading-display: 1;
+  --leading-h1: 1.12;
+  --leading-h2: 1.15;
+  --leading-h3: 1.3;
+  --leading-body: 1.625;
+  --leading-relaxed: 1.7;
+  --leading-small: 1.5;
+  --leading-caption: 1.4;
 
-  /* Radius — measured: 100px pills, 40px, 16px cards, 4px/2px chips, and
-     primary buttons that are SQUARE (0px). */
-  --radius-artifact-sm: 4px;
-  --radius-artifact-md: 16px;
-  --radius-artifact-lg: 40px;
+  /* Radius */
+  --radius-ds-sm: 6px;
+  --radius-ds-md: 8px;
+  --radius-ds-lg: 12px;
+  --radius-ds-xl: 16px;
+  --radius-ds-card: 27px;
 
-  /* Borders and luminance separate; no drop shadows on the live site except a
-     0-blur accent ring on the CTA. */
-  --shadow-soft: none;
-  --shadow-lift: none;
-  --shadow-accent-ring: 0 0 0 1px var(--ds-accent-glow);
+  /* Elevation — soft and light-mode native */
+  --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-soft: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08),
+    0 2px 4px -2px rgba(15, 23, 42, 0.06);
+  --shadow-lift: 0 20px 40px -15px rgba(15, 23, 42, 0.12);
+  --shadow-card: 0 20px 40px -15px rgba(15, 23, 42, 0.05),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  --shadow-electric: 0 8px 25px -4px rgba(37, 99, 235, 0.5),
+    0 0 0 1px rgba(37, 99, 235, 0.2);
+  --shadow-electric-hover: 0 12px 30px -2px rgba(37, 99, 235, 0.65),
+    0 0 0 1px rgba(37, 99, 235, 0.35);
 }
 
 /* --------------------------------------------------------------------------
-   2. APPLICATION TOKENS — existing names, re-pointed at the artifact.
-      This is the adapter layer: it is why no component needed rewriting.
+   APPLICATION TOKENS — existing names, re-pointed. This adapter is why no
+   component outside the hero needed rewriting.
    -------------------------------------------------------------------------- */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --c-black: var(--ds-text-primary); /* brightest ink */
-  --c-ink: var(--ds-text-primary);
+  --c-black: var(--ds-text-primary);
+  --c-ink: var(--ds-text-body);
   --c-ink-2: var(--ds-text-secondary);
   --c-ink-3: var(--ds-text-muted);
   --c-sunk: var(--ds-surface-2);
@@ -134,11 +141,11 @@
   --c-hairline: var(--ds-border);
 
   --a-1: var(--ds-accent);
-  --a-2: var(--ds-accent-active);
+  --a-2: var(--ds-accent-light);
   --a-2d: var(--ds-success);
   --a-3: var(--ds-text-muted);
-  --a-tint: var(--ds-surface);
-  --a-tint-2: var(--ds-surface-2);
+  --a-tint: var(--ds-accent-subtle);
+  --a-tint-2: var(--ds-accent-tint);
 
   --f-sans: var(--font-sans-stack);
   --f-display: var(--font-display-stack);
@@ -146,107 +153,53 @@
 }
 
 /* --------------------------------------------------------------------------
-   3. LIGHT VARIANT.
-   -------------------------------------------------------------------------- */
-html.light,
-:root[data-theme="light"],
-.light {
-  color-scheme: light;
-
-  /* Foundations — Carbon UI Gray 10 architecture */
-  --ds-bg: #f4f4f4;
-  --ds-bg-elevated: #ffffff;
-  --ds-surface: #ffffff;
-  --ds-surface-2: #e8e8e8;
-  --ds-terminal-bg: #eaeaea;
-
-  /* Text — high-contrast dark ink */
-  --ds-text-primary: #161616;
-  --ds-text-secondary: #525252;
-  --ds-text-muted: #757575;
-  --ds-text-disabled: #8d8d8d;
-  --ds-text-placeholder: #a8a8a8;
-  --ds-text-inverse: #ffffff;
-
-  /* Borders — subtle clean hairlines */
-  --ds-border: rgba(0, 0, 0, 0.09);
-  --ds-border-subtle: rgba(0, 0, 0, 0.05);
-  --ds-border-strong: rgba(0, 0, 0, 0.18);
-  --ds-border-hover: rgba(0, 0, 0, 0.28);
-  --ds-border-accent: rgba(49, 87, 255, 0.40);
-
-  /* Primary Accent — Electric Cobalt */
-  --ds-accent: #3157FF;
-  --ds-accent-hover: #1e40db;
-  --ds-accent-active: #142bb5;
-  --ds-accent-subtle: rgba(49, 87, 255, 0.08);
-  --ds-accent-glow: rgba(49, 87, 255, 0.16);
-  --ds-accent-disabled: rgba(0, 0, 0, 0.06);
-  --ds-link: #3157FF;
-
-  /* Status */
-  --ds-success: #059669;
-  --ds-progress: #3157FF;
-  --ds-error: #DC2626;
-
-  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04);
-  --shadow-lift: 0 12px 32px rgba(0, 0, 0, 0.06);
-}
-
-/* --------------------------------------------------------------------------
-   4. TYPE SCALE — §15.
-      Sizes step at breakpoints (existing responsive architecture preserved);
-      the desktop values are the artifact's.
+   TYPE LADDER
    -------------------------------------------------------------------------- */
 :root {
-  --fs-label: 12px;    /* label   12 / 1.3  w500  JetBrains Mono */
-  --fs-body-s: 14px;   /* small   14 / 1.3  w400  Inter */
-  --fs-btn: 16px;      /* button  16 / 1.2  w500  JetBrains Mono, −0.04em */
-  --fs-body: 16px;     /* body    16 / 1.2  w400  Inter */
-  --fs-lead: 20px;     /* lead    20 / 1.2  w500  Inter */
-  --fs-h3: 20px;       /* h3      20 / 1.2  w500  Inter */
-  --fs-h2: 32px;       /* h2      32 / 1.2  w400  Geist Mono, −0.04em */
-  --fs-h1: 40px;       /* h1      40 / 1.2  w500  Geist Mono, −0.04em */
-  --fs-mono: 14px;     /* mono    14 / 1.3        Inter (terminal lines) */
-
-  /* Compositional dimensions, NOT type-scale steps. The artifact scopes itself
-     out of layout, and these sizes are load-bearing for the existing hero and
-     section compositions — so they keep their dimensions and take the
-     artifact's tracking, weight and colour instead. */
-  --fs-numeral: 200px;
-  --fs-wordmark: 225px;
-  --fs-display: 240px;
+  --fs-label: 12px;
+  --fs-body-s: 14px;
+  --fs-btn: 14px;
+  --fs-body: 16px;
+  --fs-lead: 18px;
+  --fs-h3: 24px;
+  --fs-h2: 40px;
+  --fs-h1: 66px;
+  --fs-mono: 12px;
+  --fs-numeral: 180px;
+  --fs-wordmark: 200px;
+  --fs-display: clamp(6rem, 14.5vw, 15rem);
 
   --gutter: 24px;
-  --section-y: 192px;
+  --section-y: 128px;
 }
 
 @media (max-width: 1199.98px) {
   :root {
-    --fs-h1: 32px;
-    --fs-h2: 26px;
-    --fs-wordmark: 160px;
-    --fs-display: 150px;
-    --section-y: 144px;
+    --fs-h1: 48px;
+    --fs-h2: 34px;
+    --fs-h3: 22px;
+    --fs-numeral: 140px;
+    --fs-wordmark: 150px;
+    --section-y: 104px;
   }
 }
 
 @media (max-width: 809.98px) {
   :root {
-    --fs-lead: 18px;
-    --fs-h3: 18px;
-    --fs-h1: 28px;
-    --fs-h2: 24px;
-    --fs-wordmark: 110px;
-    --fs-display: 88px;
+    --fs-h1: 36px;
+    --fs-h2: 28px;
+    --fs-h3: 20px;
+    --fs-lead: 16px;
+    --fs-numeral: 96px;
+    --fs-wordmark: 96px;
 
     --gutter: 16px;
-    --section-y: 96px;
+    --section-y: 80px;
   }
 }
 
 /* --------------------------------------------------------------------------
-   5. TAILWIND THEME — existing utility names, artifact values behind them.
+   TAILWIND THEME
    -------------------------------------------------------------------------- */
 @theme inline {
   --font-sans: var(--f-sans);
@@ -268,10 +221,11 @@ html.light,
   --color-a3: var(--a-3);
   --color-tint: var(--a-tint);
 
+  --color-accent: var(--ds-accent);
+  --color-link: var(--ds-link);
   --color-success: var(--ds-success);
   --color-progress: var(--ds-progress);
   --color-error: var(--ds-error);
-  --color-link: var(--ds-link);
 
   /* shadcn contract */
   --color-background: var(--c-ground);
@@ -286,14 +240,13 @@ html.light,
   --color-secondary-foreground: var(--c-ink);
   --color-muted: var(--c-sunk);
   --color-muted-foreground: var(--c-ink-2);
-  --color-accent: var(--ds-accent);
   --color-accent-foreground: var(--ds-text-inverse);
   --color-destructive: var(--ds-error);
   --color-border: var(--c-hairline);
   --color-input: var(--c-hairline);
   --color-ring: var(--ds-border-accent);
 
-  /* Spacing — existing layout architecture, preserved verbatim. */
+  /* Spacing — unchanged layout architecture */
   --spacing-xs: 6px;
   --spacing-sm: 10px;
   --spacing-md: 24px;
@@ -301,19 +254,18 @@ html.light,
   --spacing-xl: 96px;
   --spacing-2xl: 192px;
 
-  /* Radius — §15. One moderate value reused; nothing bubbly (§21.I). */
-  /* Measured: 4px chips, 16px cards/panels, 40px large, 100px pills. */
-  --radius-sm: 4px;
-  --radius-md: 16px;
-  --radius-lg: 16px;
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
   --radius-xl: 16px;
-  --radius-2xl: 40px;
-  --radius-pill: 100px;
+  --radius-2xl: 27px;
+  --radius-pill: 9999px;
 
   /* Type roles */
   --text-label: var(--fs-label);
   --text-label--line-height: var(--leading-caption);
-  --text-label--letter-spacing: var(--tracking-normal);
+  --text-label--letter-spacing: var(--tracking-wide);
   --text-label--font-weight: var(--weight-medium);
 
   --text-body-s: var(--fs-body-s);
@@ -321,52 +273,48 @@ html.light,
 
   --text-btn: var(--fs-btn);
   --text-btn--line-height: var(--leading-small);
-  --text-btn--font-weight: var(--weight-medium);
-  --text-btn--letter-spacing: var(--tracking-button);
+  --text-btn--font-weight: var(--weight-semibold);
 
   --text-body: var(--fs-body);
   --text-body--line-height: var(--leading-body);
 
   --text-lead: var(--fs-lead);
-  --text-lead--line-height: var(--leading-body);
+  --text-lead--line-height: var(--leading-relaxed);
 
-  /* Named `h3` (not `card`) because Tailwind generates a utility per theme
-     namespace: a `--text-card` font-size and a `--color-card` colour would
-     both emit `.text-card`, and the colour rule would silently win. */
   --text-h3: var(--fs-h3);
   --text-h3--line-height: var(--leading-h3);
-  --text-h3--letter-spacing: var(--tracking-heading);
-  --text-h3--font-weight: var(--weight-semibold);
+  --text-h3--letter-spacing: var(--tracking-h3);
+  --text-h3--font-weight: var(--weight-bold);
 
   --text-h2: var(--fs-h2);
   --text-h2--line-height: var(--leading-h2);
   --text-h2--letter-spacing: var(--tracking-heading);
-  --text-h2--font-weight: var(--weight-regular);
+  --text-h2--font-weight: var(--weight-bold);
 
   --text-h1: var(--fs-h1);
   --text-h1--line-height: var(--leading-h1);
   --text-h1--letter-spacing: var(--tracking-tight);
-  --text-h1--font-weight: var(--weight-medium);
+  --text-h1--font-weight: var(--weight-bold);
 
   --text-mono: var(--fs-mono);
   --text-mono--line-height: var(--leading-small);
 
   --text-numeral: var(--fs-numeral);
-  --text-numeral--line-height: var(--leading-display);
-  --text-numeral--letter-spacing: var(--tracking-tight);
+  --text-numeral--line-height: 1.05;
+  --text-numeral--letter-spacing: var(--tracking-display);
 
   --text-wordmark: var(--fs-wordmark);
-  --text-wordmark--line-height: 0.9;
-  --text-wordmark--letter-spacing: var(--tracking-tight);
+  --text-wordmark--line-height: 0.95;
+  --text-wordmark--letter-spacing: var(--tracking-display);
 
   --text-display: var(--fs-display);
   --text-display--line-height: var(--leading-display);
-  --text-display--letter-spacing: var(--tracking-tight);
+  --text-display--letter-spacing: var(--tracking-display);
 }
 
 @layer base {
   * {
-    border-color: var(--c-hairline);
+    border-color: var(--ds-border);
   }
 
   html {
@@ -374,11 +322,15 @@ html.light,
     scroll-padding-top: 96px;
     -webkit-text-size-adjust: 100%;
     background-color: var(--ds-bg);
+    /* Scaled stack cards and the decorative wordmarks overhang by a few px;
+       clip on the root as well as body so no phone gets a stray sideways
+       scroll. `clip` (not `hidden`) keeps position:sticky working. */
+    overflow-x: clip;
   }
 
   body {
     background-color: var(--ds-bg);
-    color: var(--ds-text-secondary); /* body copy is secondary, not primary */
+    color: var(--ds-text-body);
     font-family: var(--f-sans);
     font-size: var(--fs-body);
     line-height: var(--leading-body);
@@ -386,29 +338,14 @@ html.light,
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: clip;
-    transition:
-      background-color 300ms ease,
-      color 300ms ease;
   }
 
-  /* Hierarchy is built with size, weight and case before colour (§9). */
-  /* Measured: H1/H2 are set in Geist Mono. H3 and everything below stay in
-     Inter — the live site switches face at the display tier, not at every
-     heading level. */
   h1,
-  h2 {
-    font-family: var(--f-display);
-    color: var(--ds-text-primary);
-    font-weight: var(--weight-medium);
-    text-wrap: balance;
-  }
-  h2 {
-    font-weight: var(--weight-regular);
-  }
+  h2,
   h3,
   h4 {
     color: var(--ds-text-primary);
-    font-weight: var(--weight-medium);
+    font-weight: var(--weight-bold);
     text-wrap: balance;
   }
 
@@ -419,23 +356,17 @@ html.light,
 
   ::selection {
     background: var(--ds-accent);
-    color: var(--ds-text-inverse);
+    color: #ffffff;
   }
 
   ::placeholder {
     color: var(--ds-text-placeholder);
   }
 
-  /* Focus = thin accent-tinted ring (§11, §14, §21.D). */
   :focus-visible {
-    outline: 2px solid var(--ds-border-accent);
+    outline: 2px solid var(--ds-accent);
     outline-offset: 2px;
-    border-radius: var(--radius-artifact-sm);
-  }
-
-  :disabled,
-  [aria-disabled="true"] {
-    color: var(--ds-text-disabled);
+    border-radius: var(--radius-ds-md);
   }
 
   img,
@@ -445,14 +376,11 @@ html.light,
     max-width: 100%;
   }
 
-  /* Terminal / code surface (§13). */
   code,
   pre,
   kbd,
   samp {
     font-family: var(--f-mono);
-    font-size: var(--fs-mono);
-    line-height: var(--leading-small);
   }
 }
 
@@ -465,38 +393,33 @@ html.light,
     padding-block: var(--section-y);
   }
 
-  /* Uppercase micro-label — §10.
-     Monospace, 12px, weight 500, +0.14em, muted grey, wrapped in brackets.
-     The brackets are delivered by CSS so no product copy changes. */
+  /* Bracketed mono micro-label */
   .eyebrow {
     font-family: var(--f-mono);
     font-size: var(--fs-label);
     line-height: var(--leading-caption);
-    letter-spacing: var(--tracking-normal);
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    font-weight: var(--weight-medium);
-    /* Measured: every bracketed eyebrow on the live site is #00FF88, not a
-       muted grey. This is the accent's single most frequent appearance. */
-    color: var(--ds-accent);
-    /* `inline`, not `inline-flex`: the brackets are inline text so they flow
-       with the label and stay attached when it wraps onto a second line.
-       Eyebrows that carry their own `flex` classes still lay out as flex, and
-       their gap spaces the bracket items. */
+    font-weight: var(--weight-semibold);
+    color: var(--ds-text-muted);
     display: inline;
   }
   .eyebrow::before {
     content: "[ ";
+    color: var(--ds-text-faint);
+    font-weight: var(--weight-regular);
   }
   .eyebrow::after {
     content: " ]";
+    color: var(--ds-text-faint);
+    font-weight: var(--weight-regular);
   }
 
-  /* Surfaces separate with a hairline border and a small luminance step —
-     never a shadow (§12). */
   .card-surface {
     background: var(--ds-surface);
     border: 1px solid var(--ds-border);
-    border-radius: var(--radius-artifact-md);
+    border-radius: var(--radius-ds-xl);
+    box-shadow: var(--shadow-xs);
   }
 
   .tinted {
@@ -508,66 +431,90 @@ html.light,
     cursor: none !important;
   }
 
-  /* Numerals read as measured (§5: monospace, tabular figures). */
-  /* Display-scale compositional type (hero ticker, section numeral, footer
-     wordmark) is set in the display face, like the live site's headings. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Display-scale compositional type uses the display face */
   .text-display,
   .text-numeral,
-  .text-wordmark,
-  .text-h1,
-  .text-h2 {
+  .text-wordmark {
     font-family: var(--f-display);
-  }
-  /* Display-scale numerals stay in the display face and only borrow tabular
-     figures — `.tabular` must not pull them back to the label face. */
-  .text-numeral.tabular,
-  .text-display.tabular,
-  .text-wordmark.tabular {
-    font-family: var(--f-display);
-  }
-  .text-numeral {
-    font-variant-numeric: tabular-nums;
   }
 
-  .tabular {
-    font-family: var(--f-mono);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: var(--tracking-normal);
+  /* Electric CTA halo */
+  .btn-electric {
+    background: var(--ds-accent);
+    color: #ffffff;
+    box-shadow: var(--shadow-electric);
+    transition:
+      background-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+  .btn-electric:hover {
+    background: var(--ds-accent-hover);
+    box-shadow: var(--shadow-electric-hover);
+  }
+
+  /* Dot-mesh field */
+  .bg-mesh {
+    background-image: radial-gradient(
+      rgba(15, 23, 42, 0.04) 1px,
+      transparent 1px
+    );
+    background-size: 24px 24px;
+  }
+
+  /* Animated gradient border for the signature card */
+  .framer-card-wrapper {
+    position: relative;
+    background: linear-gradient(
+      135deg,
+      rgba(37, 99, 235, 0.22),
+      rgba(255, 255, 255, 0.7),
+      rgba(99, 102, 241, 0.25),
+      rgba(16, 185, 129, 0.15)
+    );
+    background-size: 300% 300%;
+    animation: borderSpin 8s ease infinite;
+    padding: 1px;
+    border-radius: var(--radius-ds-card);
+  }
+  .framer-card-inner {
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    box-shadow: var(--shadow-card);
+    border-radius: calc(var(--radius-ds-card) - 1px);
   }
 }
+
+@keyframes borderSpin {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.08); }
+}
+.animate-pulse-glow { animation: pulseGlow 4s ease-in-out infinite; }
 
 .edge-fade-x {
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 4%,
-    black 96%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 4%,
-    black 96%,
-    transparent
-  );
+  -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
 }
 
-.flip-scene {
-  perspective: 1600px;
-}
+.flip-scene { perspective: 1600px; }
 .flip-face {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

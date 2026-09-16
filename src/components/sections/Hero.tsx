@@ -1,170 +1,293 @@
-import { motion, useReducedMotion, useTransform, type MotionValue } from "motion/react"
+import type { ReactNode } from "react"
+import { motion, useReducedMotion } from "motion/react"
 import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react"
-import { contact, identity } from "@/content"
-import { FloatingShapes, type FloatingShape } from "@/components/decor/FloatingShapes"
-import { MagneticButton } from "@/components/primitives/MagneticButton"
-import { Marquee } from "@/components/primitives/Marquee"
-import { MaskedText } from "@/components/primitives/MaskedText"
-import { StickyScene } from "@/components/primitives/StickyScene"
+import { contact, heroFooter, heroMetrics, identity } from "@/content"
+import { Shape3D } from "@/components/decor/Shape3D"
 import { ease } from "@/lib/motion"
+import { cn } from "@/lib/utils"
 
 /**
- * Six solids in a 1100×700 frame, absolutely placed around the centred card —
- * spec §2, "decoration that obeys the content": they occupy the perimeter of a
- * very open composition so the emptiness reads as authored rather than
- * unfinished. None is interactive; removing them leaves the layout correct.
+ * Hero.
  *
- * Colour arrives on the page almost entirely through these (spec §13).
+ * Layout and composition follow the supplied design: a full-viewport,
+ * centre-stacked editorial hero over an ambient light field, with colourful
+ * 3D solids at the perimeter, a giant typographic watermark behind, and a
+ * glass signature card at the optical centre.
+ *
+ * All copy is read from `content/` — nothing is written into this file.
  */
-const shapes: FloatingShape[] = [
-  { kind: "cone", color: "#3157FF", size: 160, top: "8%", left: "4%", depth: 0.8, rotate: 14, desktopOnly: true },
-  { kind: "sphere", color: "#FF5A5F", size: 140, top: "12%", left: "82%", depth: 1, desktopOnly: true },
-  { kind: "cylinder", color: "#06B6D4", size: 150, top: "62%", left: "88%", depth: 0.65, rotate: -12, desktopOnly: true },
-  { kind: "star", color: "#F97316", size: 110, top: "70%", left: "8%", depth: 0.9, desktopOnly: true },
-  { kind: "cube", color: "#7C3AED", size: 96, top: "70%", left: "26%", depth: 0.45, rotate: -8, desktopOnly: true },
-  { kind: "torus", color: "#84CC16", size: 104, top: "6%", left: "58%", depth: 0.55, rotate: 20, desktopOnly: true },
-  /* Phone keeps two, in gutters the text never occupies. */
-  { kind: "sphere", color: "#007AFF", size: 72, top: "6%", left: "72%", depth: 0.8, mobileOnly: true },
-  { kind: "cone", color: "#D946EF", size: 56, top: "78%", left: "78%", depth: 0.6, rotate: 12, mobileOnly: true },
-]
-
 export function Hero() {
+  const reduced = useReducedMotion()
+
+  /* The headline's final word carries the gradient. Derived rather than
+     hard-coded so editing `identity.headline` keeps working. */
+  const words = identity.headline.trim().split(" ")
+  const lead = words.slice(0, -1).join(" ")
+  const accentWord = words[words.length - 1]
+
+  const rise = (delay: number) => ({
+    initial: { opacity: 0, y: reduced ? 0 : 16 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6, ease: ease.out, delay: reduced ? 0 : delay },
+  })
+
   return (
-    <StickyScene id="home" vh={2} label="Introduction">
-      {(progress) => <HeroScene progress={progress} />}
-    </StickyScene>
+    <section
+      id="home"
+      className="relative flex min-h-[100svh] w-full flex-col justify-between overflow-hidden pt-[88px]"
+    >
+      {/* ---- Ambient field: light orbs + dot mesh ---- */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="animate-pulse-glow absolute top-12 left-1/4 size-[500px] rounded-full bg-blue-100/50 blur-[120px]" />
+        <div
+          className="animate-pulse-glow absolute top-1/3 right-1/4 size-[450px] rounded-full bg-emerald-100/40 blur-[100px]"
+          style={{ animationDelay: "2s" }}
+        />
+        <div className="bg-mesh absolute inset-0" />
+      </div>
+
+      {/* ---- Giant typographic watermark ---- */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center overflow-hidden select-none"
+      >
+        <span className="text-display font-display font-extrabold whitespace-nowrap text-[rgba(15,23,42,0.032)] uppercase">
+          {identity.fullName}
+        </span>
+      </div>
+
+      {/* ---- Floating 3D accents ---- */}
+      <Float className="top-[92px] left-6 md:left-14 lg:left-24" dur={7}>
+        <Shape3D kind="cone" hue="blue" size={96} className="md:hidden" />
+        <Shape3D kind="cone" hue="blue" size={144} className="hidden md:block" />
+      </Float>
+
+      <Float className="top-[54px] right-[24%] hidden sm:block md:right-[30%] lg:right-[34%]" dur={8.5} delay={0.8} reverse>
+        <Shape3D kind="torus" hue="green" size={80} className="md:hidden" />
+        <Shape3D kind="torus" hue="green" size={112} className="hidden md:block" />
+      </Float>
+
+      <Float className="top-[96px] right-6 md:right-16 lg:right-24" dur={9} delay={1.5}>
+        <Shape3D kind="sphere" hue="red" size={96} className="md:hidden" />
+        <Shape3D kind="sphere" hue="red" size={144} className="hidden md:block" />
+      </Float>
+
+      <Float className="bottom-28 left-6 md:left-20 lg:left-36" dur={7.5} delay={2} reverse>
+        <Shape3D kind="star" hue="orange" size={64} className="md:hidden" />
+        <Shape3D kind="star" hue="orange" size={96} className="hidden md:block" />
+      </Float>
+
+      <Float className="bottom-32 left-[28%] hidden sm:block md:left-[26%]" dur={6.5} delay={0.5}>
+        <Shape3D kind="cube" hue="violet" size={64} className="md:hidden" />
+        <Shape3D kind="cube" hue="violet" size={96} className="hidden md:block" />
+      </Float>
+
+      <Float className="right-6 bottom-20 md:right-16 lg:right-28" dur={7}>
+        <Shape3D kind="cylinder" hue="cyan" size={92} className="md:hidden" />
+        <Shape3D kind="cylinder" hue="cyan" size={124} className="hidden md:block" />
+      </Float>
+
+      <Float className="top-[48%] right-[18%] hidden lg:block md:right-[22%]" dur={9} delay={1.5}>
+        <span className="block size-4 rounded-full bg-slate-800/80 shadow-md" />
+      </Float>
+
+      {/* ---- Centre stack ---- */}
+      <main className="relative z-20 mx-auto flex w-full max-w-[1120px] flex-grow flex-col items-center justify-center gutter text-center">
+        {/* Availability badge */}
+        <motion.div
+          {...rise(0.05)}
+          className="border-hairline mb-6 inline-flex items-center gap-2.5 rounded-pill border bg-white/90 px-4 py-1.5 shadow-[var(--shadow-xs)] backdrop-blur-md transition-colors hover:border-emerald-300"
+        >
+          <span className="relative flex size-2">
+            {!reduced && (
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-[var(--ds-success-light)] opacity-75" />
+            )}
+            <span className="relative inline-flex size-2 rounded-full bg-[var(--ds-success)]" />
+          </span>
+          <span className="eyebrow text-[11px] tracking-wider text-[var(--ds-text-primary)]">
+            {identity.availabilityShort}
+          </span>
+        </motion.div>
+
+        {/* Headline */}
+        <motion.h1
+          {...rise(0.12)}
+          className="text-h1 mb-6 max-w-[900px] text-[var(--ds-text-primary)]"
+        >
+          {lead}{" "}
+          <span className="bg-gradient-to-r from-[var(--ds-accent)] via-[var(--ds-indigo)] to-[var(--ds-accent-light)] bg-clip-text text-transparent">
+            {accentWord}
+          </span>
+        </motion.h1>
+
+        {/* Signature card */}
+        <motion.section
+          {...rise(0.2)}
+          className="group mx-auto mb-7 w-full max-w-[460px] transition-transform duration-300 hover:-translate-y-1"
+        >
+          <div className="framer-card-wrapper">
+            <div className="framer-card-inner relative overflow-hidden p-6 text-left">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -top-16 -right-16 size-36 rounded-full bg-blue-400/15 blur-2xl"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -bottom-16 -left-16 size-36 rounded-full bg-emerald-400/15 blur-2xl"
+              />
+
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <span className="font-mono rounded-md border border-[var(--ds-accent-border)] bg-[var(--ds-accent-subtle)] px-2.5 py-1 text-[11px] font-semibold tracking-wider text-[var(--ds-accent)] uppercase">
+                  [ {identity.role} ]
+                </span>
+                <span
+                  className="font-mono flex shrink-0 items-center gap-1.5 text-[11px] text-[var(--ds-text-muted)]"
+                  title="Active timezone"
+                >
+                  <span className="size-1.5 rounded-full bg-[var(--ds-success)]" />
+                  {identity.timezone}
+                </span>
+              </div>
+
+              <div className="mb-4">
+                <h2 className="text-h3 leading-snug text-[var(--ds-text-primary)]">
+                  {identity.fullName}
+                </h2>
+                <div className="text-body-s mt-1 flex flex-wrap items-center gap-2 font-medium text-[var(--ds-text-muted)]">
+                  <span>
+                    {identity.location} {identity.locationFlag}
+                  </span>
+                  <span className="text-[var(--ds-text-disabled)]">•</span>
+                  <span>{identity.remoteAvailability}</span>
+                </div>
+              </div>
+
+              <dl className="border-hairline grid grid-cols-3 gap-2 border-t pt-3.5 text-center">
+                {heroMetrics.map((m) => (
+                  <div
+                    key={m.label}
+                    className="rounded-lg border border-[var(--ds-border-subtle)] bg-[var(--ds-surface-2)]/70 p-2"
+                  >
+                    <dt
+                      className={cn(
+                        "text-body-s block font-bold",
+                        m.tone === "accent" && "text-[var(--ds-accent)]",
+                        m.tone === "success" && "text-[var(--ds-success-deep)]",
+                        m.tone === "ink" && "text-[var(--ds-text-primary)]"
+                      )}
+                    >
+                      {m.value}
+                    </dt>
+                    <dd className="font-mono mt-0.5 block text-[10px] tracking-tight text-[var(--ds-text-muted)] uppercase">
+                      {m.label}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Bio */}
+        <motion.p
+          {...rise(0.28)}
+          className="text-lead mb-6 max-w-[680px] text-[var(--ds-text-secondary)]"
+        >
+          {identity.summary}
+        </motion.p>
+
+        {/* Discipline pills */}
+        <motion.ul
+          {...rise(0.34)}
+          className="mb-7 flex max-w-[860px] flex-wrap items-center justify-center gap-2 sm:gap-2.5"
+        >
+          {identity.disciplines.map((d) => (
+            <li
+              key={d}
+              className="border-hairline text-body-s cursor-default rounded-pill border bg-white/95 px-3.5 py-1.5 font-medium text-[var(--ds-text-secondary)] shadow-[var(--shadow-xs)] transition-all hover:scale-105 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)]"
+            >
+              {d}
+            </li>
+          ))}
+        </motion.ul>
+
+        {/* CTAs */}
+        <motion.div
+          {...rise(0.4)}
+          className="flex w-full flex-col items-center gap-3 pb-4 sm:w-auto sm:flex-row"
+        >
+          <a
+            href="#work"
+            data-cursor="link"
+            className="btn-electric text-btn group flex w-full items-center justify-center gap-2 rounded-lg px-7 py-3 active:scale-95 sm:w-auto"
+          >
+            See the work
+            <ArrowUpRight
+              size={16}
+              weight="bold"
+              className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            />
+          </a>
+          <a
+            href={contact.email ? `mailto:${contact.email}` : "#contact"}
+            data-cursor="link"
+            className="text-btn border-[var(--ds-border-strong)] flex w-full items-center justify-center rounded-lg border bg-white/80 px-7 py-3 text-[var(--ds-text-body)] shadow-[var(--shadow-xs)] transition-all hover:border-[var(--ds-border-hover)] hover:bg-white active:scale-95 sm:w-auto"
+          >
+            Get in touch
+          </a>
+        </motion.div>
+      </main>
+
+      {/* ---- Bottom indicator bar ---- */}
+      <div className="font-mono relative z-20 mx-auto flex w-full max-w-[1400px] items-center justify-between gutter py-6 text-[var(--ds-text-faint)]">
+        <span className="flex items-center gap-2 tracking-wider select-none">
+          <motion.span
+            animate={reduced ? undefined : { y: [0, 5, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            className="text-[var(--ds-text-secondary)]"
+          >
+            <ArrowDown size={14} weight="bold" />
+          </motion.span>
+          <span className="text-mono">[ {heroFooter.scrollLabel} ]</span>
+        </span>
+        <span className="hidden text-[11px] sm:block">
+          {heroFooter.credit} © {new Date().getFullYear()}
+        </span>
+      </div>
+    </section>
   )
 }
 
-function HeroScene({ progress }: { progress: MotionValue<number> }) {
+/** Absolutely-placed decorative solid with a slow idle float. */
+function Float({
+  children,
+  className,
+  dur,
+  delay = 0,
+  reverse = false,
+}: {
+  children: ReactNode
+  className?: string
+  dur: number
+  delay?: number
+  reverse?: boolean
+}) {
   const reduced = useReducedMotion()
-
-  /* Scroll-bound, progress-linear, no easing — the scroll is the curve
-     (spec §9, narrative tier). */
-  const lift = useTransform(progress, [0, 1], ["0%", reduced ? "0%" : "-14%"])
-  const fade = useTransform(progress, [0, 0.85], [1, reduced ? 1 : 0])
-  const tickerShift = useTransform(progress, [0, 1], ["0%", reduced ? "0%" : "-8%"])
-
   return (
-    <div className="relative flex h-full w-full flex-col justify-between overflow-hidden pt-20 sm:pt-[96px] pb-4 sm:pb-md">
-      <FloatingShapes shapes={shapes} />
-
-      {/* The name ticker runs edge to edge BEHIND the composition. Spec §5:
-          tickers are the single full-bleed exception, used only for motion,
-          and crossing an otherwise inset page is what makes the hero feel
-          wider than it is. */}
-      <motion.div
-        style={{ x: tickerShift }}
-        className="pointer-events-none absolute inset-x-0 top-1/2 -z-10 -translate-y-1/2"
-        aria-hidden
-      >
-        <Marquee speed={60} trackClassName="items-center">
-          <span className="text-display text-black pr-[0.12em] font-medium whitespace-nowrap opacity-[0.06]">
-            {identity.fullName.toUpperCase()}
-          </span>
-          <span className="text-display pr-[0.12em] font-medium whitespace-nowrap text-[var(--ds-text-disabled)] opacity-70">
-            ·
-          </span>
-        </Marquee>
-      </motion.div>
-
-      <motion.div
-        style={{ y: lift, opacity: fade }}
-        className="relative flex flex-1 flex-col justify-center gutter py-2 sm:py-0"
-      >
-        <div className="mx-auto flex w-full max-w-[1100px] flex-col items-center gap-3 sm:gap-4 md:gap-5 text-center">
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: ease.out, delay: 0.15 }}
-            className="border-hairline bg-surface flex items-center gap-sm rounded-pill border py-xs pr-md pl-sm"
-          >
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-[var(--ds-success)] opacity-70" />
-              <span className="relative inline-flex size-2 rounded-full bg-[var(--ds-success)]" />
-            </span>
-            <span className="eyebrow">{identity.availabilityShort}</span>
-          </motion.span>
-
-          {/* 48px greeting line — spec §4's local display step. */}
-          <h1 className="sr-only">
-            {identity.fullName} — {identity.role}
-          </h1>
-          <MaskedText
-            as="div"
-            trigger="mount"
-            delay={0.25}
-            text={identity.headline}
-            className="text-h1 text-black max-w-[16ch]"
-          />
-
-          {/* Centre-anchored card, at the composition's optical centre.
-              No photograph exists in this project, so the card carries the
-              identity typographically rather than holding a placeholder. */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: ease.out, delay: 0.35 }}
-            className="card-surface tinted flex size-[200px] sm:size-[220px] md:size-[240px] shrink-0 flex-col justify-between p-4 sm:p-md text-left shadow-[var(--shadow-soft)]"
-          >
-            <span className="eyebrow">{identity.role}</span>
-            <div className="flex flex-col gap-xs">
-              <span className="text-h3 text-black leading-none font-semibold">
-                {identity.firstName}
-              </span>
-              <span className="text-h3 text-ink-3 leading-none font-semibold">
-                {identity.lastName}
-              </span>
-            </div>
-            <span className="text-label text-ink-2 normal-case tracking-normal">
-              {contact.location}
-            </span>
-          </motion.div>
-
-          <p className="text-body text-ink-2 max-w-[52ch]">{identity.summary}</p>
-
-          {/* Discipline badges — the equivalent of the source's expertise row,
-              populated from real content. */}
-          <ul className="flex flex-wrap items-center justify-center gap-xs sm:gap-sm">
-            {identity.disciplines.map((d) => (
-              <li
-                key={d}
-                className="text-label border-hairline bg-surface text-ink-2 rounded-pill border px-3 sm:px-md py-1 sm:py-sm normal-case tracking-normal"
-              >
-                {d}
-              </li>
-            ))}
-          </ul>
-
-          <div className="flex flex-wrap items-center justify-center gap-sm pt-1">
-            <MagneticButton href="#work">
-              See the work
-              <ArrowUpRight size={16} weight="bold" />
-            </MagneticButton>
-            <MagneticButton
-              href={contact.email ? `mailto:${contact.email}` : "#contact"}
-              variant="outline"
-            >
-              Get in touch
-            </MagneticButton>
-            {contact.resumeUrl && (
-              <MagneticButton href={contact.resumeUrl} variant="ghost" external>
-                Read my CV
-              </MagneticButton>
-            )}
-          </div>
-        </div>
-      </motion.div>
-
-      <div className="text-ink-3 relative flex items-center gap-sm gutter">
-        <motion.span
-          animate={reduced ? undefined : { y: [0, 5, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <ArrowDown size={14} weight="bold" />
-        </motion.span>
-        <span className="eyebrow">Scroll</span>
-      </div>
-    </div>
+    <motion.div
+      aria-hidden
+      className={cn("pointer-events-none absolute z-10 select-none", className)}
+      animate={
+        reduced
+          ? undefined
+          : {
+              y: reverse ? [0, 14, 0] : [0, -16, 0],
+              rotate: reverse ? [0, -3, 0] : [0, 2, 0],
+            }
+      }
+      transition={{ duration: dur, delay, repeat: Infinity, ease: "easeInOut" }}
+    >
+      {children}
+    </motion.div>
   )
 }

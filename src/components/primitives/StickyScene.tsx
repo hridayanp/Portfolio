@@ -129,6 +129,7 @@ export function StackScene({
 function StackCardItem({
   children,
   index,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   total: _total,
   tilt = true,
 }: {

@@ -39,8 +39,10 @@ export function NavLink({
       whileHover="hover"
       whileFocus="hover"
       className={cn(
-        "text-label relative inline-flex items-center rounded-pill px-md py-sm align-bottom normal-case tracking-normal transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-a1 focus-visible:outline-none",
-        isActive ? "text-black font-medium" : "text-ink-2 hover:text-black",
+        "text-label relative inline-flex items-center rounded-pill px-md py-sm align-bottom normal-case tracking-normal transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none",
+        isActive
+          ? "font-semibold text-[var(--ds-accent)]"
+          : "text-[var(--ds-text-secondary)] hover:text-[var(--ds-accent)]",
         className
       )}
     >

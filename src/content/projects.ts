@@ -1,4 +1,4 @@
-import type { ShapeKind } from "@/components/decor/Shape3D"
+import type { ShapeHue, ShapeKind } from "@/components/decor/Shape3D"
 
 export type Project = {
   id: string
@@ -19,8 +19,10 @@ export type Project = {
   fill: string
   /** Decorative solid that sits in the field — one per project, stable. */
   shape: ShapeKind
-  /** Distinct palette accent color for the 3D shape and badge */
+  /** Distinct palette accent color for the badge / label. */
   color: string
+  /** Gradient ramp used by the decorative solid. */
+  hue: ShapeHue
   liveUrl?: string
   githubUrl?: string
   featured?: boolean
@@ -49,8 +51,9 @@ export const projects: Project[] = [
       "TypeScript",
       "Tailwind CSS",
     ],
-    fill: "#1a1d28",
-    color: "#3157FF",
+    fill: "#eff6ff",
+    color: "#2563eb",
+    hue: "blue",
     shape: "sphere",
     featured: true,
   },
@@ -71,8 +74,9 @@ export const projects: Project[] = [
       "Data Pipelines",
       "REST APIs",
     ],
-    fill: "#142228",
-    color: "#06B6D4",
+    fill: "#ecfeff",
+    color: "#0891b2",
+    hue: "cyan",
     shape: "torus",
     featured: true,
   },
@@ -87,8 +91,9 @@ export const projects: Project[] = [
     detail:
       "An enterprise connected-car dashboard combining real-time geospatial monitoring with weather early-warning alerts. I worked on the data pipeline and API layer so alerts arrived with minimal latency, alongside the visualisation itself.",
     technologies: ["ReactJS", "Geospatial APIs", "Node.js", "REST APIs"],
-    fill: "#261d18",
-    color: "#F97316",
+    fill: "#fff7ed",
+    color: "#ea580c",
+    hue: "orange",
     shape: "cone",
     featured: true,
   },
@@ -103,8 +108,9 @@ export const projects: Project[] = [
     detail:
       "Developers needed a way to schedule, run and track Python scripts across environments without doing it by hand. I built the frontend in React with React Flow for visual workflow chaining, plus real-time logging so execution status was visible live instead of after the fact.",
     technologies: ["ReactJS", "React Flow", "TypeScript", "WebSockets"],
-    fill: "#16251e",
-    color: "#10B981",
+    fill: "#ecfdf5",
+    color: "#059669",
+    hue: "green",
     shape: "cube",
   },
   {
@@ -118,8 +124,9 @@ export const projects: Project[] = [
     detail:
       "Built for Australian agricultural users making feedlot decisions — interactive charts and real-time parameter tracking with ChartJS and React-Table. I revamped the API integrations, cutting downtime and analysis time, and the product carried a Stripe-integrated commercial layer.",
     technologies: ["ReactJS", "ChartJS", "React-Table", "Stripe", "REST APIs"],
-    fill: "#261726",
-    color: "#D946EF",
+    fill: "#f5f3ff",
+    color: "#7c3aed",
+    hue: "violet",
     shape: "cylinder",
   },
   {
@@ -133,8 +140,9 @@ export const projects: Project[] = [
     detail:
       "The goal was making climate resilience datasets accessible to non-specialists. I built the geospatial portal with Leaflet and Georaster, focusing on UI components intuitive enough that the complexity of the underlying raster data stayed invisible to the end user.",
     technologies: ["ReactJS", "Leaflet", "Georaster", "Web GIS"],
-    fill: "#1f2516",
-    color: "#84CC16",
+    fill: "#fef2f2",
+    color: "#dc2626",
+    hue: "red",
     shape: "star",
   },
 ]

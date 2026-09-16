@@ -7,13 +7,15 @@ import {
   useSpring,
   useTransform,
 } from "motion/react"
-import { Shape3D, type ShapeKind } from "./Shape3D"
+import { Shape3D, type ShapeHue, type ShapeKind } from "./Shape3D"
 import { usePointerFine } from "@/hooks/usePointerFine"
 import { cn } from "@/lib/utils"
 
 export type FloatingShape = {
   kind: ShapeKind
-  color: string
+  /** Named hue ramp (preferred). */
+  hue?: ShapeHue
+  color?: string
   size: number
   /** Percentage position within the container. */
   top: string
@@ -150,7 +152,7 @@ function ShapeLayer({
         delay: index * 0.4,
       }}
     >
-      <Shape3D kind={shape.kind} color={shape.color} size={shape.size} />
+      <Shape3D kind={shape.kind} hue={shape.hue} color={shape.color} size={shape.size} />
     </motion.div>
   )
 }

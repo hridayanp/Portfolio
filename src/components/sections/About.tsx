@@ -26,7 +26,7 @@ export function About() {
           index="01"
           eyebrow="About"
           title="Taking messy data and making it something someone can decide from."
-          shape={<Shape3D kind="cube" color="#3157FF" size={220} />}
+          shape={<Shape3D kind="cube" hue="blue" size={220} />}
         >
           <p className="text-lead text-ink max-w-[44ch]">
             That's the thread running through every platform I've worked on — satellite imagery,
@@ -45,7 +45,7 @@ export function About() {
           index="02"
           eyebrow="Experience"
           title="Owning frontend delivery end to end."
-          shape={<Shape3D kind="cylinder" color="#F97316" size={220} />}
+          shape={<Shape3D kind="cylinder" hue="orange" size={220} />}
         >
           <ul className="flex flex-col gap-md">
             {roles.map((role) => (
@@ -69,7 +69,7 @@ export function About() {
           index="03"
           eyebrow="Education"
           title="Formal grounding in the infrastructure side, not just the UI layer."
-          shape={<Shape3D kind="torus" color="#10B981" size={220} />}
+          shape={<Shape3D kind="torus" hue="green" size={220} />}
         >
           <ul className="flex flex-col gap-md">
             {education.map((e) => (
