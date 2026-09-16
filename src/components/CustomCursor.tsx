@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from "motion/react"
 import { usePointerFine } from "@/hooks/usePointerFine"
 import { ease, spring } from "@/lib/motion"
+import { cn } from "@/lib/utils"
 
 type CursorMode = "default" | "link" | "view" | "flip" | "drag"
 
@@ -38,9 +39,11 @@ export function CustomCursor() {
   const x = useMotionValue(-200)
   const y = useMotionValue(-200)
 
-  const labelled = mode === "view" || mode === "flip" || mode === "drag"
-  const sx = useSpring(x, labelled ? spring.cursorLarge : spring.cursor)
-  const sy = useSpring(y, labelled ? spring.cursorLarge : spring.cursor)
+  const isFlip = mode === "flip"
+  const isLargeLabel = mode === "view" || mode === "drag"
+  const hasLabel = isLargeLabel || isFlip
+  const sx = useSpring(x, isLargeLabel ? spring.cursorLarge : spring.cursor)
+  const sy = useSpring(y, isLargeLabel ? spring.cursorLarge : spring.cursor)
 
   useEffect(() => {
     if (!enabled) return
@@ -87,7 +90,7 @@ export function CustomCursor() {
     flip: "Flip",
     drag: "Drag",
   }
-  const size = labelled ? 84 : mode === "link" ? 44 : 12
+  const size = isFlip ? 34 : isLargeLabel ? 80 : mode === "link" ? 40 : 12
 
   return (
     <motion.div
@@ -103,22 +106,25 @@ export function CustomCursor() {
           height: size,
           opacity: visible ? 1 : 0,
           scale: pressed ? 0.86 : 1,
-          backgroundColor: labelled ? "var(--c-black)" : "rgba(0,0,0,0)",
+          backgroundColor: hasLabel ? "var(--c-black)" : "rgba(0,0,0,0)",
           // A thick border on a tiny circle reads as a filled dot, so one
           // element grows from dot to outlined ring without swapping nodes.
-          borderWidth: labelled ? 0 : mode === "link" ? 1.5 : 6,
+          borderWidth: hasLabel ? 0 : mode === "link" ? 1.5 : 6,
         }}
         transition={{ duration: 0.3, ease: ease.out }}
       >
         <AnimatePresence mode="wait">
-          {labelled && (
+          {hasLabel && (
             <motion.span
               key={mode}
               initial={{ opacity: 0, scale: 0.7 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.7 }}
               transition={{ duration: 0.18 }}
-              className="text-label text-ground uppercase"
+              className={cn(
+                "text-ground uppercase select-none",
+                isFlip ? "text-[8px] font-bold tracking-tight font-mono" : "text-label"
+              )}
             >
               {labels[mode]}
             </motion.span>

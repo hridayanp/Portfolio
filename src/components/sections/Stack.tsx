@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { AnimatePresence, motion, useReducedMotion } from "motion/react"
+import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react"
 import { ArrowDown } from "@phosphor-icons/react"
 import {
   heroFooter,
@@ -47,6 +47,53 @@ const PIPS = [
   "#06b6d4",
 ] as const
 
+const containerVariants: Variants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.035,
+      delayChildren: 0.02,
+    },
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      staggerChildren: 0.02,
+      staggerDirection: -1,
+      duration: 0.18,
+    },
+  },
+}
+
+const cardVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    x: 24,
+    scale: 0.98,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: {
+      duration: 0.32,
+      ease: ease.out,
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: -24,
+    scale: 0.98,
+    transition: {
+      duration: 0.2,
+      ease: ease.out,
+    },
+  },
+}
+
 type Card = {
   name: string
   note: string
@@ -56,6 +103,7 @@ type Card = {
 
 export function Stack() {
   const [active, setActive] = useState<StackFilterId>("all")
+  const reduced = useReducedMotion()
 
   const cards = useMemo<Card[]>(
     () =>
@@ -148,32 +196,45 @@ export function Stack() {
                 onClick={() => setActive(f.id)}
                 data-cursor="link"
                 className={cn(
-                  "text-label inline-flex items-center gap-1.5 rounded-pill px-4 py-1.5 tracking-normal normal-case transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none",
+                  "text-label relative inline-flex items-center gap-1.5 rounded-pill px-4 py-1.5 tracking-normal normal-case transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none select-none",
                   on
-                    ? "bg-[var(--ds-text-primary)] font-semibold text-[var(--ds-bg)] shadow-[var(--shadow-md)]"
+                    ? "font-semibold text-[var(--ds-accent)] shadow-[var(--shadow-xs)]"
                     : "border border-[var(--ds-border)] bg-[var(--ds-surface)]/90 text-[var(--ds-text-secondary)] hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)]"
                 )}
               >
                 {on && (
-                  <span aria-hidden className="size-1.5 rounded-full bg-[var(--ds-success-light)]" />
+                  <motion.div
+                    layoutId="activeStackFilter"
+                    className="absolute inset-0 rounded-pill border border-[var(--ds-accent-border)] bg-[var(--ds-accent-subtle)] -z-10"
+                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                  />
                 )}
-                {f.label} [{n}]
+                {on && (
+                  <span aria-hidden className="relative z-10 size-1.5 rounded-full bg-[var(--ds-accent)]" />
+                )}
+                <span className="relative z-10">{f.label} [{n}]</span>
               </button>
             )
           })}
         </div>
 
         {/* ---- Card grid ---- */}
-        <motion.ul
-          layout
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
-        >
-          <AnimatePresence mode="popLayout" initial={false}>
-            {visible.map((tech) => (
-              <StackCard key={tech.name} card={tech} pip={pipFor(tech.name, cards)} />
-            ))}
+        <div className="min-h-[220px]">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.ul
+              key={active}
+              variants={reduced ? undefined : containerVariants}
+              initial={reduced ? undefined : "hidden"}
+              animate={reduced ? undefined : "visible"}
+              exit={reduced ? undefined : "exit"}
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
+            >
+              {visible.map((tech) => (
+                <StackCard key={tech.name} card={tech} pip={pipFor(tech.name, cards)} />
+              ))}
+            </motion.ul>
           </AnimatePresence>
-        </motion.ul>
+        </div>
 
         {/* ---- Philosophy callout + transition to the next chapter ---- */}
         <div className="mx-auto mt-lg w-full max-w-[760px] border-t border-[var(--ds-border)] pt-lg text-center">
@@ -217,18 +278,16 @@ function StackCard({
 
   return (
     <motion.li
-      layout
-      initial={{ opacity: 0, scale: 0.96 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.25, ease: ease.out }}
+      variants={reduced ? undefined : cardVariants}
       className="h-[210px] [perspective:1000px]"
     >
       <button
         type="button"
-        onClick={() => setFlipped((f) => !f)}
+        onPointerEnter={() => setFlipped(true)}
+        onPointerLeave={() => setFlipped(false)}
         onFocus={() => setFlipped(true)}
         onBlur={() => setFlipped(false)}
+        onClick={() => setFlipped((f) => !f)}
         aria-label={`${card.name} — ${card.note}`}
         aria-pressed={flipped}
         data-cursor="flip"
@@ -255,9 +314,6 @@ function StackCard({
                 className="size-2.5 rounded-full"
                 style={{ backgroundColor: pip }}
               />
-              <span className="font-mono text-[10px] tracking-widest text-[var(--ds-text-faint)] uppercase opacity-0 transition-opacity group-hover:opacity-100">
-                {stackSection.flipHint}
-              </span>
             </div>
 
             <div className="relative z-10">
@@ -283,13 +339,7 @@ function StackCard({
             className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-2xl bg-[#00A3C4] p-5 text-white shadow-[var(--shadow-lift)] [backface-visibility:hidden]"
             style={{ transform: "rotateY(180deg)" }}
           >
-            <span
-              aria-hidden
-              className="font-mono mx-auto grid size-12 shrink-0 place-items-center rounded-full bg-[#062438] text-[10px] font-bold tracking-wider uppercase shadow-inner"
-            >
-              {stackSection.flipLabel}
-            </span>
-            <p className="text-label leading-relaxed tracking-normal normal-case text-white/95">
+            <p className="text-label my-auto leading-relaxed tracking-normal normal-case text-white/95">
               {card.note}
             </p>
             <p className="font-mono text-[11px] text-white/80">[ {card.tag} ]</p>
