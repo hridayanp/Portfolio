@@ -288,7 +288,7 @@ function StackCard({
         onFocus={() => setFlipped(true)}
         onBlur={() => setFlipped(false)}
         onClick={() => setFlipped((f) => !f)}
-        aria-label={`${card.name} — ${card.note}`}
+        aria-label={`${card.name}: ${card.note}`}
         aria-pressed={flipped}
         data-cursor="flip"
         className="group relative block size-full rounded-2xl text-left focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"

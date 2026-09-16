@@ -13,25 +13,25 @@ export const principles: Principle[] = [
   {
     id: "state",
     quote:
-      "Keep state as local as possible and lift it only when you have to. On geospatial dashboards, unnecessary re-renders over large datasets get expensive fast.",
-    context: "On React & state management",
+      "Keep state as local as possible and lift it only when necessary. On geospatial dashboards, unnecessary re-renders over large datasets get expensive fast.",
+    context: "On React and state management",
   },
   {
     id: "tools",
     quote:
-      "Leaflet when the need is simpler layered maps; MapLibreGL when I need vector tiles and real performance at scale. The choice is the work, not the logo.",
+      "I use Leaflet for simple layered maps, and MapLibreGL when I need vector tiles and high performance at scale. Picking the right tool for the job matters more than brand names.",
     context: "On choosing mapping libraries",
   },
   {
     id: "honesty",
     quote:
-      "Being precise about where my depth ends lands better than overselling it. My production strength is React; the infrastructure side is real but coursework-deep.",
+      "Being clear about what I know and where my limits lie is always better than overpromising. My core day-to-day strength is React frontend engineering, supported by formal training in cloud infrastructure.",
     context: "On scope and self-assessment",
   },
   {
     id: "translation",
     quote:
-      "The common thread in everything I've built is taking messy data — satellite imagery, air quality readings, climate risk — and making it something someone can decide from.",
+      "The common thread in everything I've built is taking messy data like satellite imagery, air quality readings, and climate risk, and turning it into something people can easily act on.",
     context: "On the work itself",
   },
 ]

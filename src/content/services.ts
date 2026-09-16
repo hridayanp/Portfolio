@@ -17,9 +17,9 @@ export const services: Service[] = [
     index: "01",
     title: "Frontend Engineering",
     description:
-      "Production React applications built to survive their second year — component architecture, state boundaries and a codebase the next engineer can read.",
+      "Building maintainable React applications with clean component boundaries, clear state patterns, and code that is easy for the next engineer to understand.",
     detail:
-      "Focused on modular UI architectures, strict TypeScript typing, and scalable code conventions that prevent tech debt as projects grow.",
+      "Focused on modular UI architectures, strict TypeScript typing, and clean code conventions that prevent technical debt as applications scale.",
     tags: ["ReactJS", "TypeScript", "Tailwind CSS", "Next.js", "Redux Toolkit"],
   },
   {
@@ -27,9 +27,9 @@ export const services: Service[] = [
     index: "02",
     title: "Geospatial Web Applications",
     description:
-      "Map-centric interfaces over raster and vector data: layer toggling, spatial filtering and time-series drill-downs that stay responsive under large payloads.",
+      "Map-centric interfaces for raster and vector data, supporting layer toggles, spatial filters, and time-series drilldowns that stay fast under heavy loads.",
     detail:
-      "Built and shipped GIS portals for UNDP with raster analytics, geoJSON rendering, and interactive spatial queries.",
+      "Built and shipped web GIS platforms for UNDP, featuring raster analytics, GeoJSON rendering, and interactive spatial queries.",
     tags: ["Leaflet", "MapLibreGL", "Georaster", "Web GIS", "Spatial Filtering"],
   },
   {
@@ -37,9 +37,9 @@ export const services: Service[] = [
     index: "03",
     title: "Data Visualisation & Dashboards",
     description:
-      "Charts, tables and real-time parameter tracking designed so a non-technical stakeholder can look at the screen and make a decision from it.",
+      "Charts, tables, and live parameter tracking designed so non-technical stakeholders can easily review data and take informed action.",
     detail:
-      "Interactive time-series telemetry, climate risk metrics, and commercial dashboards with multi-parameter filtering and fast data rendering.",
+      "Interactive time-series telemetry, climate risk indicators, and operational dashboards with multi-parameter filtering and fast rendering.",
     tags: ["ChartJS", "React-Table", "React Flow", "Time-series", "Real-time Metrics"],
   },
   {
@@ -47,9 +47,9 @@ export const services: Service[] = [
     index: "04",
     title: "Performance Engineering",
     description:
-      "Diagnosing and fixing what makes a data-heavy React app feel slow — re-render cost, payload size, clustering and virtualisation at map scale.",
+      "Diagnosing and fixing bottlenecks in data-heavy React apps, including re-render costs, payload size, map clustering, and list virtualization.",
     detail:
-      "Eliminating unnecessary re-renders, virtualization for 10,000+ data points, and efficient local state isolation under streaming data.",
+      "Eliminating redundant renders, virtualizing thousands of data points, and isolating local state under real-time data streams.",
     tags: ["Profiling", "State Optimization", "Clustering", "Virtualisation", "Payload Reduction"],
   },
   {
@@ -57,9 +57,9 @@ export const services: Service[] = [
     index: "05",
     title: "API & Data Pipeline Integration",
     description:
-      "Wiring frontends to the services behind them, including automated pipelines and low-latency alerting where the data's value decays quickly.",
+      "Connecting frontends to backend services, automated data pipelines, and low-latency alert feeds where timely data delivery is critical.",
     detail:
-      "Seamless RESTful endpoints, weather early-warning data pipelines, and internal orchestration tools for continuous real-time sync.",
+      "Working with RESTful endpoints, weather early-warning data streams, and internal orchestration tools for dependable data synchronization.",
     tags: ["REST APIs", "Node.js", "Express.js", "Pipeline Chaining", "Low Latency"],
   },
   {
@@ -67,9 +67,9 @@ export const services: Service[] = [
     index: "06",
     title: "Containerised Delivery",
     description:
-      "Building and shipping containerised frontend applications, and working comfortably inside an orchestrated environment alongside platform teams.",
+      "Building and running containerized web applications within modern cloud environments alongside platform and DevOps teams.",
     detail:
-      "Formal grounding through M.Tech in Cloud Computing at IIT Patna — reasoning across the full stack from Docker containers to deployment pipelines.",
+      "Supported by an M.Tech in Cloud Computing from IIT Patna, bringing practical understanding across Docker containers, orchestration, and CI/CD workflows.",
     tags: ["Docker", "Kubernetes", "Skaffold", "Cloud Architecture", "CI/CD Workflows"],
   },
 ]

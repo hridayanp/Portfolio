@@ -45,7 +45,7 @@ export function ProjectField({
       className={cn("relative h-full w-full overflow-hidden", className)}
       style={{ backgroundColor: project.fill }}
       role="img"
-      aria-label={`${project.title} — ${project.category}`}
+      aria-label={`${project.title} - ${project.category}`}
     >
       {/* Title at display scale, clipped by the frame. Type is the subject,
           not a label sitting on top of an image. */}

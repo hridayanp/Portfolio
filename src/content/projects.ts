@@ -41,9 +41,9 @@ export const projects: Project[] = [
     category: "Geospatial Platform",
     year: "2024",
     description:
-      "A map-centric dashboard letting policy stakeholders explore satellite-derived climate data without GIS software.",
+      "A map dashboard that helps policy teams explore satellite climate data without desktop GIS software.",
     detail:
-      "UNDP needed non-technical policy stakeholders to explore satellite-derived climate data without GIS software. I built a map-centric dashboard that toggles raster and vector layers, applies spatial filters and drills into time-series data. The hard part was performance — large geospatial payloads make re-renders expensive — so the work centred on efficient state management and modular components that keep the UI responsive.",
+      "UNDP needed a way for policy teams to explore satellite-derived climate data without specialized GIS software. I built a web map dashboard to toggle raster and vector layers, apply spatial filters, and inspect time-series charts. Because large geospatial datasets can easily degrade UI performance, I focused on careful state management and modular React architecture to keep map interactions fast.",
     technologies: [
       "ReactJS",
       "Leaflet",
@@ -64,9 +64,9 @@ export const projects: Project[] = [
     category: "Real-time Monitoring",
     year: "2024",
     description:
-      "Near-real-time regional air quality visibility, built for retrieval speed above all else.",
+      "A monitoring dashboard for regional air quality, designed for fast data retrieval and clear readability.",
     detail:
-      "Air quality data loses its value fast if it isn't near-real-time. I built the React frontend and the automated pipelines feeding it, using Leaflet and MapLibreGL for the geospatial layer, with the interface pared back so retrieval speed and clarity came first.",
+      "Air quality data is only useful when it is current. I built the React interface and the automated data pipelines feeding it, using Leaflet and MapLibreGL for map rendering, keeping the layout focused on fast data retrieval and clear visual cues.",
     technologies: [
       "ReactJS",
       "Leaflet",
@@ -87,9 +87,9 @@ export const projects: Project[] = [
     category: "Enterprise Platform",
     year: "2023",
     description:
-      "Real-time geospatial monitoring paired with weather early-warning alerts for driver and fleet safety.",
+      "Live geospatial tracking and weather hazard alerts for driver and fleet safety.",
     detail:
-      "An enterprise connected-car dashboard combining real-time geospatial monitoring with weather early-warning alerts. I worked on the data pipeline and API layer so alerts arrived with minimal latency, alongside the visualisation itself.",
+      "An enterprise fleet dashboard combining live vehicle tracking with severe weather early warnings. I worked on the data ingestion and API layer to deliver alerts with low latency, as well as the frontend map interface.",
     technologies: ["ReactJS", "Geospatial APIs", "Node.js", "REST APIs"],
     fill: "#fff7ed",
     color: "#ea580c",
@@ -104,9 +104,9 @@ export const projects: Project[] = [
     category: "Developer Tooling",
     year: "2024",
     description:
-      "Visual orchestration for scheduling, running and tracking Python scripts across environments.",
+      "A visual interface for scheduling, running, and monitoring Python scripts across environments.",
     detail:
-      "Developers needed a way to schedule, run and track Python scripts across environments without doing it by hand. I built the frontend in React with React Flow for visual workflow chaining, plus real-time logging so execution status was visible live instead of after the fact.",
+      "Developers needed an easier way to schedule, run, and track Python workflows across environments. I built the React frontend using React Flow for node-based pipeline building, adding live WebSocket logging so teams could follow job progress in real time.",
     technologies: ["ReactJS", "React Flow", "TypeScript", "WebSockets"],
     fill: "#ecfdf5",
     color: "#059669",
@@ -120,9 +120,9 @@ export const projects: Project[] = [
     category: "Data Visualisation",
     year: "2023",
     description:
-      "Interactive charts and real-time parameter tracking for feedlot decisions, with Stripe on the commercial side.",
+      "Interactive charts and environmental parameter tracking for livestock operations, including Stripe billing integration.",
     detail:
-      "Built for Australian agricultural users making feedlot decisions — interactive charts and real-time parameter tracking with ChartJS and React-Table. I revamped the API integrations, cutting downtime and analysis time, and the product carried a Stripe-integrated commercial layer.",
+      "Built for Australian agricultural operators to track environmental and animal well-being parameters using interactive Chart.js graphs and React tables. I overhauled the API integrations to reduce latency and downtime, and integrated Stripe for subscription payments.",
     technologies: ["ReactJS", "ChartJS", "React-Table", "Stripe", "REST APIs"],
     fill: "#f5f3ff",
     color: "#7c3aed",
@@ -136,9 +136,9 @@ export const projects: Project[] = [
     category: "Geospatial Platform",
     year: "2023",
     description:
-      "Climate resilience datasets made legible to people who aren't GIS specialists.",
+      "A web portal translating complex climate resilience data into clear, accessible maps for non-specialists.",
     detail:
-      "The goal was making climate resilience datasets accessible to non-specialists. I built the geospatial portal with Leaflet and Georaster, focusing on UI components intuitive enough that the complexity of the underlying raster data stayed invisible to the end user.",
+      "Built to help agricultural and policy stakeholders review climate resilience datasets. I developed the web GIS portal using Leaflet and Georaster, focusing on straightforward controls so users could explore raster data layers without needing a GIS background.",
     technologies: ["ReactJS", "Leaflet", "Georaster", "Web GIS"],
     fill: "#fef2f2",
     color: "#dc2626",

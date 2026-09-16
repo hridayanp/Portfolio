@@ -26,7 +26,7 @@ export const identity = {
   headline: "I build interfaces that make complex data usable.",
   /** The one-line "what I actually do" from the 30-second pitch. */
   summary:
-    "Frontend engineer with 4+ years building React data platforms — geospatial and climate-intelligence dashboards for UNDP and enterprise clients.",
+    "Frontend engineer with 4+ years of experience building React data platforms, including geospatial and climate intelligence dashboards for UNDP and enterprise clients.",
   /** Disciplines, used for the hero ticker and meta description. */
   disciplines: [
     "React Engineering",
@@ -46,7 +46,7 @@ export const identity = {
   /** Stated experience. Deliberately the figure from MYSELF.md rather than a
    *  computed one, so the site never claims more than the source document. */
   experienceLabel: "4+",
-  availability: "Open to frontend / React / geospatial roles",
+  availability: "Open to frontend, React, and geospatial roles",
   /** Same fact, short enough for a one-line pill on a phone. */
   availabilityShort: "Open to new roles",
 } as const
@@ -102,6 +102,6 @@ export const navItems: NavItem[] = [
 ]
 
 export const meta = {
-  title: `${identity.fullName} — ${identity.role}`,
+  title: `${identity.fullName} - ${identity.role}`,
   description: identity.summary,
 }

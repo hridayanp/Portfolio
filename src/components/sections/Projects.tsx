@@ -45,7 +45,7 @@ export function Projects() {
               Projects
             </span>
             <h2 className="text-h2 text-black max-w-[20ch]">
-              Platforms built for people who have to decide something.
+              Platforms built to make complex data clear and actionable.
             </h2>
             <ul className="grid gap-lg lg:grid-cols-2">
               {projects.map((project) => (

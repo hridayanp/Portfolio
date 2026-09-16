@@ -23,14 +23,13 @@ export function Contact() {
 
         <MaskedText
           as="h2"
-          text="Let's build something worth looking at."
+          text="Let's build something great together."
           className="text-h1 text-black max-w-[16ch]"
         />
 
         <p className="text-lead text-ink-2 max-w-[46ch]">
-          {identity.availability}. If you're working on data-heavy interfaces — geospatial,
-          climate, or anything where the hard part is making complexity legible — I'd like to hear
-          about it.
+          {identity.availability}. If you are building data-heavy interfaces for geospatial,
+          climate, or analytics platforms, I would love to hear from you.
         </p>
 
         {contact.email && (
@@ -64,7 +63,7 @@ export function Contact() {
 
         {!hasChannels && (
           <p className="text-body-s border-hairline text-ink-3 rounded-lg border border-dashed px-md py-sm">
-            Contact channels are being updated — they'll appear here as soon as they're set.
+            Contact links are being updated and will appear here shortly.
           </p>
         )}
 

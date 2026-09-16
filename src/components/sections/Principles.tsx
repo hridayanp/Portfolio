@@ -42,8 +42,8 @@ export function Principles() {
       <div className="flex flex-col gap-xl">
         <SectionHeading
           eyebrow="How I work"
-          title="No client quotes here — just how I talk about the work."
-          lede="Principles I'd say out loud in an interview, which is a more useful signal than a testimonial I could have written myself."
+          title="Core principles behind how I build."
+          lede="A few practical ideas that guide how I write code, choose tools, and collaborate with teams."
           aside={
             <div className="flex gap-sm">
               <SliderButton label="Previous" onClick={() => step(-1)}>

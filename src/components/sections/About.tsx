@@ -25,23 +25,17 @@ export function About() {
           key="01"
           index="01"
           eyebrow="About"
-          title="Taking messy data and making it something someone can decide from."
+          title="Turning complex data into clear, actionable interfaces."
           shape={<Shape3D kind="cube" hue="blue" size={220} />}
         >
           <p className="text-lead text-ink max-w-[44ch]">
-            That's the thread running through every platform I've worked on — satellite imagery,
-            air quality readings, climate risk datasets — turned into an interface a non-technical
-            stakeholder can actually use.
+            That is the common thread across the platforms I build: taking complex datasets like satellite imagery, air quality metrics, and climate risks, and turning them into clear interfaces that help people make informed decisions.
           </p>
           <p className="text-body text-ink-2 max-w-[48ch]">
-            I'm a frontend engineer with {experienceYears} years of experience, most of it spent
-            building React data platforms — geospatial and climate-intelligence dashboards for UNDP
-            and enterprise clients.
+            I am a frontend engineer with {experienceYears} years of experience, specializing in React data platforms, geospatial maps, and climate dashboards for UNDP and enterprise organizations.
           </p>
           <p className="text-body text-ink-2 max-w-[48ch]">
-            I focus heavily on component architecture, state management, and geospatial mapping
-            tools like Leaflet and MapLibreGL to keep large raster and vector datasets responsive
-            and fast.
+            I focus on thoughtful component architecture, state management, and geospatial mapping tools like Leaflet and MapLibreGL to keep large raster and vector datasets fast and responsive.
           </p>
         </AboutCard>,
 
@@ -49,12 +43,12 @@ export function About() {
           key="02"
           index="02"
           eyebrow="Experience"
-          title="Owning frontend delivery end to end."
+          title="Building and shipping frontend products from start to finish."
           shape={<Shape3D kind="cylinder" hue="orange" size={220} />}
         >
-          <ul className="flex flex-col gap-md">
+          <ul className="flex flex-col gap-sm sm:gap-md">
             {roles.map((role) => (
-              <li key={role.id} className="border-hairline flex flex-col gap-xs border-t pt-md">
+              <li key={role.id} className="border-hairline flex flex-col gap-1 border-t pt-sm sm:pt-md">
                 <span className="eyebrow">{role.period}</span>
                 <span className="text-h3 text-black">{role.title}</span>
                 <span className="text-body-s text-ink-2">{role.company}</span>
@@ -73,7 +67,7 @@ export function About() {
           key="03"
           index="03"
           eyebrow="Education"
-          title="Formal grounding in the infrastructure side, not just the UI layer."
+          title="Strong foundation in cloud infrastructure as well as frontend UI."
           shape={<Shape3D kind="torus" hue="green" size={220} />}
         >
           <ul className="flex flex-col gap-md">
@@ -115,7 +109,7 @@ function AboutCard({
 }) {
   return (
     <div className={cn("w-full gutter max-w-[1200px] mx-auto", className)}>
-      <article className="card-surface relative mx-auto flex h-[580px] sm:h-[600px] md:h-[620px] max-h-[calc(100svh-128px)] w-full flex-col justify-center overflow-hidden p-6 sm:p-8 md:p-10 shadow-[var(--shadow-lift)] rounded-2xl">
+      <article className="card-surface relative mx-auto flex h-[580px] sm:h-[600px] md:h-[620px] max-h-[calc(100svh-128px)] w-full flex-col justify-start overflow-hidden p-6 sm:p-8 md:p-10 shadow-[var(--shadow-lift)] rounded-2xl">
         <div className="pointer-events-none absolute -top-[6%] -right-[4%] opacity-90 md:opacity-100">
           {shape}
         </div>
