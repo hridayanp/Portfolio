@@ -4,10 +4,22 @@ export type Tech = {
   note: string
 }
 
+/** Filter buckets exposed by the stack grid's control row. */
+export type StackFilterId =
+  | "all"
+  | "frontend"
+  | "geospatial"
+  | "visualisation"
+  | "backend"
+
 export type StackGroup = {
   id: string
   label: string
   blurb: string
+  /** Monospaced bracket tag printed on each card — `[ FRONTEND ]` etc. */
+  tag: string
+  /** Which control-row filter this group answers to. */
+  filter: Exclude<StackFilterId, "all">
   items: Tech[]
 }
 
@@ -20,6 +32,8 @@ export const stackGroups: StackGroup[] = [
     id: "frontend",
     label: "Frontend",
     blurb: "Where most of my production time has gone.",
+    tag: "FRONTEND",
+    filter: "frontend",
     items: [
       {
         name: "ReactJS",
@@ -48,6 +62,8 @@ export const stackGroups: StackGroup[] = [
     id: "geospatial",
     label: "Geospatial",
     blurb: "Web GIS — browser-based, not desktop GIS.",
+    tag: "GEOSPATIAL",
+    filter: "geospatial",
     items: [
       {
         name: "Leaflet",
@@ -72,6 +88,8 @@ export const stackGroups: StackGroup[] = [
     id: "visualisation",
     label: "Visualisation",
     blurb: "Turning datasets into something decision-grade.",
+    tag: "VISUALISATION",
+    filter: "visualisation",
     items: [
       {
         name: "ChartJS",
@@ -88,6 +106,8 @@ export const stackGroups: StackGroup[] = [
     id: "backend",
     label: "Backend",
     blurb: "Real exposure, not my core specialty.",
+    tag: "BACKEND",
+    filter: "backend",
     items: [
       {
         name: "Node.js",
@@ -107,6 +127,8 @@ export const stackGroups: StackGroup[] = [
     id: "data",
     label: "Databases",
     blurb: "Comfortable reading and shaping the data layer.",
+    tag: "DATABASES",
+    filter: "backend",
     items: [
       { name: "PostgreSQL", note: "Relational work behind platform features." },
       { name: "MySQL", note: "Used across earlier product teams." },
@@ -117,6 +139,8 @@ export const stackGroups: StackGroup[] = [
     id: "platform",
     label: "Cloud & Delivery",
     blurb: "Frontend-adjacent in production, deepened through my M.Tech.",
+    tag: "CLOUD & DELIVERY",
+    filter: "backend",
     items: [
       {
         name: "Docker",
@@ -136,3 +160,31 @@ export const stackGroups: StackGroup[] = [
 
 /** Flat list used by the hero ticker and the tools row. */
 export const allTech = stackGroups.flatMap((g) => g.items.map((i) => i.name))
+
+/** Control-row labels. Counts are derived, never written down twice. */
+export const stackFilters: { id: StackFilterId; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "frontend", label: "Frontend & UI" },
+  { id: "geospatial", label: "Geospatial & WebGIS" },
+  { id: "visualisation", label: "Data Visualisation" },
+  { id: "backend", label: "Backend & Cloud" },
+]
+
+/**
+ * Section copy. Kept here so the eyebrow, index and callout read from the
+ * same source as the rest of the site rather than living in JSX.
+ */
+export const stackSection = {
+  eyebrow: "Stack & Production Tooling",
+  index: "04",
+  total: "06",
+  title: "The tools, and what I'd actually say about each one.",
+  lede:
+    "Grouped by where it sits in the stack. Flip a card for the honest version — including where my depth stops, production war stories, and real architectural trade-offs.",
+  calloutBadge: "Honesty > Buzzword stuffing",
+  callout:
+    "If I haven't debugged it under production fire at 2 AM, it doesn't get listed on this grid. Every technology chosen is grounded in measurable stability and speed.",
+  scrollHint: "SCROLL TO EXPERTISE & PROJECTS",
+  flipLabel: "Flip",
+  flipHint: "Click to flip",
+}

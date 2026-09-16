@@ -127,6 +127,12 @@
   --shadow-lift: 0 20px 40px -15px rgba(15, 23, 42, 0.12);
   --shadow-card: 0 20px 40px -15px rgba(15, 23, 42, 0.05),
     inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  /* Card elevation used by the stack grid — a near-flat resting state that
+     picks up an accent-tinted ring on hover. */
+  --shadow-card-subtle: 0 4px 20px -2px rgba(15, 23, 42, 0.04),
+    0 0 0 1px rgba(15, 23, 42, 0.04);
+  --shadow-card-hover: 0 20px 35px -8px rgba(37, 99, 235, 0.12),
+    0 0 0 1px rgba(37, 99, 235, 0.25);
   --shadow-electric: 0 8px 25px -4px rgba(37, 99, 235, 0.5),
     0 0 0 1px rgba(37, 99, 235, 0.2);
   --shadow-electric-hover: 0 12px 30px -2px rgba(37, 99, 235, 0.65),
