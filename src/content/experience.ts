@@ -15,8 +15,10 @@ export type Education = {
   institution: string
   qualification: string
   field: string
+  period: string
   completed: string
   note?: string
+  highlights?: string[]
 }
 
 export const roles: Role[] = [
@@ -58,14 +60,20 @@ export const education: Education[] = [
     institution: "IIT Patna",
     qualification: "M.Tech",
     field: "Cloud Computing",
+    period: "2024 — 2026",
     completed: "Jun 2026",
-    note: "Taken concurrently with full-time work — formal grounding in the infrastructure and deployment side of the stack.",
+    note: "Taken concurrently with full-time work — formal grounding in the infrastructure, distributed systems, and deployment side of the stack.",
+    highlights: ["Cloud Architecture", "Distributed Systems", "Docker & Kubernetes"],
   },
   {
     id: "smit",
     institution: "Sikkim Manipal Institute of Technology",
     qualification: "B.Tech",
     field: "Computer Science & Engineering",
+    period: "2017 — 2021",
     completed: "Jul 2021",
+    note: "Comprehensive foundation in computer science fundamentals, data structures, algorithms, and modular software engineering.",
+    highlights: ["Data Structures & Algorithms", "System Architecture", "Web Technologies"],
   },
 ]
+

@@ -38,6 +38,11 @@ export function About() {
             building React data platforms — geospatial and climate-intelligence dashboards for UNDP
             and enterprise clients.
           </p>
+          <p className="text-body text-ink-2 max-w-[48ch]">
+            I focus heavily on component architecture, state management, and geospatial mapping
+            tools like Leaflet and MapLibreGL to keep large raster and vector datasets responsive
+            and fast.
+          </p>
         </AboutCard>,
 
         <AboutCard
@@ -110,7 +115,7 @@ function AboutCard({
 }) {
   return (
     <div className={cn("w-full gutter max-w-[1200px] mx-auto", className)}>
-      <article className="card-surface relative mx-auto flex max-h-[calc(100svh-128px)] w-full flex-col justify-center overflow-hidden p-6 sm:p-8 md:p-10 shadow-[var(--shadow-lift)] rounded-2xl">
+      <article className="card-surface relative mx-auto flex h-[580px] sm:h-[600px] md:h-[620px] max-h-[calc(100svh-128px)] w-full flex-col justify-center overflow-hidden p-6 sm:p-8 md:p-10 shadow-[var(--shadow-lift)] rounded-2xl">
         <div className="pointer-events-none absolute -top-[6%] -right-[4%] opacity-90 md:opacity-100">
           {shape}
         </div>
@@ -127,3 +132,4 @@ function AboutCard({
     </div>
   )
 }
+
