@@ -136,7 +136,6 @@ export function Stack() {
           className="animate-pulse-glow absolute bottom-[12%] left-[-4%] size-[420px] rounded-full bg-[var(--ds-orb-emerald)] blur-[110px]"
           style={{ animationDelay: "2s" }}
         />
-        <div className="bg-mesh absolute inset-0 opacity-70" />
       </div>
 
       <Float className="top-24 right-4 hidden sm:block md:right-10 lg:right-16" dur={7}>

@@ -103,7 +103,6 @@ function ProjectsScene({
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="animate-pulse-glow absolute top-8 left-1/4 size-[420px] -translate-x-1/2 rounded-full bg-[var(--ds-orb-blue)] blur-[110px]" />
         <div className="absolute top-1/3 right-6 size-[480px] rounded-full bg-[var(--ds-orb-emerald)] blur-[120px]" />
-        <div className="bg-mesh absolute inset-0 opacity-70" />
       </div>
 
       <div className="mx-auto my-auto flex w-full max-w-[1400px] flex-col gap-4">

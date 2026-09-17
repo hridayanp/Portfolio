@@ -26,7 +26,9 @@ import { Footer } from "@/components/Footer"
  */
 export function App() {
   return (
-    <div className="bg-ground text-ink relative min-h-screen w-full">
+    // Deliberately transparent: the dot-grid canvas and the ambient vignette
+    // are painted on <body>, so an opaque shell here would hide them.
+    <div className="text-ink relative min-h-screen w-full">
       <ScrollProgress />
       <CustomCursor />
       <Navbar />

@@ -9,9 +9,12 @@ import { ease } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
 /**
- * Fixed at top, 72px tall. Light surface, electric-blue CTA — matched to the
- * new hero's visual language: pill brand mark, soft hairline border, and a
- * rounded-xl accent button rather than the old square/mono treatment.
+ * Global floating capsule header, fixed at top.
+ *
+ * The capsule is frosted at every scroll position rather than fading in —
+ * it is the page's persistent chrome, and it has to stay legible over the
+ * dot-grid canvas from the first pixel. Scrolling only deepens its shadow,
+ * which reads as lift rather than as the bar appearing from nowhere.
  */
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -49,27 +52,23 @@ export function Navbar() {
 
       <header className="fixed inset-x-0 top-0 z-50 gutter pt-md">
         <nav
-          className={cn(
-            "mx-auto flex h-[72px] items-center justify-between gap-md rounded-pill border px-md transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500",
-            scrolled
-              ? "border-[var(--ds-border)] bg-[var(--ds-nav-bg)] shadow-[var(--shadow-md)] backdrop-blur-xl"
-              : "border-transparent bg-transparent"
-          )}
+          data-raised={scrolled}
+          className="floating-nav mx-auto flex h-[72px] items-center justify-between gap-md rounded-pill px-5 transition-[box-shadow] duration-500 sm:px-7"
         >
           <a
             href="#home"
             data-cursor="link"
-            className="text-label group flex items-center gap-sm px-sm tracking-normal normal-case"
+            className="text-label group flex shrink-0 items-center gap-2.5 whitespace-nowrap tracking-normal normal-case"
           >
             <span
               aria-hidden
-              className="inline-block size-2 rounded-full bg-[var(--ds-accent)] shadow-[0_0_0_4px_var(--ds-accent-tint)] transition-transform duration-300 group-hover:scale-125"
+              className="inline-block size-2.5 shrink-0 rounded-full bg-[var(--ds-accent)] shadow-[var(--ds-brand-glow)] transition-transform duration-200 group-hover:scale-125"
             />
             <span className="font-semibold text-[var(--ds-text-primary)]">{identity.firstName}</span>
             <span className="text-[var(--ds-text-muted)]">{identity.lastName}</span>
           </a>
 
-          <ul className="hidden items-center lg:flex">
+          <ul className="hidden items-center gap-1 lg:flex">
             {navItems.map((item) => (
               <li key={item.id}>
                 <NavLink label={item.label} href={item.href} isActive={active === item.id} />
@@ -82,7 +81,7 @@ export function Navbar() {
             <a
               href={contact.email ? `mailto:${contact.email}` : "#contact"}
               data-cursor="link"
-              className="text-label hidden rounded-xl bg-[var(--ds-accent)] px-md py-sm font-semibold tracking-normal normal-case text-[var(--ds-text-inverse)] shadow-[var(--shadow-electric)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--ds-accent-hover)] hover:shadow-[var(--shadow-electric-hover)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none sm:inline-flex"
+              className="text-label hidden rounded-pill bg-[var(--ds-accent)] px-5 py-2.5 font-semibold tracking-normal normal-case text-[var(--ds-text-inverse)] shadow-[0_4px_14px_rgba(37,99,235,0.3)] transition-all duration-200 hover:bg-[var(--ds-accent-hover)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.4)] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none sm:inline-flex"
             >
               Get in touch
             </a>
@@ -123,7 +122,7 @@ function MobileMenu({ active, onClose }: { active: string; onClose: () => void }
         animate={{ clipPath: "inset(0 0 0% 0)" }}
         exit={{ clipPath: "inset(0 0 100% 0)" }}
         transition={{ duration: 0.4, ease: ease.out }}
-        className="absolute inset-0 bg-[var(--ds-bg)]"
+        className="bg-mesh absolute inset-0 bg-[var(--ds-bg)]"
       />
 
       <div className="relative flex h-full flex-col gutter pt-md pb-xl">

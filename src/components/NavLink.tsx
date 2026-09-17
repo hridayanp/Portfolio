@@ -46,6 +46,16 @@ export function NavLink({
         className
       )}
     >
+      {/* Active marker: a 4px dot centred beneath the label, as the design
+          specifies — it sits outside the masked box so the hover slide
+          never clips it. */}
+      {isActive && (
+        <span
+          aria-hidden
+          className="absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-[var(--ds-accent)]"
+        />
+      )}
+
       <span className="relative block h-[1.4em] overflow-hidden leading-[1.4em]">
         <motion.span
           className="flex flex-col"

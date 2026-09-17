@@ -117,7 +117,20 @@
   --ds-orb-emerald: rgba(209, 250, 229, 0.4);
   --ds-framer-glow: rgba(255, 255, 255, 0.7);
   --ds-framer-bg: rgba(255, 255, 255, 0.78);
-  --ds-nav-bg: rgba(255, 255, 255, 0.8);
+  --ds-nav-bg: rgba(255, 255, 255, 0.82);
+  --ds-nav-border: rgba(226, 232, 240, 0.9);
+  --ds-nav-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04),
+    0 8px 10px -6px rgba(0, 0, 0, 0.02);
+  --ds-nav-shadow-raised: 0 14px 34px -8px rgba(15, 23, 42, 0.1),
+    0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  --ds-brand-glow: 0 0 8px rgba(37, 99, 235, 0.6);
+
+  /* Signature page canvas: 28px dot grid + a top-centre ambient vignette. */
+  --ds-grid-dot: rgba(148, 163, 184, 0.35);
+  --ds-grid-size: 28px;
+  --ds-grid-radius: 1.25px;
+  --ds-ambient: rgba(219, 234, 254, 0.4);
+  --ds-ambient-fade: rgba(250, 251, 253, 0);
 
   /* Elevation — soft and light-mode native */
   --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
@@ -199,7 +212,19 @@
   --ds-orb-emerald: rgba(16, 185, 129, 0.1);
   --ds-framer-glow: rgba(59, 130, 246, 0.25);
   --ds-framer-bg: rgba(17, 24, 39, 0.82);
-  --ds-nav-bg: rgba(17, 24, 39, 0.8);
+  --ds-nav-bg: rgba(17, 24, 39, 0.82);
+  --ds-nav-border: rgba(255, 255, 255, 0.09);
+  --ds-nav-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5),
+    0 8px 10px -6px rgba(0, 0, 0, 0.35);
+  --ds-nav-shadow-raised: 0 16px 38px -8px rgba(0, 0, 0, 0.62),
+    0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --ds-brand-glow: 0 0 10px rgba(59, 130, 246, 0.7);
+
+  --ds-grid-dot: rgba(148, 163, 184, 0.12);
+  --ds-grid-size: 28px;
+  --ds-grid-radius: 1.25px;
+  --ds-ambient: rgba(59, 130, 246, 0.1);
+  --ds-ambient-fade: rgba(9, 13, 22, 0);
 
   /* Elevation */
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
@@ -421,6 +446,29 @@
 
   body {
     background-color: var(--ds-bg);
+    /* The dot grid is a property of the page, not of individual sections —
+       one declaration here keeps the canvas continuous across every
+       chapter instead of seaming at section boundaries. */
+    background-image:
+      /* Ambient illumination descending from the top centre. Fixed
+         attachment keeps it a property of the viewport rather than
+         scrolling away with the hero. Layered into the background rather
+         than added as an overlay element, so it can never paint over
+         content that has no stacking context of its own. */
+      radial-gradient(
+        circle at 50% 20%,
+        var(--ds-ambient) 0%,
+        var(--ds-ambient-fade) 70%
+      ),
+      radial-gradient(
+        circle,
+        var(--ds-grid-dot) var(--ds-grid-radius),
+        transparent var(--ds-grid-radius)
+      );
+    background-size:
+      100% 100%,
+      var(--ds-grid-size) var(--ds-grid-size);
+    background-attachment: fixed, scroll;
     color: var(--ds-text-body);
     font-family: var(--f-sans);
     font-size: var(--fs-body);
@@ -549,11 +597,38 @@
 
   /* Dot-mesh field */
   .bg-mesh {
-    background-image: radial-gradient(
-      var(--ds-mesh-dot, rgba(15, 23, 42, 0.04)) 1px,
-      transparent 1px
-    );
-    background-size: 24px 24px;
+    background-image:
+      /* Ambient illumination descending from the top centre. Fixed
+         attachment keeps it a property of the viewport rather than
+         scrolling away with the hero. Layered into the background rather
+         than added as an overlay element, so it can never paint over
+         content that has no stacking context of its own. */
+      radial-gradient(
+        circle at 50% 20%,
+        var(--ds-ambient) 0%,
+        var(--ds-ambient-fade) 70%
+      ),
+      radial-gradient(
+        circle,
+        var(--ds-grid-dot) var(--ds-grid-radius),
+        transparent var(--ds-grid-radius)
+      );
+    background-size:
+      100% 100%,
+      var(--ds-grid-size) var(--ds-grid-size);
+    background-attachment: fixed, scroll;
+  }
+
+  /* Floating capsule header — frosted glass over whatever scrolls beneath. */
+  .floating-nav {
+    background: var(--ds-nav-bg);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid var(--ds-nav-border);
+    box-shadow: var(--ds-nav-shadow);
+  }
+  .floating-nav[data-raised="true"] {
+    box-shadow: var(--ds-nav-shadow-raised);
   }
 
   /* Animated gradient border for the signature card */

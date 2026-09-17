@@ -46,7 +46,6 @@ export function Hero() {
           className="animate-pulse-glow absolute top-1/3 right-1/4 size-[450px] rounded-full blur-[100px]"
           style={{ backgroundColor: "var(--ds-orb-emerald)", animationDelay: "2s" }}
         />
-        <div className="bg-mesh absolute inset-0" />
       </div>
 
       {/* ---- Giant typographic watermark ---- */}
