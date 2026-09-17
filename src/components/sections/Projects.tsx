@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   AnimatePresence,
   motion,
@@ -6,26 +6,25 @@ import {
   useReducedMotion,
   type MotionValue,
 } from "motion/react"
-import { ArrowUpRight, GithubLogo, X } from "@phosphor-icons/react"
-import { projects, type Project } from "@/content"
-import { ProjectField } from "@/components/decor/ProjectField"
+import { ArrowDown, ArrowUpRight, GithubLogo, X } from "@phosphor-icons/react"
+import { heroFooter, projects, type Project } from "@/content"
+import { Shape3D } from "@/components/decor/Shape3D"
 import { StickyScene } from "@/components/primitives/StickyScene"
-import { Tag } from "@/components/primitives/Tag"
 import { ease } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
 /**
- * Projects — Pattern A, and the section that carries the largest scroll
- * budget on the page.
+ * Projects — the section carrying the largest scroll budget on the page.
  *
- * Spec §10 / §21: the source template spends 47.6% of its scroll on Services
- * and 10.3% on Projects because it sells services. "Keep the technique; move
- * the weight." So the per-item sticky narrative — the page's premium
- * mechanism — is spent here, on the work, one viewport per project.
+ * The scroll-driven mechanism is unchanged: one viewport of scroll per
+ * project, with progress selecting which record the featured card shows.
+ * What changed is the presentation — it now reads as a showcase card beside
+ * a vertical project directory, matching the rest of the site's mono-bracket
+ * taxonomy and glass-over-dot-grid surface language.
  *
- * The card anatomy is the source's, preserved exactly: Photo / Category /
- * Title / Overlay (opacity 0 → 1 on hover) / Link, with the whole card as a
- * single large hit area.
+ * Card and modal remain two VIEWS of one record: every field reads from the
+ * same project object, so a URL changed once changes everywhere, and an
+ * absent URL removes the affordance rather than rendering a dead link.
  */
 export function Projects() {
   const [openId, setOpenId] = useState<string | null>(null)
@@ -34,26 +33,21 @@ export function Projects() {
 
   return (
     <>
-      {/* Spec §15: the reduced-motion path shows every project, because a
-          collapsed scene has no scroll progress to step through and would
-          otherwise present one card as the whole portfolio. */}
+      {/* A collapsed scene has no scroll progress to step through, so under
+          reduced motion every project is rendered at once instead of one
+          card standing in for the whole portfolio. */}
       {reduced ? (
         <section id="work" aria-label="Projects" className="w-full gutter section-y">
           <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-lg">
-            <span className="eyebrow flex items-center gap-sm">
-              <span aria-hidden className="inline-block size-[6px] rounded-full bg-[var(--ds-accent)]" />
-              Projects
-            </span>
-            <h2 className="text-h2 text-black max-w-[20ch]">
-              Platforms built to make complex data clear and actionable.
-            </h2>
+            <SectionMeta index={0} />
             <ul className="grid gap-lg lg:grid-cols-2">
               {projects.map((project) => (
                 <li key={project.id}>
-                  <ProjectCard project={project} onOpen={() => setOpenId(project.id)} />
+                  <ShowcaseCard project={project} onOpen={() => setOpenId(project.id)} />
                 </li>
               ))}
             </ul>
+            <SceneFooter />
           </div>
         </section>
       ) : (
@@ -63,11 +57,15 @@ export function Projects() {
       )}
 
       <AnimatePresence>
-        {open && <ProjectDetail project={open} onClose={() => setOpenId(null)} />}
+        {open && <CaseStudy project={open} onClose={() => setOpenId(null)} />}
       </AnimatePresence>
     </>
   )
 }
+
+/* -------------------------------------------------------------------------
+   Scene
+   ---------------------------------------------------------------------- */
 
 function ProjectsScene({
   progress,
@@ -77,186 +75,323 @@ function ProjectsScene({
   onOpen: (id: string) => void
 }) {
   const [index, setIndex] = useState(0)
+  /* A click in the directory wins until the next scroll tick moves past it,
+     so the list stays usable without fighting the scroll narrative. */
+  const pinned = useRef<number | null>(null)
 
   useMotionValueEvent(progress, "change", (v) => {
     const next = Math.min(projects.length - 1, Math.max(0, Math.floor(v * projects.length)))
+    if (pinned.current !== null) {
+      if (pinned.current === next) pinned.current = null
+      else return
+    }
     setIndex((prev) => (prev === next ? prev : next))
   })
+
+  const select = useCallback((i: number) => {
+    pinned.current = i
+    setIndex(i)
+  }, [])
 
   const project = projects[index]
 
   return (
-    <div className="flex h-full w-full flex-col justify-between gutter pt-[104px] pb-6 sm:pb-8 max-h-[100svh] overflow-hidden">
-      <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-3 sm:gap-4 my-auto">
-        <div className="flex items-baseline justify-between">
-          <span className="eyebrow flex items-center gap-sm">
-            <span aria-hidden className="inline-block size-[6px] rounded-full bg-[var(--ds-accent)]" />
-            Projects
-          </span>
-          <h2 className="sr-only">Projects</h2>
-          <span
-            className="eyebrow font-mono tabular"
-            aria-live="polite"
-            style={{ color: "var(--ds-progress)" }}
-          >
-            {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
-          </span>
-        </div>
+    <div className="relative flex h-full max-h-[100svh] w-full flex-col justify-between gutter overflow-hidden pt-[104px] pb-5">
+      {/* Ambient field, matching the hero and stack chapters. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div className="animate-pulse-glow absolute top-8 left-1/4 size-[420px] -translate-x-1/2 rounded-full bg-[var(--ds-orb-blue)] blur-[110px]" />
+        <div className="absolute top-1/3 right-6 size-[480px] rounded-full bg-[var(--ds-orb-emerald)] blur-[120px]" />
+        <div className="bg-mesh absolute inset-0 opacity-70" />
+      </div>
 
-        <div className="grid gap-md lg:gap-lg lg:grid-cols-[1fr_300px] lg:items-center">
+      <div className="mx-auto my-auto flex w-full max-w-[1400px] flex-col gap-4">
+        <SectionMeta index={index} />
+
+        <div className="grid items-start gap-6 lg:grid-cols-12">
           <motion.div
             key={project.id}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2, ease: ease.out }}
+            transition={{ duration: 0.25, ease: ease.out }}
+            className="lg:col-span-8"
           >
-            <ProjectCard project={project} onOpen={() => onOpen(project.id)} />
+            <ShowcaseCard project={project} onOpen={() => onOpen(project.id)} />
           </motion.div>
 
-          {/* Index rail. Doubles as the keyboard path through the section —
-              the scroll narrative is never the only way in (spec §15). */}
-          <nav aria-label="All projects" className="hidden lg:block">
-            <ol className="flex flex-col">
-              {projects.map((p, i) => (
-                <li key={p.id}>
-                  <button
-                    type="button"
-                    onClick={() => onOpen(p.id)}
-                    data-cursor="view"
-                    className={cn(
-                      "border-hairline flex w-full items-center gap-md border-t py-sm text-left transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none rounded-sm",
-                      i === index ? "text-black font-semibold" : "text-ink-3 hover:text-ink-2"
-                    )}
-                  >
-                    <span
-                      aria-hidden
-                      className="size-2 shrink-0 rounded-full transition-colors duration-300"
-                      style={{ backgroundColor: i === index ? p.color : "var(--c-hairline)" }}
-                    />
-                    <span className="text-body-s flex-1 leading-tight">{p.title}</span>
-                    <span className="text-label text-ink-3">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ol>
+          {/* Vertical directory. Also the keyboard path through the section —
+              the scroll narrative is never the only way in. */}
+          <nav aria-label="All projects" className="hidden lg:col-span-4 lg:block">
+            <div className="relative py-2 ps-6">
+              <span
+                aria-hidden
+                className="absolute top-5 bottom-5 left-2.5 w-px bg-[var(--ds-border)]"
+              />
+              <ol className="flex flex-col gap-2">
+                {projects.map((p, i) => {
+                  const on = i === index
+                  return (
+                    <li key={p.id} className="relative">
+                      <button
+                        type="button"
+                        onClick={() => select(i)}
+                        onDoubleClick={() => onOpen(p.id)}
+                        aria-current={on ? "true" : undefined}
+                        data-cursor="view"
+                        className={cn(
+                          "flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none",
+                          on
+                            ? "border border-[var(--ds-border)] bg-[var(--ds-surface)]/70 shadow-[var(--shadow-xs)]"
+                            : "border border-transparent hover:bg-[var(--ds-surface)]/60"
+                        )}
+                      >
+                        <span
+                          aria-hidden
+                          className={cn(
+                            "absolute top-1/2 -translate-y-1/2 rounded-full transition-all duration-300",
+                            on
+                              ? "-left-[22px] size-3 ring-4 ring-[var(--ds-accent-tint)]"
+                              : "-left-[20px] size-2"
+                          )}
+                          style={{
+                            backgroundColor: on ? "var(--ds-accent)" : "var(--ds-border-strong)",
+                          }}
+                        />
+                        <span
+                          className={cn(
+                            "text-body-s flex-1 leading-tight transition-colors",
+                            on
+                              ? "font-bold tracking-tight text-[var(--ds-text-primary)]"
+                              : "font-medium text-[var(--ds-text-secondary)]"
+                          )}
+                        >
+                          {p.title}
+                        </span>
+                        <span className="font-mono text-[11px] text-[var(--ds-text-faint)]">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                      </button>
+                    </li>
+                  )
+                })}
+              </ol>
+            </div>
           </nav>
         </div>
 
-        <div className="bg-hairline h-px w-full">
-          <motion.div className="h-px origin-left bg-[var(--ds-progress)]" style={{ scaleX: progress }} />
+        <div className="h-px w-full bg-[var(--ds-border)]">
+          <motion.div
+            className="h-px origin-left bg-[var(--ds-accent)]"
+            style={{ scaleX: progress }}
+          />
         </div>
       </div>
+
+      <SceneFooter />
     </div>
   )
 }
 
-function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void }) {
-  const [hovered, setHovered] = useState(false)
-
+/** `[ ● PROJECTS ]` … `[ 01 / 06 ]` — the site's shared section taxonomy. */
+function SectionMeta({ index }: { index: number }) {
   return (
-    <div className="card-surface tinted relative flex flex-col overflow-hidden rounded-lg">
+    <div className="font-mono flex items-center justify-between px-1 text-[11px] tracking-wider text-[var(--ds-text-muted)]">
+      <span className="flex items-center gap-2">
+        [
+        <span
+          aria-hidden
+          className="inline-block size-1.5 animate-pulse rounded-full bg-[var(--ds-accent)]"
+        />
+        <span className="font-medium text-[var(--ds-text-secondary)] uppercase">Projects</span>]
+      </span>
+      <h2 className="sr-only">Projects</h2>
+      <span className="flex items-center gap-1" aria-live="polite">
+        [<span className="font-semibold text-[var(--ds-accent)]">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <span className="text-[var(--ds-text-faint)]">/</span>
+        <span>{String(projects.length).padStart(2, "0")}</span>]
+      </span>
+    </div>
+  )
+}
+
+function SceneFooter() {
+  return (
+    <div className="font-mono mx-auto flex w-full max-w-[1400px] flex-col items-center justify-between gap-2 border-t border-[var(--ds-border)] pt-4 text-[11px] text-[var(--ds-text-muted)] sm:flex-row">
+      <a
+        href="#contact"
+        data-cursor="link"
+        className="inline-flex items-center gap-1.5 transition-colors hover:text-[var(--ds-accent)]"
+      >
+        <ArrowDown size={12} weight="bold" />
+        [ SCROLL TO CONTACT ]
+      </a>
+      <p className="text-[var(--ds-text-faint)]">
+        {heroFooter.credit} © {new Date().getFullYear()}
+      </p>
+    </div>
+  )
+}
+
+/* -------------------------------------------------------------------------
+   Showcase card
+   ---------------------------------------------------------------------- */
+
+function ShowcaseCard({ project, onOpen }: { project: Project; onOpen: () => void }) {
+  return (
+    <article className="group relative overflow-hidden rounded-3xl border border-[var(--ds-border)] bg-gradient-to-b from-[var(--ds-surface)]/80 via-[var(--ds-surface-2)]/50 to-[var(--ds-surface-sunken)]/40 p-5 shadow-[var(--shadow-card)] backdrop-blur-md transition-all duration-300 hover:border-[var(--ds-border-strong)] sm:p-7">
       <button
         type="button"
         onClick={onOpen}
-        onFocus={() => setHovered(true)}
-        onBlur={() => setHovered(false)}
-        onPointerEnter={() => setHovered(true)}
-        onPointerLeave={() => setHovered(false)}
         aria-label={`Open case study: ${project.title}`}
         data-cursor="view"
-        className="group relative block w-full text-left focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+        className="block w-full text-left focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
       >
-        <div className="relative aspect-[16/9] sm:aspect-[2.2/1] max-h-[34svh] sm:max-h-[38svh] w-full overflow-hidden">
-          <motion.div
-            className="h-full w-full"
-            animate={{ scale: hovered ? 1.03 : 1 }}
-            transition={{ duration: 0.35, ease: ease.out }}
-          >
-            <ProjectField project={project} hovered={hovered} />
-          </motion.div>
-
-          {/* Overlay: 0 → 1 on hover, exactly as the source. */}
-          <motion.div
-            aria-hidden
-            className="absolute inset-0 flex items-center justify-center bg-[color-mix(in_srgb,var(--ds-bg)_72%,transparent)]"
-            initial={false}
-            animate={{ opacity: hovered ? 1 : 0 }}
-            transition={{ duration: 0.25, ease: ease.out }}
-          >
-            <span
-              className="text-btn inline-flex items-center gap-sm rounded-xl px-lg py-sm font-semibold text-white shadow-[var(--shadow-md)]"
-              style={{ backgroundColor: project.color }}
-            >
-              Read the case study <ArrowUpRight size={16} weight="bold" />
-            </span>
-          </motion.div>
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-[11px] font-semibold tracking-widest text-[var(--ds-text-muted)] uppercase">
+            {project.category}
+          </span>
+          <span className="font-mono text-[11px] text-[var(--ds-text-faint)] opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            Click to expand ↗
+          </span>
         </div>
 
-        <div className="flex flex-col gap-xs sm:gap-sm p-3 sm:p-md">
-          <div className="flex flex-wrap items-center gap-xs sm:gap-sm">
-            <Tag>{project.category}</Tag>
-            {project.client && <Tag>{project.client}</Tag>}
-            {project.year && <Tag>{project.year}</Tag>}
-          </div>
-          <h3 className="text-h3 text-black">{project.title}</h3>
-          <p className="text-body-s text-ink-2 max-w-[62ch] line-clamp-2">{project.description}</p>
-          <ul className="flex flex-wrap gap-xs sm:gap-sm">
-            {project.technologies.map((t) => (
-              <li key={t}>
-                <Tag>{t}</Tag>
+        <Artboard project={project} />
+
+        <ul className="mt-3 flex flex-wrap gap-2">
+          {[project.category, project.client, project.year]
+            .filter(Boolean)
+            .map((meta) => (
+              <li key={meta as string}>
+                <Pill>{meta}</Pill>
               </li>
             ))}
-          </ul>
-        </div>
+        </ul>
+
+        <h3 className="text-h3 mt-3 font-extrabold tracking-tight text-[var(--ds-text-primary)] transition-colors group-hover:text-[var(--ds-accent)]">
+          {project.title}
+        </h3>
+
+        <p className="text-body-s mt-2 max-w-[640px] leading-relaxed text-[var(--ds-text-secondary)]">
+          {project.description}
+        </p>
+
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {project.technologies.map((t) => (
+            <li key={t}>
+              <Pill muted>{t}</Pill>
+            </li>
+          ))}
+        </ul>
       </button>
 
-      {/* Persistent affordances. The source hides its CTA behind hover, which
-          keyboard and touch users never see (spec §15) — so the same call to
-          action also lives here, at rest. Links render only when the data
-          carries a real URL: absent data removes the affordance (spec §8). */}
-      <div className="border-hairline flex flex-wrap items-center gap-md border-t px-3 sm:px-md py-xs sm:py-sm">
-        <button
-          type="button"
-          onClick={onOpen}
-          className="text-label inline-flex items-center gap-xs rounded-sm font-semibold tracking-normal normal-case text-[var(--ds-accent)] underline-offset-4 transition-colors hover:text-[var(--ds-accent-hover)] hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
-        >
-          Read the case study <ArrowUpRight size={13} weight="bold" />
-        </button>
-        {project.liveUrl && (
-          <a
-            href={project.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor="link"
-            className="text-label text-[var(--ds-link)] hover:text-[var(--ds-link)] hover:brightness-125 inline-flex items-center gap-xs normal-case tracking-normal underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none rounded-sm"
+      {/* Persistent affordances: the hover hint above is decoration, this row
+          is the actual, always-reachable call to action. */}
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--ds-border)] pt-4">
+        <div className="flex flex-wrap items-center gap-4">
+          <button
+            type="button"
+            onClick={onOpen}
+            className="text-body-s inline-flex items-center gap-1 rounded-sm font-semibold text-[var(--ds-accent)] transition-colors hover:text-[var(--ds-accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
           >
-            Live site <ArrowUpRight size={13} weight="bold" />
-          </a>
-        )}
-        {project.githubUrl && (
-          <a
-            href={project.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor="link"
-            className="text-label text-[var(--ds-link)] hover:text-[var(--ds-link)] hover:brightness-125 inline-flex items-center gap-xs normal-case tracking-normal underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none rounded-sm"
-          >
-            <GithubLogo size={14} weight="bold" /> Source
-          </a>
-        )}
+            Read the case study
+            <ArrowUpRight
+              size={14}
+              weight="bold"
+              className="transition-transform group-hover:translate-x-0.5"
+            />
+          </button>
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="link"
+              className="text-label inline-flex items-center gap-1 rounded-sm tracking-normal normal-case text-[var(--ds-link)] underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+            >
+              Live site <ArrowUpRight size={12} weight="bold" />
+            </a>
+          )}
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="link"
+              className="text-label inline-flex items-center gap-1 rounded-sm tracking-normal normal-case text-[var(--ds-link)] underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+            >
+              <GithubLogo size={13} weight="bold" /> Source
+            </a>
+          )}
+        </div>
+        <span className="font-mono hidden text-[11px] text-[var(--ds-text-faint)] sm:inline">
+          Expanded Case Study
+        </span>
       </div>
+    </article>
+  )
+}
+
+/** Watermark word + the project's signature solid, floating over it. */
+function Artboard({ project, compact = false }: { project: Project; compact?: boolean }) {
+  const reduced = useReducedMotion()
+
+  return (
+    <div
+      aria-hidden
+      className={cn(
+        "relative my-2 w-full overflow-hidden rounded-2xl",
+        compact ? "h-40 sm:h-48" : "h-48 sm:h-60"
+      )}
+    >
+      <span
+        className="absolute bottom-0 left-0 translate-y-[12%] leading-[0.85] font-extrabold tracking-[-0.04em] whitespace-nowrap select-none"
+        style={{
+          fontSize: compact ? "clamp(2.5rem, 6vw, 4.5rem)" : "clamp(3rem, 7.5vw, 6rem)",
+          color: "var(--ds-text-faint)",
+          opacity: 0.22,
+        }}
+      >
+        {project.watermark}
+      </span>
+
+      <motion.div
+        className="absolute top-4 right-[12%] sm:top-6"
+        animate={reduced ? undefined : { y: [0, -12, 0], rotate: [0, 3, 0] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <Shape3D kind={project.shape} hue={project.hue} size={compact ? 116 : 140} />
+      </motion.div>
+
+      <motion.span
+        className="absolute right-[34%] bottom-8 hidden size-3 rounded-full bg-[var(--ds-text-primary)]/80 shadow-md sm:block"
+        animate={reduced ? undefined : { y: [0, -6, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      />
     </div>
   )
 }
 
-/**
- * The detail view. Spec §8: the card and the detail are two VIEWS of one
- * record — every field here reads from the same project object, so a URL
- * changed once changes everywhere.
- */
-function ProjectDetail({ project, onClose }: { project: Project; onClose: () => void }) {
+function Pill({ children, muted = false }: { children: React.ReactNode; muted?: boolean }) {
+  return (
+    <span
+      className={cn(
+        "text-label inline-flex items-center rounded-pill border px-3 py-1 font-medium tracking-normal normal-case whitespace-nowrap",
+        muted
+          ? "border-[var(--ds-border)] bg-[var(--ds-surface)]/80 text-[var(--ds-text-secondary)]"
+          : "border-[var(--ds-border)] bg-[var(--ds-surface)]/90 text-[var(--ds-text-body)] shadow-[var(--shadow-xs)]"
+      )}
+    >
+      {children}
+    </span>
+  )
+}
+
+/* -------------------------------------------------------------------------
+   Expanded case study
+   ---------------------------------------------------------------------- */
+
+function CaseStudy({ project, onClose }: { project: Project; onClose: () => void }) {
   const closeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -273,7 +408,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
 
   return (
     <motion.div
-      className="fixed inset-0 z-[90] flex items-end justify-center sm:items-center sm:p-md"
+      className="fixed inset-0 z-[90] flex items-end justify-center p-0 sm:items-center sm:p-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -284,67 +419,84 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
         aria-label="Close case study"
         tabIndex={-1}
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-[color-mix(in_srgb,var(--ds-bg)_80%,transparent)]"
+        className="absolute inset-0 cursor-default bg-[color-mix(in_srgb,var(--ds-text-primary)_40%,transparent)] backdrop-blur-md"
       />
 
       <motion.div
         role="dialog"
         aria-modal="true"
         aria-labelledby={`project-${project.id}-title`}
-        initial={{ y: 24, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 16, opacity: 0 }}
+        initial={{ scale: 0.95, y: 16, opacity: 0 }}
+        animate={{ scale: 1, y: 0, opacity: 1 }}
+        exit={{ scale: 0.97, y: 8, opacity: 0 }}
         transition={{ duration: 0.3, ease: ease.out }}
-        className="relative max-h-[92svh] w-full max-w-[900px] overflow-y-auto rounded-t-2xl border border-[var(--ds-border)] bg-[var(--ds-surface)] shadow-[var(--shadow-card)] sm:rounded-2xl"
+        className="relative max-h-[92svh] w-full max-w-[860px] overflow-hidden rounded-t-3xl border border-[var(--ds-border)] bg-[var(--ds-surface)] shadow-[var(--shadow-card)] sm:rounded-3xl"
       >
-        <div className="relative aspect-[3/2] max-h-[40svh] overflow-hidden">
-          <ProjectField project={project} />
-          <button
-            ref={closeRef}
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            data-cursor="link"
-            className="absolute top-md right-md grid size-11 place-items-center rounded-pill border border-[var(--ds-border)] bg-[var(--ds-surface)]/90 text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] backdrop-blur-md transition-all duration-200 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-95"
-          >
-            <X size={18} weight="bold" />
-          </button>
-        </div>
-
-        <div className="flex flex-col gap-md p-md sm:p-lg">
-          <div className="flex flex-wrap gap-sm">
-            <Tag>{project.category}</Tag>
-            {project.client && <Tag>{project.client}</Tag>}
-            {project.year && <Tag>{project.year}</Tag>}
+        {/* Top artboard */}
+        <div className="border-b border-[var(--ds-border-subtle)] bg-gradient-to-b from-[var(--ds-surface-2)] via-[var(--ds-surface-sunken)]/60 to-[var(--ds-surface)] px-6 pt-5 pb-3 sm:px-8">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[11px] font-semibold tracking-widest text-[var(--ds-text-muted)] uppercase">
+              {project.category}
+            </span>
+            <button
+              ref={closeRef}
+              type="button"
+              onClick={onClose}
+              aria-label="Close case study"
+              data-cursor="link"
+              className="grid size-10 place-items-center rounded-pill border border-[var(--ds-border-strong)] bg-[var(--ds-surface)]/90 text-[var(--ds-text-secondary)] shadow-[var(--shadow-xs)] transition-all hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+            >
+              <X size={16} weight="bold" />
+            </button>
           </div>
 
-          <h3 id={`project-${project.id}-title`} className="text-h2 text-black">
+          <Artboard project={project} compact />
+        </div>
+
+        {/* Body */}
+        <div className="max-h-[60svh] space-y-5 overflow-y-auto p-6 sm:p-8">
+          <ul className="flex flex-wrap gap-2">
+            {[project.category, project.client, project.year]
+              .filter(Boolean)
+              .map((meta) => (
+                <li key={meta as string}>
+                  <Pill>{meta}</Pill>
+                </li>
+              ))}
+          </ul>
+
+          <h3
+            id={`project-${project.id}-title`}
+            className="text-h2 font-extrabold tracking-tight text-[var(--ds-text-primary)]"
+          >
             {project.title}
           </h3>
 
-          <p className="text-lead text-ink-2">{project.detail}</p>
+          <p className="text-body leading-relaxed text-[var(--ds-text-secondary)]">
+            {project.detail}
+          </p>
 
-          <div className="bg-hairline h-px w-full" />
-
-          <div className="flex flex-col gap-sm">
-            <span className="eyebrow">Built with</span>
-            <ul className="flex flex-wrap gap-sm">
+          <div className="border-t border-[var(--ds-border-subtle)] pt-5">
+            <p className="font-mono mb-3 text-[11px] font-medium tracking-wider text-[var(--ds-text-muted)]">
+              [ BUILT WITH ]
+            </p>
+            <ul className="flex flex-wrap gap-2.5">
               {project.technologies.map((t) => (
                 <li key={t}>
-                  <Tag>{t}</Tag>
+                  <Pill>{t}</Pill>
                 </li>
               ))}
             </ul>
           </div>
 
           {(project.liveUrl || project.githubUrl) && (
-            <div className="flex flex-wrap gap-md">
+            <div className="flex flex-wrap gap-3 pt-1">
               {project.liveUrl && (
                 <a
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-btn inline-flex items-center gap-sm rounded-xl bg-[var(--ds-accent)] px-lg py-sm font-semibold text-[var(--ds-text-inverse)] shadow-[var(--shadow-electric)] transition-all hover:-translate-y-0.5 hover:bg-[var(--ds-accent-hover)] hover:shadow-[var(--shadow-electric-hover)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+                  className="text-btn inline-flex items-center gap-2 rounded-xl bg-[var(--ds-accent)] px-5 py-2.5 font-semibold text-[var(--ds-text-inverse)] shadow-[var(--shadow-electric)] transition-all hover:-translate-y-0.5 hover:bg-[var(--ds-accent-hover)] hover:shadow-[var(--shadow-electric-hover)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
                 >
                   Visit live site <ArrowUpRight size={15} weight="bold" />
                 </a>
@@ -354,7 +506,7 @@ function ProjectDetail({ project, onClose }: { project: Project; onClose: () => 
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-btn inline-flex items-center gap-sm rounded-xl border border-[var(--ds-border)] bg-[var(--ds-surface)] px-lg py-sm font-semibold text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:-translate-y-0.5 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] hover:shadow-[var(--shadow-md)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+                  className="text-btn inline-flex items-center gap-2 rounded-xl border border-[var(--ds-border)] bg-[var(--ds-surface)] px-5 py-2.5 font-semibold text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:-translate-y-0.5 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] hover:shadow-[var(--shadow-md)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
                 >
                   <GithubLogo size={16} weight="bold" /> View source
                 </a>

@@ -19,6 +19,8 @@ export type Project = {
   fill: string
   /** Decorative solid that sits in the field — one per project, stable. */
   shape: ShapeKind
+  /** Single word set as the giant watermark behind the artboard solid. */
+  watermark: string
   /** Distinct palette accent color for the badge / label. */
   color: string
   /** Gradient ramp used by the decorative solid. */
@@ -55,6 +57,7 @@ export const projects: Project[] = [
     color: "#2563eb",
     hue: "blue",
     shape: "sphere",
+    watermark: "Geospatial",
     featured: true,
   },
   {
@@ -78,6 +81,7 @@ export const projects: Project[] = [
     color: "#0891b2",
     hue: "cyan",
     shape: "torus",
+    watermark: "AirQuality",
     featured: true,
   },
   {
@@ -95,6 +99,7 @@ export const projects: Project[] = [
     color: "#ea580c",
     hue: "orange",
     shape: "cone",
+    watermark: "Connected",
     featured: true,
   },
   {
@@ -112,6 +117,7 @@ export const projects: Project[] = [
     color: "#059669",
     hue: "green",
     shape: "cube",
+    watermark: "DataFlow",
   },
   {
     id: "feedlot",
@@ -128,6 +134,7 @@ export const projects: Project[] = [
     color: "#7c3aed",
     hue: "violet",
     shape: "cylinder",
+    watermark: "Decision",
   },
   {
     id: "climateag",
@@ -144,6 +151,7 @@ export const projects: Project[] = [
     color: "#dc2626",
     hue: "red",
     shape: "star",
+    watermark: "Resilience",
   },
 ]
 
