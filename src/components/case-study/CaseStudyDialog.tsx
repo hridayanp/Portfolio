@@ -16,7 +16,7 @@ import { caseStudySections } from "./caseStudyDoc"
  * from the document's own `##` headings, and the rendered body. Adding a
  * project adds a document; nothing here changes.
  *
- * Sized to 90% of the viewport in both axes, per the design.
+ * Sized to 95% of the viewport in both axes, per the design.
  */
 export function CaseStudyDialog({
   project,
@@ -79,7 +79,7 @@ export function CaseStudyDialog({
 
   return (
     <motion.div
-      className="fixed inset-0 z-[90] flex items-center justify-center p-3 sm:p-6"
+      className="fixed inset-0 z-[90] flex items-center justify-center p-2 sm:p-3"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -101,7 +101,7 @@ export function CaseStudyDialog({
         animate={{ scale: 1, y: 0, opacity: 1 }}
         exit={{ scale: 0.97, y: 8, opacity: 0 }}
         transition={{ duration: 0.3, ease: ease.out }}
-        className="relative flex h-[90vh] max-h-[90vh] w-[90vw] max-w-[90vw] flex-col overflow-hidden rounded-3xl border border-[var(--ds-border)] bg-[var(--ds-surface)] shadow-[var(--shadow-card)]"
+        className="relative flex h-[95vh] max-h-[95vh] w-[95vw] max-w-[95vw] flex-col overflow-hidden rounded-3xl border border-[var(--ds-border)] bg-[var(--ds-surface)] shadow-[var(--shadow-card)]"
       >
         {/* ---- Masthead ---- */}
         <header className="relative shrink-0 border-b border-[var(--ds-border-subtle)]">
