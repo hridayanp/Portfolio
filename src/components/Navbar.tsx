@@ -53,7 +53,7 @@ export function Navbar() {
       <header className="fixed inset-x-0 top-0 z-50 gutter pt-md">
         <nav
           data-raised={scrolled}
-          className="floating-nav mx-auto flex h-[72px] items-center justify-between gap-md rounded-pill px-5 transition-[box-shadow] duration-500 sm:px-7"
+          className="floating-nav mx-auto flex h-[72px] items-center justify-between gap-md rounded-pill px-5 transition-all duration-300 sm:px-7"
         >
           <a
             href="#home"
