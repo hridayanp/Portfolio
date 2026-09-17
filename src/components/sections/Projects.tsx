@@ -7,7 +7,7 @@ import {
   type MotionValue,
 } from "motion/react"
 import { ArrowDown, ArrowUpRight, GithubLogo, X } from "@phosphor-icons/react"
-import { heroFooter, projects, type Project } from "@/content"
+import { projects, type Project } from "@/content"
 import { Shape3D } from "@/components/decor/Shape3D"
 import { StickyScene } from "@/components/primitives/StickyScene"
 import { ease } from "@/lib/motion"
@@ -75,6 +75,7 @@ function ProjectsScene({
   onOpen: (id: string) => void
 }) {
   const [index, setIndex] = useState(0)
+  const reduced = useReducedMotion()
   /* A click in the directory wins until the next scroll tick moves past it,
      so the list stays usable without fighting the scroll narrative. */
   const pinned = useRef<number | null>(null)
@@ -94,6 +95,7 @@ function ProjectsScene({
   }, [])
 
   const project = projects[index]
+  const initialTilt = index % 2 === 0 ? -5 : 5
 
   return (
     <div className="relative flex h-full max-h-[100svh] w-full flex-col justify-between gutter overflow-hidden pt-[104px] pb-5">
@@ -110,9 +112,23 @@ function ProjectsScene({
         <div className="grid items-start gap-6 lg:grid-cols-12">
           <motion.div
             key={project.id}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, ease: ease.out }}
+            initial={{
+              opacity: reduced ? 0 : 0.7,
+              scale: reduced ? 1 : 0.94,
+              rotate: reduced ? 0 : initialTilt,
+              y: reduced ? 0 : 12,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              rotate: 0,
+              y: 0,
+            }}
+            transition={{
+              duration: 0.45,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            style={{ transformOrigin: "center center" }}
             className="lg:col-span-8"
           >
             <ShowcaseCard project={project} onOpen={() => onOpen(project.id)} />
@@ -138,7 +154,7 @@ function ProjectsScene({
                         aria-current={on ? "true" : undefined}
                         data-cursor="view"
                         className={cn(
-                          "flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none",
+                          "flex w-full items-center justify-between gap-3 rounded-md px-3 py-2 text-left transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none",
                           on
                             ? "border border-[var(--ds-border)] bg-[var(--ds-surface)]/70 shadow-[var(--shadow-xs)]"
                             : "border border-transparent hover:bg-[var(--ds-surface)]/60"
@@ -217,7 +233,7 @@ function SectionMeta({ index }: { index: number }) {
 
 function SceneFooter() {
   return (
-    <div className="font-mono mx-auto flex w-full max-w-[1400px] flex-col items-center justify-between gap-2 border-t border-[var(--ds-border)] pt-4 text-[11px] text-[var(--ds-text-muted)] sm:flex-row">
+    <div className="font-mono mx-auto flex w-full max-w-[1400px] items-center justify-start border-t border-[var(--ds-border)] pt-4 text-[11px] text-[var(--ds-text-muted)]">
       <a
         href="#contact"
         data-cursor="link"
@@ -226,9 +242,6 @@ function SceneFooter() {
         <ArrowDown size={12} weight="bold" />
         [ SCROLL TO CONTACT ]
       </a>
-      <p className="text-[var(--ds-text-faint)]">
-        {heroFooter.credit} © {new Date().getFullYear()}
-      </p>
     </div>
   )
 }

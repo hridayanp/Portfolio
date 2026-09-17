@@ -1,4 +1,4 @@
-import { activeSocials, contact, identity, navItems, roles } from "@/content"
+import { activeSocials, contact, heroFooter, identity, navItems, roles } from "@/content"
 import { Marquee } from "./primitives/Marquee"
 
 /**
@@ -106,7 +106,7 @@ export function Footer() {
 
         <div className="mx-auto mt-md flex w-full max-w-[1400px] flex-col gap-sm sm:flex-row sm:items-center sm:justify-between">
           <p className="text-label text-ink-3 normal-case tracking-normal">
-            © {year} {identity.fullName}
+            {heroFooter.credit} © {year}
           </p>
           <p className="text-label text-ink-3 normal-case tracking-normal">
             Built with React, TypeScript and Framer Motion
