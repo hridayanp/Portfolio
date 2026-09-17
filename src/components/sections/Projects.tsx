@@ -152,9 +152,9 @@ function ProjectsScene({
                         onClick={() => select(i)}
                         onDoubleClick={() => onOpen(p.id)}
                         aria-current={on ? "true" : undefined}
-                        data-cursor="view"
+                        data-cursor="link"
                         className={cn(
-                          "flex w-full items-center justify-between gap-3 rounded-md px-3 py-2 text-left transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none",
+                          "flex w-full cursor-pointer items-center justify-between gap-3 rounded-md px-3 py-2 text-left transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none",
                           on
                             ? "border border-[var(--ds-border)] bg-[var(--ds-surface)]/70 shadow-[var(--shadow-xs)]"
                             : "border border-transparent hover:bg-[var(--ds-surface)]/60"
