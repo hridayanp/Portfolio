@@ -1,5 +1,32 @@
 import type { ShapeHue, ShapeKind } from "@/components/decor/Shape3D"
 
+/* ---------------------------------------------------------------------------
+   Case-study prose.
+
+   Imported as RAW markdown straight from `docs/`. The documents are authored,
+   verified and vetted by hand, so they are never transcribed, summarised or
+   re-typed into this file — importing the source guarantees what renders is
+   byte-identical to what is on disk. Editing a document in `docs/` is the
+   only way to change what the dialog shows.
+   ------------------------------------------------------------------------ */
+import dicraMd from "../../docs/case_study_geospatial.md?raw"
+import airQualityMd from "../../docs/case_study_air_quality.md?raw"
+import dataflowMd from "../../docs/case_study_dataflow.md?raw"
+import hyperlocalMd from "../../docs/case_study_Hyperlocal forecast for thunderstorm and surface wind.md?raw"
+import unfpaMd from "../../docs/case_study_unfpa_population.md?raw"
+
+/* Artwork. `_banner` is the landing card; `_full` is the dialog masthead. */
+import dicraBanner from "@/assets/images/projects/geospatial_banner.png"
+import dicraFull from "@/assets/images/projects/geospatial_full.png"
+import airQualityBanner from "@/assets/images/projects/air-quality-banner.png"
+import airQualityFull from "@/assets/images/projects/air_quality-full.png"
+import dataflowBanner from "@/assets/images/projects/dataflow_banner.png"
+import dataflowFull from "@/assets/images/projects/dataflow_full.png"
+import hyperlocalBanner from "@/assets/images/projects/hyperlocal_banner.png"
+import hyperlocalFull from "@/assets/images/projects/hyperlocal_full.png"
+import unfpaBanner from "@/assets/images/projects/unfpa_banner.png"
+import unfpaFull from "@/assets/images/projects/unfpa_full.png"
+
 export type Project = {
   id: string
   title: string
@@ -8,14 +35,14 @@ export type Project = {
   year?: string
   /** One-line card description. */
   description: string
-  /** Longer narrative used in the expanded view. */
-  detail: string
   technologies: string[]
-  /** Optional real screenshot — drop a file in /public and set the path. */
-  image?: string
-  /**
-   * Deterministic colour field used when no `image` exists.
-   */
+  /** Full case study, raw markdown, exactly as authored in `docs/`. */
+  caseStudy: string
+  /** Landing-card artwork, shown when `USE_ASSET_IMAGES` is on. */
+  bannerImage: string
+  /** Dialog masthead artwork, shown when `USE_ASSET_IMAGES` is on. */
+  fullImage: string
+  /** Deterministic colour field used by the fallback artboard. */
   fill: string
   /** Decorative solid that sits in the field — one per project, stable. */
   shape: ShapeKind
@@ -31,52 +58,56 @@ export type Project = {
 }
 
 /**
- * Projects are declared once, here. Add / remove / reorder in this array and
- * every surface in the site follows. Links are omitted entirely unless a real
- * URL exists.
+ * One entry per case study in `docs/` — the documents ARE the portfolio, so
+ * nothing without a document appears here. Add a document, add an entry.
+ *
+ * Titles are the documents' own H1s. `client` is set only where a document
+ * names the commissioning organisation, and `year` is omitted throughout
+ * rather than guessed. Links are omitted entirely unless a real URL exists.
  */
 export const projects: Project[] = [
   {
-    id: "geodash",
-    title: "Geospatial Dashboard Portal",
+    id: "dicra",
+    title: "Data in Climate Resilient Agriculture (DiCRA)",
     client: "UNDP",
-    category: "Geospatial Platform",
-    year: "2024",
+    category: "Geospatial Intelligence Platform",
     description:
-      "A map dashboard that helps policy teams explore satellite climate data without desktop GIS software.",
-    detail:
-      "UNDP needed a way for policy teams to explore satellite-derived climate data without specialized GIS software. I built a web map dashboard to toggle raster and vector layers, apply spatial filters, and inspect time-series charts. Because large geospatial datasets can easily degrade UI performance, I focused on careful state management and modular React architecture to keep map interactions fast.",
+      "A digital public good integrating Earth observation and socioeconomic datasets into interactive geospatial analytics across 36 Indian states and union territories.",
     technologies: [
-      "ReactJS",
-      "Leaflet",
-      "MapLibreGL",
+      "React",
       "TypeScript",
-      "Tailwind CSS",
+      "MapLibre GL",
+      "PMTiles",
+      "Cloud Optimized GeoTIFF",
+      "Redux Toolkit",
     ],
+    caseStudy: dicraMd,
+    bannerImage: dicraBanner,
+    fullImage: dicraFull,
     fill: "#eff6ff",
     color: "#2563eb",
     hue: "blue",
     shape: "sphere",
-    watermark: "Geospatial",
+    watermark: "DiCRA",
     featured: true,
   },
   {
-    id: "airquality",
-    title: "Air Quality Portal",
-    client: "UNDP",
-    category: "Real-time Monitoring",
-    year: "2024",
+    id: "air-quality",
+    title: "Uzbekistan Air Quality and Health Risk Geospatial System",
+    category: "Environmental Analytics",
     description:
-      "A monitoring dashboard for regional air quality, designed for fast data retrieval and clear readability.",
-    detail:
-      "Air quality data is only useful when it is current. I built the React interface and the automated data pipelines feeding it, using Leaflet and MapLibreGL for map rendering, keeping the layout focused on fast data retrieval and clear visual cues.",
+      "Transforms ground-level observations and satellite atmospheric measurements into continuous spatial rasters and a composite health-risk index across thirteen administrative regions.",
     technologies: [
-      "ReactJS",
-      "Leaflet",
-      "MapLibreGL",
-      "Data Pipelines",
-      "REST APIs",
+      "React",
+      "TypeScript",
+      "MapLibre GL",
+      "Pyodide (WASM)",
+      "NumPy",
+      "Tailwind CSS",
     ],
+    caseStudy: airQualityMd,
+    bannerImage: airQualityBanner,
+    fullImage: airQualityFull,
     fill: "#ecfeff",
     color: "#0891b2",
     hue: "cyan",
@@ -85,73 +116,75 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    id: "connected-car",
-    title: "Connected Car & Weather Early Warning",
-    client: "Maruti Suzuki",
-    category: "Enterprise Platform",
-    year: "2023",
+    id: "hyperlocal",
+    title: "Hyperlocal Meteorological Operations and Decision Intelligence",
+    category: "Operational Meteorology",
     description:
-      "Live geospatial tracking and weather hazard alerts for driver and fleet safety.",
-    detail:
-      "An enterprise fleet dashboard combining live vehicle tracking with severe weather early warnings. I worked on the data ingestion and API layer to deliver alerts with low latency, as well as the frontend map interface.",
-    technologies: ["ReactJS", "Geospatial APIs", "Node.js", "REST APIs"],
+      "Convective thunderstorm and strong surface wind forecasting for high-consequence environments — aerodrome management and defence aviation.",
+    technologies: [
+      "React 19",
+      "TypeScript",
+      "MapLibre GL",
+      "Deck.gl",
+      "geotiff.js",
+      "Redux Toolkit",
+    ],
+    caseStudy: hyperlocalMd,
+    bannerImage: hyperlocalBanner,
+    fullImage: hyperlocalFull,
     fill: "#fff7ed",
     color: "#ea580c",
     hue: "orange",
     shape: "cone",
-    watermark: "Connected",
+    watermark: "MetOps",
     featured: true,
   },
   {
-    id: "dataflow",
-    title: "DataFlow",
-    client: "Internal",
-    category: "Developer Tooling",
-    year: "2024",
+    id: "unfpa-population",
+    title: "Demographic Intelligence and High-Resolution Landscape Dynamics",
+    client: "UNFPA",
+    category: "Spatial Demography",
     description:
-      "A visual interface for scheduling, running, and monitoring Python scripts across environments.",
-    detail:
-      "Developers needed an easier way to schedule, run, and track Python workflows across environments. I built the React frontend using React Flow for node-based pipeline building, adding live WebSocket logging so teams could follow job progress in real time.",
-    technologies: ["ReactJS", "React Flow", "TypeScript", "WebSockets"],
+      "Satellite-based population estimation and land-use change attribution for Odisha, closing the information deficit left by a postponed decennial census.",
+    technologies: [
+      "React",
+      "TypeScript",
+      "MapLibre GL",
+      "LightGBM",
+      "Google Earth Engine",
+      "PMTiles",
+    ],
+    caseStudy: unfpaMd,
+    bannerImage: unfpaBanner,
+    fullImage: unfpaFull,
+    fill: "#f5f3ff",
+    color: "#7c3aed",
+    hue: "violet",
+    shape: "cylinder",
+    watermark: "Odisha",
+  },
+  {
+    id: "dataflow",
+    title: "Serverless Automation Pipeline Builder",
+    category: "Developer Tooling",
+    description:
+      "Event-driven workflow orchestration without long-running clusters — a visual DAG builder dispatching sandboxed tasks across ephemeral serverless compute.",
+    technologies: [
+      "React 19",
+      "TypeScript",
+      "React Flow",
+      "Redux Toolkit",
+      "AWS Lambda",
+      "Node.js",
+    ],
+    caseStudy: dataflowMd,
+    bannerImage: dataflowBanner,
+    fullImage: dataflowFull,
     fill: "#ecfdf5",
     color: "#059669",
     hue: "green",
     shape: "cube",
     watermark: "DataFlow",
-  },
-  {
-    id: "feedlot",
-    title: "Climate Decision Intelligence Feedlot Dashboard",
-    client: "Australian agricultural client",
-    category: "Data Visualisation",
-    year: "2023",
-    description:
-      "Interactive charts and environmental parameter tracking for livestock operations, including Stripe billing integration.",
-    detail:
-      "Built for Australian agricultural operators to track environmental and animal well-being parameters using interactive Chart.js graphs and React tables. I overhauled the API integrations to reduce latency and downtime, and integrated Stripe for subscription payments.",
-    technologies: ["ReactJS", "ChartJS", "React-Table", "Stripe", "REST APIs"],
-    fill: "#f5f3ff",
-    color: "#7c3aed",
-    hue: "violet",
-    shape: "cylinder",
-    watermark: "Decision",
-  },
-  {
-    id: "climateag",
-    title: "Climate Resilience Agriculture Portal",
-    client: "UNDP",
-    category: "Geospatial Platform",
-    year: "2023",
-    description:
-      "A web portal translating complex climate resilience data into clear, accessible maps for non-specialists.",
-    detail:
-      "Built to help agricultural and policy stakeholders review climate resilience datasets. I developed the web GIS portal using Leaflet and Georaster, focusing on straightforward controls so users could explore raster data layers without needing a GIS background.",
-    technologies: ["ReactJS", "Leaflet", "Georaster", "Web GIS"],
-    fill: "#fef2f2",
-    color: "#dc2626",
-    hue: "red",
-    shape: "star",
-    watermark: "Resilience",
   },
 ]
 

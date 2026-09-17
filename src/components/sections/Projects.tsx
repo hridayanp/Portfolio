@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import {
   AnimatePresence,
   motion,
@@ -6,11 +6,11 @@ import {
   useReducedMotion,
   type MotionValue,
 } from "motion/react"
-import { ArrowDown, ArrowUpRight, GithubLogo, X } from "@phosphor-icons/react"
+import { ArrowDown, ArrowUpRight, GithubLogo } from "@phosphor-icons/react"
 import { projects, type Project } from "@/content"
 import { Shape3D } from "@/components/decor/Shape3D"
 import { StickyScene } from "@/components/primitives/StickyScene"
-import { ease } from "@/lib/motion"
+import { CaseStudyDialog } from "@/components/case-study/CaseStudyDialog"
 import { cn } from "@/lib/utils"
 
 /**
@@ -26,6 +26,16 @@ import { cn } from "@/lib/utils"
  * same project object, so a URL changed once changes everywhere, and an
  * absent URL removes the affordance rather than rendering a dead link.
  */
+/**
+ * Global switch for the section's artwork.
+ *
+ *   true  — use the `_banner` / `_full` screenshots from `assets/images/projects`
+ *   false — keep the generated artboard (watermark word + 3D solid)
+ *
+ * Both paths are kept working; flipping this changes nothing else.
+ */
+export const USE_ASSET_IMAGES = true
+
 export function Projects() {
   const [openId, setOpenId] = useState<string | null>(null)
   const reduced = useReducedMotion()
@@ -57,7 +67,13 @@ export function Projects() {
       )}
 
       <AnimatePresence>
-        {open && <CaseStudy project={open} onClose={() => setOpenId(null)} />}
+        {open && (
+          <CaseStudyDialog
+            project={open}
+            onClose={() => setOpenId(null)}
+            useAssetImage={USE_ASSET_IMAGES}
+          />
+        )}
       </AnimatePresence>
     </>
   )
@@ -344,9 +360,31 @@ function ShowcaseCard({ project, onOpen }: { project: Project; onOpen: () => voi
   )
 }
 
-/** Watermark word + the project's signature solid, floating over it. */
+/**
+ * The card's visual. With `USE_ASSET_IMAGES` on this is the project's
+ * `_banner` screenshot; with it off, the generated artboard — the watermark
+ * word and the project's signature solid floating over it.
+ */
 function Artboard({ project, compact = false }: { project: Project; compact?: boolean }) {
   const reduced = useReducedMotion()
+
+  if (USE_ASSET_IMAGES) {
+    return (
+      <div
+        className={cn(
+          "relative my-2 w-full overflow-hidden rounded-2xl border border-[var(--ds-border)] bg-[var(--ds-surface-2)]",
+          compact ? "h-40 sm:h-48" : "h-48 sm:h-60"
+        )}
+      >
+        <img
+          src={project.bannerImage}
+          alt={`${project.title} interface`}
+          loading="lazy"
+          className="size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+        />
+      </div>
+    )
+  }
 
   return (
     <div
@@ -396,137 +434,5 @@ function Pill({ children, muted = false }: { children: React.ReactNode; muted?: 
     >
       {children}
     </span>
-  )
-}
-
-/* -------------------------------------------------------------------------
-   Expanded case study
-   ---------------------------------------------------------------------- */
-
-function CaseStudy({ project, onClose }: { project: Project; onClose: () => void }) {
-  const closeRef = useRef<HTMLButtonElement>(null)
-
-  useEffect(() => {
-    const prev = document.body.style.overflow
-    document.body.style.overflow = "hidden"
-    closeRef.current?.focus()
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose()
-    window.addEventListener("keydown", onKey)
-    return () => {
-      document.body.style.overflow = prev
-      window.removeEventListener("keydown", onKey)
-    }
-  }, [onClose])
-
-  return (
-    <motion.div
-      className="fixed inset-0 z-[90] flex items-end justify-center p-0 sm:items-center sm:p-6"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-    >
-      <button
-        type="button"
-        aria-label="Close case study"
-        tabIndex={-1}
-        onClick={onClose}
-        className="absolute inset-0 cursor-default bg-[color-mix(in_srgb,var(--ds-text-primary)_40%,transparent)] backdrop-blur-md"
-      />
-
-      <motion.div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={`project-${project.id}-title`}
-        initial={{ scale: 0.95, y: 16, opacity: 0 }}
-        animate={{ scale: 1, y: 0, opacity: 1 }}
-        exit={{ scale: 0.97, y: 8, opacity: 0 }}
-        transition={{ duration: 0.3, ease: ease.out }}
-        className="relative max-h-[92svh] w-full max-w-[860px] overflow-hidden rounded-t-3xl border border-[var(--ds-border)] bg-[var(--ds-surface)] shadow-[var(--shadow-card)] sm:rounded-3xl"
-      >
-        {/* Top artboard */}
-        <div className="border-b border-[var(--ds-border-subtle)] bg-gradient-to-b from-[var(--ds-surface-2)] via-[var(--ds-surface-sunken)]/60 to-[var(--ds-surface)] px-6 pt-5 pb-3 sm:px-8">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[11px] font-semibold tracking-widest text-[var(--ds-text-muted)] uppercase">
-              {project.category}
-            </span>
-            <button
-              ref={closeRef}
-              type="button"
-              onClick={onClose}
-              aria-label="Close case study"
-              data-cursor="link"
-              className="grid size-10 place-items-center rounded-pill border border-[var(--ds-border-strong)] bg-[var(--ds-surface)]/90 text-[var(--ds-text-secondary)] shadow-[var(--shadow-xs)] transition-all hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
-            >
-              <X size={16} weight="bold" />
-            </button>
-          </div>
-
-          <Artboard project={project} compact />
-        </div>
-
-        {/* Body */}
-        <div className="max-h-[60svh] space-y-5 overflow-y-auto p-6 sm:p-8">
-          <ul className="flex flex-wrap gap-2">
-            {[project.category, project.client, project.year]
-              .filter(Boolean)
-              .map((meta) => (
-                <li key={meta as string}>
-                  <Pill>{meta}</Pill>
-                </li>
-              ))}
-          </ul>
-
-          <h3
-            id={`project-${project.id}-title`}
-            className="text-h2 font-extrabold tracking-tight text-[var(--ds-text-primary)]"
-          >
-            {project.title}
-          </h3>
-
-          <p className="text-body leading-relaxed text-[var(--ds-text-secondary)]">
-            {project.detail}
-          </p>
-
-          <div className="border-t border-[var(--ds-border-subtle)] pt-5">
-            <p className="font-mono mb-3 text-[11px] font-medium tracking-wider text-[var(--ds-text-muted)]">
-              [ BUILT WITH ]
-            </p>
-            <ul className="flex flex-wrap gap-2.5">
-              {project.technologies.map((t) => (
-                <li key={t}>
-                  <Pill>{t}</Pill>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {(project.liveUrl || project.githubUrl) && (
-            <div className="flex flex-wrap gap-3 pt-1">
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-btn inline-flex items-center gap-2 rounded-xl bg-[var(--ds-accent)] px-5 py-2.5 font-semibold text-[var(--ds-text-inverse)] shadow-[var(--shadow-electric)] transition-all hover:-translate-y-0.5 hover:bg-[var(--ds-accent-hover)] hover:shadow-[var(--shadow-electric-hover)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
-                >
-                  Visit live site <ArrowUpRight size={15} weight="bold" />
-                </a>
-              )}
-              {project.githubUrl && (
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-btn inline-flex items-center gap-2 rounded-xl border border-[var(--ds-border)] bg-[var(--ds-surface)] px-5 py-2.5 font-semibold text-[var(--ds-text-primary)] shadow-[var(--shadow-xs)] transition-all hover:-translate-y-0.5 hover:border-[var(--ds-accent-light)] hover:text-[var(--ds-accent)] hover:shadow-[var(--shadow-md)] active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
-                >
-                  <GithubLogo size={16} weight="bold" /> View source
-                </a>
-              )}
-            </div>
-          )}
-        </div>
-      </motion.div>
-    </motion.div>
   )
 }
