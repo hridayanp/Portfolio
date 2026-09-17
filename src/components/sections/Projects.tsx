@@ -265,57 +265,87 @@ function SceneFooter() {
    Showcase card
    ---------------------------------------------------------------------- */
 
+/**
+ * The showcase card.
+ *
+ * At rest the media fills the card and carries only its category tag — the
+ * screenshot is the thing worth looking at, and the directory beside it
+ * already names every project. On hover the image scales and desaturates,
+ * a scrim rises, and the written detail lifts in over it.
+ *
+ * Concentric radii: the card is `rounded-3xl` (24px) with 10px of padding,
+ * so the media frame takes 14px — 24 minus the gap — and the two curves
+ * stay parallel instead of fighting each other.
+ */
 function ShowcaseCard({ project, onOpen }: { project: Project; onOpen: () => void }) {
+  const meta = [project.category, project.client, project.year].filter(Boolean) as string[]
+
   return (
-    <article className="group relative overflow-hidden rounded-3xl border border-[var(--ds-border)] bg-gradient-to-b from-[var(--ds-surface)]/80 via-[var(--ds-surface-2)]/50 to-[var(--ds-surface-sunken)]/40 p-5 shadow-[var(--shadow-card)] backdrop-blur-md transition-all duration-300 hover:border-[var(--ds-border-strong)] sm:p-7">
+    <article className="group relative overflow-hidden rounded-3xl border border-[var(--ds-border)] bg-gradient-to-b from-[var(--ds-surface)]/80 via-[var(--ds-surface-2)]/50 to-[var(--ds-surface-sunken)]/40 p-2.5 shadow-[var(--shadow-card)] backdrop-blur-md transition-all duration-300 hover:border-[var(--ds-border-strong)]">
       <button
         type="button"
         onClick={onOpen}
         aria-label={`Open case study: ${project.title}`}
         data-cursor="view"
-        className="block w-full text-left focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+        className="relative block w-full overflow-hidden rounded-[14px] text-left focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
       >
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-[11px] font-semibold tracking-widest text-[var(--ds-text-muted)] uppercase">
+        <Artboard project={project} />
+
+        {/* Top chrome: category tag at rest, expand hint on hover. */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-3 p-3.5">
+          <span className="font-mono rounded-pill border border-[var(--ds-border)] bg-[var(--ds-surface)]/85 px-3 py-1 text-[10px] font-semibold tracking-widest text-[var(--ds-text-secondary)] uppercase shadow-[var(--shadow-xs)] backdrop-blur-md">
             {project.category}
           </span>
-          <span className="font-mono text-[11px] text-[var(--ds-text-faint)] opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <span className="font-mono rounded-pill bg-[var(--ds-text-primary)]/75 px-2.5 py-1 text-[10px] text-white opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100">
             Click to expand ↗
           </span>
         </div>
 
-        <Artboard project={project} />
+        {/* Glassmorphic scrim with light blue tint and soft backdrop blur */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-[#050c1e]/90 via-[#0a183d]/60 to-[#0e204d]/10 opacity-0 backdrop-blur-[3px] transition-all duration-500 ease-out group-hover:opacity-100 group-focus-within:opacity-100"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_bottom_left,rgba(37,99,235,0.28),transparent_70%)] opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-within:opacity-100"
+        />
 
-        <ul className="mt-3 flex flex-wrap gap-2">
-          {[project.category, project.client, project.year]
-            .filter(Boolean)
-            .map((meta) => (
-              <li key={meta as string}>
-                <Pill>{meta}</Pill>
+        {/* The written detail, lifting in smoothly over the glassmorphic image. */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 translate-y-2 p-4 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100 sm:p-6">
+          <ul className="flex flex-wrap gap-2">
+            {meta.map((m) => (
+              <li key={m}>
+                <span className="text-label inline-flex items-center rounded-pill border border-blue-400/30 bg-blue-500/20 px-3 py-1 font-medium tracking-normal normal-case text-blue-100 shadow-[0_2px_8px_rgba(0,0,0,0.2)] backdrop-blur-md">
+                  {m}
+                </span>
               </li>
             ))}
-        </ul>
+          </ul>
 
-        <h3 className="text-h3 mt-3 font-extrabold tracking-tight text-[var(--ds-text-primary)] transition-colors group-hover:text-[var(--ds-accent)]">
-          {project.title}
-        </h3>
+          <h3 className="text-h3 mt-2.5 font-extrabold tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
+            {project.title}
+          </h3>
 
-        <p className="text-body-s mt-2 max-w-[640px] leading-relaxed text-[var(--ds-text-secondary)]">
-          {project.description}
-        </p>
+          <p className="text-body-s mt-2 max-w-[640px] leading-relaxed text-blue-50/90 drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)]">
+            {project.description}
+          </p>
 
-        <ul className="mt-4 flex flex-wrap gap-2">
-          {project.technologies.map((t) => (
-            <li key={t}>
-              <Pill muted>{t}</Pill>
-            </li>
-          ))}
-        </ul>
+          <ul className="mt-3.5 flex flex-wrap gap-2">
+            {project.technologies.map((t) => (
+              <li key={t}>
+                <span className="text-label inline-flex items-center rounded-pill border border-white/20 bg-white/10 px-2.5 py-1 font-medium tracking-normal normal-case text-white/90 shadow-[0_2px_8px_rgba(0,0,0,0.15)] backdrop-blur-md">
+                  {t}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </button>
 
-      {/* Persistent affordances: the hover hint above is decoration, this row
-          is the actual, always-reachable call to action. */}
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--ds-border)] pt-4">
+      {/* Persistent affordances: the hover reveal is decoration, this row is
+          the actual, always-reachable call to action. */}
+      <div className="flex flex-wrap items-center justify-between gap-3 px-3.5 pt-4 pb-1.5 sm:px-4">
         <div className="flex flex-wrap items-center gap-4">
           <button
             type="button"
@@ -361,26 +391,21 @@ function ShowcaseCard({ project, onOpen }: { project: Project; onOpen: () => voi
 }
 
 /**
- * The card's visual. With `USE_ASSET_IMAGES` on this is the project's
- * `_banner` screenshot; with it off, the generated artboard — the watermark
- * word and the project's signature solid floating over it.
+ * The card's visual, filling the media frame. With `USE_ASSET_IMAGES` on this
+ * is the project's screenshot; with it off, the generated artboard — the
+ * watermark word and the project's signature solid floating over it.
  */
-function Artboard({ project, compact = false }: { project: Project; compact?: boolean }) {
+function Artboard({ project }: { project: Project }) {
   const reduced = useReducedMotion()
 
   if (USE_ASSET_IMAGES) {
     return (
-      <div
-        className={cn(
-          "relative my-2 w-full overflow-hidden rounded-2xl border border-[var(--ds-border)] bg-[var(--ds-surface-2)]",
-          compact ? "h-40 sm:h-48" : "h-48 sm:h-60"
-        )}
-      >
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--ds-surface-2)]">
         <img
           src={project.bannerImage}
           alt={`${project.title} interface`}
           loading="lazy"
-          className="size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+          className="size-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04] group-focus-within:scale-[1.04]"
         />
       </div>
     )
@@ -389,15 +414,12 @@ function Artboard({ project, compact = false }: { project: Project; compact?: bo
   return (
     <div
       aria-hidden
-      className={cn(
-        "relative my-2 w-full overflow-hidden rounded-2xl",
-        compact ? "h-40 sm:h-48" : "h-48 sm:h-60"
-      )}
+      className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--ds-surface-2)]/40 transition-transform duration-700 ease-out group-hover:scale-[1.04] group-focus-within:scale-[1.04]"
     >
       <span
         className="absolute bottom-0 left-0 translate-y-[12%] leading-[0.85] font-extrabold tracking-[-0.04em] whitespace-nowrap select-none"
         style={{
-          fontSize: compact ? "clamp(2.5rem, 6vw, 4.5rem)" : "clamp(3rem, 7.5vw, 6rem)",
+          fontSize: "clamp(3rem, 7.5vw, 6rem)",
           color: "var(--ds-text-faint)",
           opacity: 0.22,
         }}
@@ -406,15 +428,15 @@ function Artboard({ project, compact = false }: { project: Project; compact?: bo
       </span>
 
       <motion.div
-        className="absolute top-4 right-[12%] sm:top-6"
+        className="absolute top-4 right-[12%] sm:top-8"
         animate={reduced ? undefined : { y: [0, -12, 0], rotate: [0, 3, 0] }}
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       >
-        <Shape3D kind={project.shape} hue={project.hue} size={compact ? 116 : 140} />
+        <Shape3D kind={project.shape} hue={project.hue} size={140} />
       </motion.div>
 
       <motion.span
-        className="absolute right-[34%] bottom-8 hidden size-3 rounded-full bg-[var(--ds-text-primary)]/80 shadow-md sm:block"
+        className="absolute right-[34%] bottom-10 hidden size-3 rounded-full bg-[var(--ds-text-primary)]/80 shadow-md sm:block"
         animate={reduced ? undefined : { y: [0, -6, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -422,17 +444,3 @@ function Artboard({ project, compact = false }: { project: Project; compact?: bo
   )
 }
 
-function Pill({ children, muted = false }: { children: React.ReactNode; muted?: boolean }) {
-  return (
-    <span
-      className={cn(
-        "text-label inline-flex items-center rounded-pill border px-3 py-1 font-medium tracking-normal normal-case whitespace-nowrap",
-        muted
-          ? "border-[var(--ds-border)] bg-[var(--ds-surface)]/80 text-[var(--ds-text-secondary)]"
-          : "border-[var(--ds-border)] bg-[var(--ds-surface)]/90 text-[var(--ds-text-body)] shadow-[var(--shadow-xs)]"
-      )}
-    >
-      {children}
-    </span>
-  )
-}

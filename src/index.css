@@ -619,6 +619,26 @@
     background-attachment: fixed, scroll;
   }
 
+  /* Project card reveal.
+
+     The written detail lives over the image and is revealed on hover, which
+     leaves touch devices with no way to reach it — there is no hover there
+     to give. So on any pointer that cannot hover, the reveal is simply the
+     resting state. */
+  .card-reveal,
+  .card-scrim {
+    will-change: opacity, transform;
+  }
+  @media (hover: none) {
+    .card-reveal {
+      opacity: 1;
+      transform: none;
+    }
+    .card-scrim {
+      opacity: 1;
+    }
+  }
+
   /* Floating capsule header — transparent at top, frosted glass on scroll. */
   .floating-nav {
     background: transparent;
@@ -684,6 +704,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Keep the reveal, drop the travel — the information still arrives. */
+  .card-reveal {
+    transform: none !important;
+  }
+
   html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
