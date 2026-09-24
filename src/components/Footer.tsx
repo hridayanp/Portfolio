@@ -1,4 +1,4 @@
-import { activeSocials, contact, heroFooter, identity, navItems, roles } from "@/content"
+import { activeSocials, contact, heroFooter, identity, navItems } from "@/content"
 import { Marquee } from "./primitives/Marquee"
 
 /**
@@ -31,7 +31,7 @@ export function Footer() {
           <div className="flex flex-col gap-sm">
             <p className="text-h3 text-black">{identity.fullName}</p>
             <p className="text-body-s text-ink-2 max-w-[34ch]">
-              {roles[0].title} · {roles[0].company}
+              {identity.role} · {identity.engagementModel}
             </p>
             <p className="text-label text-ink-3 normal-case tracking-normal">
               {contact.location}

@@ -1,5 +1,5 @@
 import { ArrowUpRight } from "@phosphor-icons/react"
-import { activeSocials, contact, identity, roles } from "@/content"
+import { activeSocials, contact, identity } from "@/content"
 import { FloatingShapes, type FloatingShape } from "@/components/decor/FloatingShapes"
 import { MagneticButton } from "@/components/primitives/MagneticButton"
 import { MaskedText } from "@/components/primitives/MaskedText"
@@ -29,7 +29,8 @@ export function Contact() {
 
         <p className="text-lead text-ink-2 max-w-[46ch]">
           {identity.availability}. If you are building data-heavy interfaces for geospatial,
-          climate, or analytics platforms, I would love to hear from you.
+          climate, or analytics platforms, send over the brief and I will tell you honestly
+          whether I am the right person for it.
         </p>
 
         {contact.email && (
@@ -69,8 +70,8 @@ export function Contact() {
 
         <dl className="mt-md grid w-full max-w-[760px] gap-md sm:grid-cols-3">
           {[
-            { label: "Based in", value: contact.location },
-            { label: "Currently", value: roles[0].company },
+            { label: "Based in", value: `${contact.location} \u00b7 ${identity.timezone}` },
+            { label: "How I work", value: contact.engagementModel },
             { label: "Focus", value: identity.role },
           ].map((item) => (
             <div key={item.label} className="card-surface tinted px-md py-md text-left">

@@ -21,12 +21,12 @@ export const identity = {
   lastName: "Phukan",
   fullName: "Hridayan Phukan",
   /** Short role used in nav, footer, meta. */
-  role: "Frontend Software Engineer",
+  role: "Freelance Frontend Engineer",
   /** Longer positioning used in the hero. */
   headline: "I build interfaces that make complex data usable.",
   /** The one-line "what I actually do" from the 30-second pitch. */
   summary:
-    "Frontend engineer with 4+ years of experience building React data platforms, including geospatial and climate intelligence dashboards for UNDP and enterprise clients.",
+    "Freelance frontend engineer with 4+ years building React data platforms \u2014 geospatial, climate intelligence and analytics dashboards delivered for UNDP programmes and enterprise clients.",
   /** Disciplines, used for the hero ticker and meta description. */
   disciplines: [
     "React Engineering",
@@ -41,14 +41,22 @@ export const identity = {
   locationFlag: "🇮🇳",
   /** Shown in the hero signature card. */
   timezone: "IST (UTC+5:30)",
-  remoteAvailability: "Available for Global Remote Roles",
+  remoteAvailability: "Available for Remote Projects Worldwide",
   careerStart: 2021,
   /** Stated experience. Deliberately the figure from MYSELF.md rather than a
    *  computed one, so the site never claims more than the source document. */
   experienceLabel: "4+",
-  availability: "Open to frontend, React, and geospatial roles",
+  availability: "Available for freelance React, data visualisation and geospatial projects",
   /** Same fact, short enough for a one-line pill on a phone. */
-  availabilityShort: "Open to new roles",
+  availabilityShort: "Available for new projects",
+  /** How I work with clients — used on the contact and footer cards. */
+  engagementModel: "Freelance \u00b7 Contract \u00b7 Fully remote",
+  /** The kinds of engagement I take on. */
+  engagementTypes: [
+    "Project-based builds",
+    "Ongoing retainers",
+    "Short technical sprints",
+  ],
 } as const
 
 export const experienceYears = identity.experienceLabel
@@ -58,7 +66,7 @@ export type HeroMetric = { value: string; label: string; tone: "ink" | "accent" 
 
 export const heroMetrics: HeroMetric[] = [
   { value: `${identity.experienceLabel} Yrs`, label: "Experience", tone: "ink" },
-  { value: "UNDP", label: "Enterprise", tone: "accent" },
+  { value: "UNDP", label: "Clients", tone: "accent" },
   { value: "Maps & UI", label: "Geospatial", tone: "success" },
 ]
 
@@ -75,6 +83,7 @@ export const contact = {
   resumeUrl: null as string | null,
   location: identity.location,
   availability: identity.availability,
+  engagementModel: identity.engagementModel,
 }
 
 export const socials: SocialLink[] = [

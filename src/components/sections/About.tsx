@@ -42,8 +42,8 @@ export function About() {
         <AboutCard
           key="02"
           index="02"
-          eyebrow="Experience"
-          title="Building and shipping frontend products from start to finish."
+          eyebrow="Track record"
+          title="Delivering frontend products from first brief to final ship."
           shape={<Shape3D kind="cylinder" hue="orange" size={220} />}
         >
           <ul className="flex flex-col gap-sm sm:gap-md">
@@ -84,7 +84,7 @@ export function About() {
             ))}
           </ul>
           <p className="text-label text-ink-2 mt-md normal-case tracking-normal">
-            Based in {identity.location} · {identity.availability}
+            Based in {identity.location} · {identity.engagementModel}
           </p>
         </AboutCard>,
       ]}

@@ -25,8 +25,8 @@ export const principles: Principle[] = [
   {
     id: "honesty",
     quote:
-      "Being clear about what I know and where my limits lie is always better than overpromising. My core day-to-day strength is React frontend engineering, supported by formal training in cloud infrastructure.",
-    context: "On scope and self-assessment",
+      "Being clear about what I know and where my limits lie is always better than overpromising. If a brief is outside what I have actually shipped, I will say so before we start rather than after. My core strength is React frontend engineering, supported by formal training in cloud infrastructure.",
+    context: "On scope and taking on work",
   },
   {
     id: "translation",
@@ -39,8 +39,8 @@ export const principles: Principle[] = [
 export type Highlight = { id: string; value: string; label: string }
 
 export const highlights: Highlight[] = [
-  { id: "years", value: "4+", label: "Years building production React" },
-  { id: "platforms", value: "6", label: "Shipped data platforms" },
-  { id: "clients", value: "UNDP", label: "Primary platform client" },
+  { id: "years", value: "4+", label: "Years shipping production React" },
+  { id: "platforms", value: "5", label: "Data platforms delivered" },
+  { id: "clients", value: "UNDP", label: "Programmes delivered for" },
   { id: "degree", value: "M.Tech", label: "Cloud Computing, IIT Patna" },
 ]
