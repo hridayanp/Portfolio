@@ -5,6 +5,7 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/portfolio/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -14,6 +15,10 @@ export default defineConfig({
   server: {
     host: true,
     port: 5175,
-    allowedHosts: ["laborer-unwound-timid.ngrok-free.dev", ".ngrok-free.dev", ".ngrok-free.app"],
+    allowedHosts: [
+      "laborer-unwound-timid.ngrok-free.dev",
+      ".ngrok-free.dev",
+      ".ngrok-free.app",
+    ],
   },
 })
