@@ -65,50 +65,7 @@ Ground stations measure air quality at discrete coordinates. Continuous spatial 
 
 ## 6. System Concept
 
-The conceptual architecture of the system follows a clear information progression from raw input ingestion to user decision support.
-
-```
-+-------------------------------------------------------------+
-|                     1. Input Datasets                       |
-|   - Multi-pollutant Ground Station Telemetry (13 Regions)   |
-|   - Satellite Observations (Sentinel-5P NO2/SO2, MODIS AOD) |
-|   - Administrative Vectors (ADM0 National, ADM2 Districts)  |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-|              2. Data Normalization & Weighting              |
-|   - 5th/95th Percentile Dynamic Min-Max Scaling             |
-|   - Domain Weight Assignment (0.25 PM2.5, 0.15 AQI, etc.)   |
-|   - Application of Regional Geo-Exposure Penalties          |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-|          3. Regional Aggregation & Categorization           |
-|   - Aggregation to 13 Regional Administrative Centroids     |
-|   - Percentile Ranking (0 to 100 Scale)                     |
-|   - 5-Tier Classification (Low, Moderate, High, Very High,  |
-|     Critical) & EPA AQI Breakpoint Computation              |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-|              4. Spatial Interpolation Engine                |
-|   - Custom IDW with Linear Griddata + Nearest Edge Fill     |
-|   - KD-Tree Distance Blending & Gaussian Filtering          |
-|   - Coordinate Clipping via Vector Polygon Mask             |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-|             5. Presentation & Analytics Layer               |
-|   - Dual-Slot Cross-Fading MapLibre Raster Overlays         |
-|   - Synchronized Time-Travel Temporal Scrubber              |
-|   - Sortable 13-Column Risk Matrix with CSV/Excel Export    |
-|   - In-Browser Pyodide WASM Pipeline Studio Execution       |
-+-------------------------------------------------------------+
-```
+The conceptual architecture of the system follows a clear information progression from raw input ingestion to user decision support:
 
 1. **Input Ingestion:** The system captures multi-pollutant telemetry, satellite observational proxies, and administrative boundary files.
 2. **Normalization and Weighting:** Raw pollutant measurements are normalized across empirical percentile bounds to eliminate scale imbalances, then combined using domain weights and regional geographic multipliers.

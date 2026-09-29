@@ -79,51 +79,7 @@ In DiCRA, DPPD uses Seasonal-Trend decomposition using LOESS (STL) and robust re
 
 ## 6. System Concept
 
-The conceptual architecture of DiCRA is structured as a sequential pipeline that ingests Earth observation data and transforms it into spatial representations and decision support metrics.
-
-```
-+-----------------------------------------------------------------------------+
-|                            1. INGESTION LAYER                               |
-|  Satellites (MODIS, Sentinel-2, S5P, SMAP), Reanalysis (ERA5-Land),        |
-|  Gridded Models (SoilGrids, WorldPop), Admin Shapes, Registries (Agri/Ware) |
-+-----------------------------------------------------------------------------+
-                                       |
-                                       v
-+-----------------------------------------------------------------------------+
-|                          2. TRANSFORMATION LAYER                            |
-|  * Python / GEE / GDAL Preprocessing pipelines                             |
-|  * Time-Series Decomposition (LOESS / STL) for DPPD Trends                  |
-|  * Zonal Pre-aggregation to District & Sub-district (Mandal) Vectors        |
-|  * Cloud-Native Formatting: COG (Rasters) & PMTiles (Vector Boundaries)     |
-+-----------------------------------------------------------------------------+
-                                       |
-                                       v
-+-----------------------------------------------------------------------------+
-|                        3. DISCOVERY & API SERVING                           |
-|  * Encrypted Metadata & Layer URL Endpoints (JOSE / JWE)                    |
-|  * Historical Date Catalogs & Relationship Lookups                          |
-|  * Multi-Year Zarr / Time-Series Database Endpoints                         |
-|  * Administrative Ranking & Boundary Coordinate Registries                  |
-+-----------------------------------------------------------------------------+
-                                       |
-                                       v
-+-----------------------------------------------------------------------------+
-|                       4. CLIENT-SIDE SPATIAL ENGINE                         |
-|  * MapLibre GL Map Engine with Custom Protocol Extensions (PMTiles, COG)    |
-|  * Dynamic Overview Min/Max Header Extraction & On-the-Fly Shader Ramps     |
-|  * Viewport Feature Querying & Real-time Turf Geometry Clipping             |
-|  * Custom Draw Polygon & Client-Side Zonal Histogram Aggregations           |
-+-----------------------------------------------------------------------------+
-                                       |
-                                       v
-+-----------------------------------------------------------------------------+
-|                      5. DECISION & VISUALIZATION LAYER                      |
-|  * Administrative Choropleths, Interactive Pinpoint Raster Inspectors       |
-|  * Split-Screen Dual Synchronized Viewports (Curtain Layer/Date Compare)    |
-|  * Multi-Year Trend Charts (ApexCharts), Distribution Histograms            |
-|  * District / Mandal Relative Risk & Priority Scorecards                    |
-+-----------------------------------------------------------------------------+
-```
+The conceptual architecture of DiCRA is structured as a sequential pipeline that ingests Earth observation data and transforms it into spatial representations and decision support metrics:
 
 ### Stage 1: Data Ingestion and Cataloging
 

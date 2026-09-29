@@ -73,25 +73,6 @@ In high-throughput distributed systems, metadata management is separated from bi
 
 The conceptual architecture of the platform is organized into six interconnected stages, mapping the lifecycle of an automation pipeline from initial authoring to post-run telemetry analysis:
 
-```
-[User Pipeline Design]
-        │
-        ▼
-[Graph-to-Tree Compilation]
-        │
-        ▼
-[Asynchronous Dispatch & State Registration]
-        │
-        ▼
-[Recursive Tree Traversal & Node Resolution]
-        │
-        ▼
-[Ephemeral Task Sandboxing & Dependency Setup]
-        │
-        ▼
-[Telemetry Persistence & Real-Time Client Observability]
-```
-
 1. **Design and Configuration Stage**: The user defines high-level project contexts, uploads Python scripts with requirements files, and visually connects task nodes and conditional trigger nodes on an interactive canvas.
 2. **Compilation Stage**: The client graph transformation engine traverses the canvas node-edge relationships and compiles the visual graph into a normalized, hierarchical JSON tree where task nodes encapsulate child nodes under explicit outcome keys.
 3. **Dispatch and Registration Stage**: Triggering an execution creates an immutable execution record with status `EXECUTING` in the database and dispatches the execution tree asynchronously to the backend orchestrator.

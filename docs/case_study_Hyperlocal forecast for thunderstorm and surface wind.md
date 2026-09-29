@@ -91,48 +91,7 @@ Here, $U$ represents the zonal velocity component (positive toward East), $V$ re
 
 ## 6. System Concept
 
-The conceptual architecture of the system models the progression of atmospheric data from raw observational ingestion through analytical transformation to tactical user interpretation.
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│ 1. DATA INGESTION & ACQUISITION                                         │
-│    • Surface AWS & METAR (30-min)   • Geostationary Satellites (INSAT)  │
-│    • Upper-air Soundings (BUFR)     • NWP Forecast Grids (GRIB2/NetCDF) │
-└────────────────────────────────────┬────────────────────────────────────┘
-                                     │
-                                     ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│ 2. PRE-PROCESSING, GRIDDING & STORAGE                                   │
-│    • Cartesian Vector Conversion ($U, V$) • Spatial Mesh Interpolation  │
-│    • Cloud-Optimized GeoTIFF Generation   • Presigned S3 Asset Pipeline │
-└────────────────────────────────────┬────────────────────────────────────┘
-                                     │
-                                     ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│ 3. ANALYTICAL PROCESSING & BLENDING                                     │
-│    • Hybrid Timeline Transition Blender (0-3h Nowcast, 3-6h Fade, 6-24h)│
-│    • Geodesic Storm Cell Projections (Bearing, Distance, Movement)      │
-│    • Operational Threshold Evaluation (Flight Rules, Aerodrome Status)  │
-└────────────────────────────────────┬────────────────────────────────────┘
-                                     │
-                                     ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│ 4. CLIENT RENDERING & INTERACTION LAYER                                 │
-│    • In-Browser GeoTIFF Float Decoding • Offscreen Canvas Colorization  │
-│    • GPU Dual-Source Double Buffering  • Deck.gl Vector Particle Flow   │
-│    • Synchronized 4D Meteogram Dock    • Tactical Aerodrome Runway HUD  │
-└────────────────────────────────────┬────────────────────────────────────┘
-                                     │
-                                     ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│ 5. OPERATIONAL DECISION INTELLIGENCE                                    │
-│    • Aerodrome Status: OPERATIONAL / CAUTION / RESTRICTED               │
-│    • Automated Alert Generation and Audit Streaming                     │
-│    • Crosswind & Headwind Safety Bounds per Active Runway               │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-The system is organized into distinct functional layers:
+The conceptual architecture of the system models the progression of atmospheric data from raw observational ingestion through analytical transformation to tactical user interpretation:
 
 1. **Acquisition Layer**: Continuously ingests point readings from surface weather stations, gridded satellite infrared radiance, and global/regional NWP model runs.
 2. **Gridding and Asset Preparation Layer**: Normalizes non-uniform station points into continuous regular meshes using spatial interpolation, exports Cloud-Optimized GeoTIFFs, and generates UV-encoded vector texture maps.

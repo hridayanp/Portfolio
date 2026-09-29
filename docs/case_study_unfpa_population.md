@@ -78,31 +78,11 @@ The Degree of Urbanisation framework, established by the European Commission, OE
 
 The platform operates as a directed information pipeline converting multi-source raw satellite observations and tabular census statistics into structured demographic intelligence and interactive spatial layers:
 
-```
-[Census 2011 Ground Truth] + [Landsat / VIIRS / ESRI LULC Features]
-                           │
-                           ▼
-          [Pipeline 1: Satellite ML Estimation]
-               (Random Forest, LightGBM, CatBoost)
-                           │
-                           ▼
-          [Annual Historical Estimates: 2011-2025]
-                           │
-                           ▼
-          [Pipeline 2: Log-Linear Forward Prediction]
-               (District-Specific Growth Rates)
-                           │
-                           ▼
-          [Future Projections: 2026-2036 + GHS-SMOD Urbanisation]
-                           │
-                           ├──────────────────────────────────────────┐
-                           ▼                                          ▼
-     [Pipeline 3: Sentinel-2 Change Detection]      [Geospatial Optimization & Packaging]
-         (2016-2024 Multi-Signal Scoring)               (PMTiles, COGs, Vector Tiles)
-                           │                                          │
-                           ▼                                          ▼
-          [150 Attributed Hotspot Landmarks]         [Interactive Dashboard & PDF Engine]
-```
+1. **Ground Truth & Baseline Calibration**: Ingests Census 2011 ground truth tables and multi-spectral Landsat/VIIRS/ESRI LULC features across administrative boundaries.
+2. **Satellite ML Estimation Pipeline**: Trains ensemble regression models (Random Forest, LightGBM, CatBoost) to generate annual historical demographic estimates from 2011 to 2025.
+3. **Forward Prediction Modeling**: Computes district-specific growth rates with log-linear forward projections (2026 to 2036) integrated with GHS-SMOD urbanisation settlement hierarchies.
+4. **Change Detection & Hotspot Analysis**: Evaluates multi-signal Sentinel-2 (2016 to 2024) land change scoring to identify and attribute 150+ priority hotspot landmarks.
+5. **Spatial Packaging & Decision Delivery**: Packages multi-resolution outputs into cloud-native PMTiles and COGs for interactive in-browser map analysis and automated report generation.
 
 At each stage, raw observation data is systematically filtered, calibrated, spatially aggregated, and verified against independent reference data.
 
