@@ -3,6 +3,16 @@ import { contact, identity, navItems } from "@/content"
 import { useActiveSection } from "@/hooks/useActiveSection"
 import { ThemeToggle } from "./ThemeToggle"
 
+/**
+ * Scroll to a section by id without pushing a hash into the URL.
+ * Keeps the address bar clean while honouring scroll-padding-top.
+ */
+function scrollToSection(id: string) {
+  const el = document.getElementById(id)
+  if (!el) return
+  el.scrollIntoView({ behavior: "smooth", block: "start" })
+}
+
 interface HeaderProps {
   isSolid?: boolean
 }
@@ -86,8 +96,12 @@ export function Navbar({ isSolid = false }: HeaderProps) {
                     style={{ display: "flex", alignItems: "center", gap: "6px" }}
                   >
                     <a
-                      href="#home"
-                      onClick={() => setMenuOpen(false)}
+                      href="/"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        scrollToSection("home")
+                        setMenuOpen(false)
+                      }}
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -125,9 +139,14 @@ export function Navbar({ isSolid = false }: HeaderProps) {
                       <li key={item.id}>
                         <a
                           className={`menu-item ${active === item.id ? "active" : ""}`}
-                          href={item.href}
+                          href="/"
                           data-cursor="link"
                           aria-current={active === item.id ? "page" : undefined}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            scrollToSection(item.id)
+                            setMenuOpen(false)
+                          }}
                         >
                           {item.label}
                         </a>

@@ -32,6 +32,19 @@ export function Principles() {
   const onScroll = () => {
     const track = trackRef.current
     if (!track) return
+
+    // At the rightmost boundary (within 1px for sub-pixel safety), force the
+    // last index — Math.round can fall one short due to gap/fractional widths.
+    if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 1) {
+      setIndex(principles.length - 1)
+      return
+    }
+    // At the leftmost boundary, force zero for the same reason.
+    if (track.scrollLeft <= 0) {
+      setIndex(0)
+      return
+    }
+
     const card = track.querySelector("li")
     const w = card ? card.getBoundingClientRect().width + 24 : 1
     setIndex(Math.round(track.scrollLeft / w))
@@ -67,7 +80,44 @@ export function Principles() {
           whileInView="visible"
           viewport={viewportOnce}
           variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
-          className="flex snap-x snap-mandatory gap-md overflow-x-auto scroll-smooth pb-md [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x snap-mandatory gap-md overflow-x-auto scroll-smooth pb-md [scrollbar-width:none] [&::-webkit-scrollbar]:hidden select-none"
+          style={{ cursor: "grab" }}
+          onPointerDown={(e) => {
+            const el = trackRef.current
+            if (!el) return
+            // Only handle primary (left) mouse button; ignore touch (handled natively)
+            if (e.pointerType === "touch") return
+            e.currentTarget.setPointerCapture(e.pointerId)
+            const startX = e.clientX
+            const startScroll = el.scrollLeft
+            let dragging = false
+
+            const onMove = (ev: PointerEvent) => {
+              const dx = ev.clientX - startX
+              if (!dragging && Math.abs(dx) > 4) {
+                dragging = true
+                el.style.scrollBehavior = "auto"
+                el.style.cursor = "grabbing"
+              }
+              if (dragging) {
+                el.scrollLeft = startScroll - dx
+              }
+            }
+
+            const onUp = () => {
+              el.style.scrollBehavior = ""
+              el.style.cursor = "grab"
+              window.removeEventListener("pointermove", onMove)
+              window.removeEventListener("pointerup", onUp)
+            }
+
+            window.addEventListener("pointermove", onMove)
+            window.addEventListener("pointerup", onUp)
+          }}
+          onClick={() => {
+            // Swallow click events that fire immediately after a drag so
+            // links/buttons inside cards aren't accidentally triggered.
+          }}
         >
           {principles.map((p, i) => {
             const color = getColorForIndex(i + 3)
