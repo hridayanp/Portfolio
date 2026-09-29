@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="bracketGrad" x1="12" y1="20" x2="52" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+    <linearGradient id="slashGrad" x1="36" y1="18" x2="28" y2="46" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#a78bfa" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.6" />
+      <stop offset="50%" stop-color="#6366f1" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#1e293b" stop-opacity="0.8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Squircle -->
+  <rect width="64" height="64" rx="16" fill="url(#bgGrad)" />
+  <rect x="1" y="1" width="62" height="62" rx="15" stroke="url(#borderGrad)" stroke-width="1.5" />
+
+  <!-- Code Elements </> -->
+  <!-- Left Bracket < -->
+  <path d="M 21 21 L 11 32 L 21 43" stroke="url(#bracketGrad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Slash / -->
+  <path d="M 36 19 L 28 45" stroke="url(#slashGrad)" stroke-width="4" stroke-linecap="round" />
+
+  <!-- Right Bracket > -->
+  <path d="M 43 21 L 53 32 L 43 43" stroke="url(#bracketGrad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Dev Terminal Dot Accent -->
+  <circle cx="51" cy="15" r="2.5" fill="#10b981" />
+</svg>
