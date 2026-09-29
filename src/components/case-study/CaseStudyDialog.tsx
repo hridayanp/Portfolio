@@ -31,6 +31,9 @@ export function CaseStudyDialog({
   const closeRef = useRef<HTMLButtonElement>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
   const navRef = useRef<HTMLElement>(null)
+  const isJumpingRef = useRef(false)
+  const jumpTimeoutRef = useRef<number | null>(null)
+  const rafIdRef = useRef<number | null>(null)
   const [activeSection, setActiveSection] = useState<string | null>(null)
 
   const sections = caseStudySections(project.caseStudy)
@@ -44,50 +47,65 @@ export function CaseStudyDialog({
     return () => {
       document.body.style.overflow = prev
       window.removeEventListener("keydown", onKey)
+      if (jumpTimeoutRef.current) clearTimeout(jumpTimeoutRef.current)
+      if (rafIdRef.current !== null) cancelAnimationFrame(rafIdRef.current)
     }
   }, [onClose])
 
-  /* Track the active heading as the reader scrolls the body container. */
+  /* Track the active heading smoothly as the reader scrolls the body container. */
   useEffect(() => {
     const root = bodyRef.current
     if (!root || sections.length === 0) return
 
-    const onScroll = () => {
-      const rootRect = root.getBoundingClientRect()
-      const isAtBottom = root.scrollTop + root.clientHeight >= root.scrollHeight - 30
+    const handleScroll = () => {
+      if (isJumpingRef.current) return
+      if (rafIdRef.current !== null) return
 
-      if (isAtBottom) {
-        setActiveSection(sections[sections.length - 1].id)
-        return
-      }
+      rafIdRef.current = requestAnimationFrame(() => {
+        rafIdRef.current = null
+        if (!root) return
 
-      const headingElements = sections
-        .map((s) => ({ id: s.id, el: root.querySelector(`#${CSS.escape(s.id)}`) }))
-        .filter((item): item is { id: string; el: HTMLElement } => item.el instanceof HTMLElement)
+        const rootRect = root.getBoundingClientRect()
+        const isAtBottom = root.scrollTop + root.clientHeight >= root.scrollHeight - 30
 
-      if (headingElements.length === 0) return
-
-      let currentId = headingElements[0].id
-      // Section threshold: when heading reaches near top of the scroll container
-      const threshold = rootRect.top + 60
-
-      for (const h of headingElements) {
-        const rect = h.el.getBoundingClientRect()
-        if (rect.top <= threshold) {
-          currentId = h.id
-        } else {
-          break
+        if (isAtBottom) {
+          setActiveSection(sections[sections.length - 1].id)
+          return
         }
-      }
-      setActiveSection(currentId)
+
+        const headingElements = sections
+          .map((s) => ({ id: s.id, el: root.querySelector(`#${CSS.escape(s.id)}`) }))
+          .filter((item): item is { id: string; el: HTMLElement } => item.el instanceof HTMLElement)
+
+        if (headingElements.length === 0) return
+
+        let currentId = headingElements[0].id
+        const threshold = rootRect.top + 60
+
+        for (const h of headingElements) {
+          const rect = h.el.getBoundingClientRect()
+          if (rect.top <= threshold) {
+            currentId = h.id
+          } else {
+            break
+          }
+        }
+        setActiveSection(currentId)
+      })
     }
 
-    onScroll()
-    root.addEventListener("scroll", onScroll, { passive: true })
-    return () => root.removeEventListener("scroll", onScroll)
+    handleScroll()
+    root.addEventListener("scroll", handleScroll, { passive: true })
+    return () => {
+      root.removeEventListener("scroll", handleScroll)
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current)
+        rafIdRef.current = null
+      }
+    }
   }, [sections])
 
-  /* Automatically keep the active navigation item visible and centered within the left rail. */
+  /* Automatically and smoothly keep the active navigation item visible within the left rail without thrashing. */
   useEffect(() => {
     if (!activeSection || !navRef.current) return
     const nav = navRef.current
@@ -98,16 +116,23 @@ export function CaseStudyDialog({
     if (activeBtn) {
       const navRect = nav.getBoundingClientRect()
       const btnRect = activeBtn.getBoundingClientRect()
-      const targetScroll =
-        nav.scrollTop +
-        (btnRect.top - navRect.top) -
-        nav.clientHeight / 2 +
-        btnRect.height / 2
+      const margin = 48 // comfortable margin from top/bottom bounds
 
-      nav.scrollTo({
-        top: Math.max(0, targetScroll),
-        behavior: "smooth",
-      })
+      const isAbove = btnRect.top < navRect.top + margin
+      const isBelow = btnRect.bottom > navRect.bottom - margin
+
+      if (isAbove || isBelow) {
+        const targetScroll =
+          nav.scrollTop +
+          (btnRect.top - navRect.top) -
+          nav.clientHeight / 2 +
+          btnRect.height / 2
+
+        nav.scrollTo({
+          top: Math.max(0, targetScroll),
+          behavior: "smooth",
+        })
+      }
     }
   }, [activeSection])
 
@@ -115,11 +140,18 @@ export function CaseStudyDialog({
     const root = bodyRef.current
     const el = root?.querySelector(`#${CSS.escape(id)}`)
     if (el instanceof HTMLElement && root) {
+      isJumpingRef.current = true
+      if (jumpTimeoutRef.current) clearTimeout(jumpTimeoutRef.current)
+
       const rootRect = root.getBoundingClientRect()
       const elRect = el.getBoundingClientRect()
       const offset = elRect.top - rootRect.top + root.scrollTop
       root.scrollTo({ top: offset, behavior: "smooth" })
       setActiveSection(id)
+
+      jumpTimeoutRef.current = window.setTimeout(() => {
+        isJumpingRef.current = false
+      }, 500)
     }
   }
 
