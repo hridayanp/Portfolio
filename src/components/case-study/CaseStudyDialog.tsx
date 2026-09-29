@@ -21,15 +21,16 @@ import { caseStudySections } from "./caseStudyDoc"
 export function CaseStudyDialog({
   project,
   onClose,
-  useAssetImage,
+  useAssetImage = false,
 }: {
   project: Project
   onClose: () => void
-  /** Mirrors the section's `USE_ASSET_IMAGES` flag. */
-  useAssetImage: boolean
+  /** Defaults to false for the clean generative artboard header. */
+  useAssetImage?: boolean
 }) {
   const closeRef = useRef<HTMLButtonElement>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
+  const navRef = useRef<HTMLElement>(null)
   const [activeSection, setActiveSection] = useState<string | null>(null)
 
   const sections = caseStudySections(project.caseStudy)
@@ -46,32 +47,79 @@ export function CaseStudyDialog({
     }
   }, [onClose])
 
-  /* The rail follows the reader. Observed against the scrolling body rather
-     than the viewport, because the body is the scroll container here. */
+  /* Track the active heading as the reader scrolls the body container. */
   useEffect(() => {
     const root = bodyRef.current
     if (!root || sections.length === 0) return
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0]
-        if (visible?.target.id) setActiveSection(visible.target.id)
-      },
-      { root, rootMargin: "0px 0px -70% 0px", threshold: 0 }
-    )
-    for (const s of sections) {
-      const el = root.querySelector(`#${CSS.escape(s.id)}`)
-      if (el) observer.observe(el)
+
+    const onScroll = () => {
+      const rootRect = root.getBoundingClientRect()
+      const isAtBottom = root.scrollTop + root.clientHeight >= root.scrollHeight - 30
+
+      if (isAtBottom) {
+        setActiveSection(sections[sections.length - 1].id)
+        return
+      }
+
+      const headingElements = sections
+        .map((s) => ({ id: s.id, el: root.querySelector(`#${CSS.escape(s.id)}`) }))
+        .filter((item): item is { id: string; el: HTMLElement } => item.el instanceof HTMLElement)
+
+      if (headingElements.length === 0) return
+
+      let currentId = headingElements[0].id
+      // Section threshold: when heading reaches near top of the scroll container
+      const threshold = rootRect.top + 60
+
+      for (const h of headingElements) {
+        const rect = h.el.getBoundingClientRect()
+        if (rect.top <= threshold) {
+          currentId = h.id
+        } else {
+          break
+        }
+      }
+      setActiveSection(currentId)
     }
-    return () => observer.disconnect()
+
+    onScroll()
+    root.addEventListener("scroll", onScroll, { passive: true })
+    return () => root.removeEventListener("scroll", onScroll)
   }, [sections])
+
+  /* Automatically keep the active navigation item visible and centered within the left rail. */
+  useEffect(() => {
+    if (!activeSection || !navRef.current) return
+    const nav = navRef.current
+    const activeBtn = nav.querySelector(
+      `[data-section-id="${CSS.escape(activeSection)}"]`
+    ) as HTMLElement | null
+
+    if (activeBtn) {
+      const navRect = nav.getBoundingClientRect()
+      const btnRect = activeBtn.getBoundingClientRect()
+      const targetScroll =
+        nav.scrollTop +
+        (btnRect.top - navRect.top) -
+        nav.clientHeight / 2 +
+        btnRect.height / 2
+
+      nav.scrollTo({
+        top: Math.max(0, targetScroll),
+        behavior: "smooth",
+      })
+    }
+  }, [activeSection])
 
   const jump = (id: string) => {
     const root = bodyRef.current
     const el = root?.querySelector(`#${CSS.escape(id)}`)
     if (el instanceof HTMLElement && root) {
-      root.scrollTo({ top: el.offsetTop - 16, behavior: "smooth" })
+      const rootRect = root.getBoundingClientRect()
+      const elRect = el.getBoundingClientRect()
+      const offset = elRect.top - rootRect.top + root.scrollTop
+      root.scrollTo({ top: offset, behavior: "smooth" })
+      setActiveSection(id)
     }
   }
 
@@ -202,6 +250,7 @@ export function CaseStudyDialog({
         {/* ---- Rail + body ---- */}
         <div className="flex min-h-0 flex-1">
           <nav
+            ref={navRef}
             aria-label="Case study sections"
             className="hidden w-[280px] shrink-0 overflow-y-auto border-e border-[var(--ds-border-subtle)] bg-[var(--ds-surface-2)]/50 p-4 lg:block"
           >
@@ -213,6 +262,7 @@ export function CaseStudyDialog({
                 <li key={s.id}>
                   <button
                     type="button"
+                    data-section-id={s.id}
                     onClick={() => jump(s.id)}
                     className={cn(
                       "text-body-s w-full rounded-lg px-2.5 py-1.5 text-left leading-snug transition-colors focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none",
@@ -228,7 +278,7 @@ export function CaseStudyDialog({
             </ol>
           </nav>
 
-          <div ref={bodyRef} className="min-w-0 flex-1 overflow-y-auto px-5 py-6 sm:px-8">
+          <div ref={bodyRef} className="min-w-0 flex-1 overflow-y-auto px-5 pt-0 pb-10 sm:px-8">
             <div className="mx-auto w-full max-w-[860px]">
               <CaseStudyMarkdown markdown={project.caseStudy} />
 

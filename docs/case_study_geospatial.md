@@ -1,5 +1,3 @@
-# Case Study: Data in Climate Resilient Agriculture (DiCRA) Geospatial Intelligence Platform
-
 ## 1. Abstract
 
 Climate variability and environmental stress pose persistent risks to agricultural productivity, food security, and rural livelihoods across India. The Data in Climate Resilient Agriculture (DiCRA) platform is a digital public good developed in collaboration with the United Nations Development Programme (UNDP), the Government of Telangana, NABARD, ICRISAT, and academic research institutions. DiCRA addresses the challenge of fragmented, high-volume Earth observation and socioeconomic datasets by integrating them into an interactive geospatial analytics system.
@@ -134,51 +132,6 @@ The platform incorporates seventeen distinct primary layers, categorized into th
 
 The platform's methodology follows a structured operational lifecycle:
 
-```
-+-----------------------------------------------------------------------------------+
-| 1. Region & Configuration Initialization                                         |
-|    - Parse URL route or state selector (e.g., Telangana, regionID 32)             |
-|    - Load state boundary bounds, center point, district & mandal shapefile schemas |
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-| 2. Layer Selection, Parameter Discovery & Date Catalog Query                      |
-|    - Retrieve available layers for category from /getlayerconfig                  |
-|    - Query valid timestamp list via /getblobdate                                  |
-|    - Establish view mode: Raster (Pixel Inspection) vs Vector (Admin Choropleth)  |
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-| 3. Spatiotemporal Tile Streaming & Protocol Registration                          |
-|    - COG Pipeline: Read TIFF overview headers, compute dynamic [min, max],       |
-|      construct cog:// URL with hex color ramp expression                          |
-|    - PMTiles Pipeline: Read archive metadata, inspect vector_layers, bind         |
-|      MapLibre vector source, compile data-driven paint color stops                |
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-| 4. User Interaction & Multi-Tier Spatial Querying                                 |
-|    - Administrative Click: Intersect vector tile feature, extract summary stats,   |
-|      trigger /gettrendzarr for longitudinal history, request /rankings scorecard  |
-|    - Raster Click: Sample exact pixel value via locationValues(), reverse-geocode |
-|      coordinates via Nominatim, request point-level time-series from Zarr store   |
-|    - Custom Draw Mode: Capture drawn polygon geometry, project to Web Mercator,   |
-|      run ray-casting containment filter on bounding vector features or call       |
-|      /getzstat for on-the-fly raster categorical area percentages                 |
-+-----------------------------------------------------------------------------------+
-                                         |
-                                         v
-+-----------------------------------------------------------------------------------+
-| 5. Comparative Analysis & Split-Screen Viewport Synchronization                  |
-|    - Split display into left and right independent canvas viewports               |
-|    - Bind mutual camera move listeners to maintain identical zoom, pitch, bearing |
-|    - Allow side-by-side evaluation of Layer A vs Layer B or Date T1 vs Date T2    |
-+-----------------------------------------------------------------------------------+
-```
-
 ### Stage 1: Region and Parameter Initialization
 
 - **Input**: User-selected state route parameter (for example, `/telangana`) or default root initialization.
@@ -307,38 +260,6 @@ A rank card preview selects a focused five-item comparison window (lowest two, c
 
 The step-by-step lifecycle of data through the DiCRA architecture is summarized below:
 
-```
-[Satellite Observations / Climate Model Reanalysis / Spatial Registries]
-                                 │
-                                 ▼
-              [Data Ingestion & Cleaning Pipelines]
-  (Reprojection to EPSG:4326, GDAL Cloud-Optimized Tiling, COG Pyramid Creation)
-                                 │
-                                 ▼
-           [Longitudinal Modeling & Vector Pre-Aggregation]
- (STL LOESS Trend Extraction for DPPD, District/Mandal Zonal Reduction, PMTiles Bundling)
-                                 │
-                                 ▼
-                     [Cloud Object Storage]
-          (Indexed COG .tif Archives & PMTiles Vector Databases)
-                                 │
-                                 ▼
-                   [API Service Layer & Catalog]
-    (Metadata Registry, Date Lookups, JOSE/JWE Encrypted Token Dispatch)
-                                 │
-                                 ▼
-                     [Client Browser Engine]
-         (MapLibre GL Map Canvas, PMTiles Protocol, COG WebGL Protocol)
-                                 │
-                                 ▼
-              [Interactive Querying & Spatial Clipping]
-   (Vector Feature Intersect, Raster locationValues(), Turf Point-in-Polygon)
-                                 │
-                                 ▼
-                  [Visual Analytics & Outputs]
-(Choropleths, Zonal Histograms, Zarr Multi-Year Trends, Split-Screen Comparison)
-```
-
 1. **Acquisition**: Raw satellite swaths, atmospheric reanalysis grids, and administrative records are pulled from providers (NASA LP DAAC, ESA Copernicus, C3S Climate Data Store, Meta Data for Good, state open data portals).
 2. **Standardization and Cloud Optimization**: Continuous rasters are converted into Cloud Optimized GeoTIFFs (COGs) with internal tiling (typically 256x256 or 512x512 tile blocks) and multi-level overview decimation. Vector boundaries are joined with aggregated statistical properties and converted into PMTiles archives.
 3. **Storage and Indexing**: COGs and PMTiles are hosted in high-throughput cloud storage supporting HTTP GET byte-range queries.
@@ -387,35 +308,6 @@ For user-drawn custom shapes, spatial filtering combines bounding box checks wit
 
 The platform handles diverse temporal cadences across its operational layers.
 
-```
-TEMPORAL SCALES AND RESOLUTIONS
-═════════════════════════════════════════════════════════════════════════════════
-Daily / Near-Real-Time:
-  * Active Fire Thermal Anomalies (NASA FIRMS - FIREEV)
-  * Daily Soil Moisture Composites (NASA SMAP - SOILM)
-
-8-Day / 16-Day Composites:
-  * 8-Day Leaf Area Index (MODIS MOD15A2H - LAI)
-  * 8-Day Normalized Difference Water Index (MODIS MOD09A1 - NDWI)
-  * 16-Day Vegetation Index (MODIS MOD13Q1 - NDVI)
-
-Monthly Aggregations:
-  * Monthly 2m Air Temperature (ERA5-Land)
-  * Monthly Total Precipitation (ERA5-Land)
-  * Monthly Tropospheric NO2 Total Column (Sentinel-5P TROPOMI)
-  * Monthly PM2.5 Surface Concentrations (NASA GEOS-CF)
-
-Annual / Seasonal Classifications:
-  * Annual Land Use / Land Cover (Sentinel-2 LULC)
-  * Annual Crop Intensity (ICRISAT)
-  * Seasonal Crop Type & Stress (ICRISAT / JADS Paddy)
-
-Longitudinal Multi-Year Trend Analysis (Zarr Stores):
-  * Selectable 1-Year, 3-Year, 5-Year, and 10-Year historical trajectories
-  * Longitudinal LOESS / STL decomposition baselines (2016-present)
-═════════════════════════════════════════════════════════════════════════════════
-```
-
 ### Temporal Categorization of System Layers
 
 1. **Near-Real-Time Observations**: Fire event points and daily soil moisture composites represent operational, near-real-time observations.
@@ -432,44 +324,6 @@ In the split-screen comparison mode, users can lock the active layer (for exampl
 
 The platform translates raw physical observations into interpretable decision-support indicators:
 
-```
-+-----------------------------------------------------------------------------+
-|                          1. RAW PHYSICAL OBSERVATION                        |
-|   Reflectance ratios, thermal radiances, microwave dielectric constants,    |
-|   atmospheric trace columns (e.g., NDVI: 0.42, SMAP: 0.18 m³/m³, FRP: 25MW)  |
-+-----------------------------------------------------------------------------+
-                                       │
-                                       ▼
-+-----------------------------------------------------------------------------+
-|                         2. STATISTICAL AGGREGATION                          |
-|   Zonal reduction over administrative polygons (District Mean, Mandal Mean,  |
-|   Zonal Min/Max, Pixel Count Histogram Distributions)                        |
-+-----------------------------------------------------------------------------+
-                                       │
-                                       ▼
-+-----------------------------------------------------------------------------+
-|                    3. ANOMALY & DEVIANCE NORMALIZATION                      |
-|   Data Powered Positive Deviance (DPPD) STL Trend Decomposition             |
-|   (Slope Scores, Multi-Year Baseline Residuals, Relative Ranking Index)      |
-+-----------------------------------------------------------------------------+
-                                       │
-                                       ▼
-+-----------------------------------------------------------------------------+
-|                   4. CARTOGRAPHIC & CATEGORICAL MAPPING                     |
-|   Standardized scientific color ramps (IMD, NASA, Copernicus palettes),     |
-|   Relative risk classification (Low, Medium, High Priority),                |
-|   Categorical class breakdowns (Donut shares of Crop Types / Stress levels)  |
-+-----------------------------------------------------------------------------+
-                                       │
-                                       ▼
-+-----------------------------------------------------------------------------+
-|                       5. DECISION MAKER INTERPRETATION                      |
-|   * Identification of drought hotspots requiring irrigation support         |
-|   * Detection of positive deviant mandals for agricultural extension study   |
-|   * Infrastructure gap identification (Warehouses relative to Crop Yields)  |
-+-----------------------------------------------------------------------------+
-```
-
 ### Layer Classification Rules
 
 - **Direct Observations**: Pixel values directly reflect physical units (for example, temperature in °C, precipitation in mm, SOC in dg/kg, PM2.5 in μg/m³).
@@ -480,34 +334,6 @@ The platform translates raw physical observations into interpretable decision-su
 ## 14. User Interaction With the System
 
 The user workflow through DiCRA follows a consistent analytical progression:
-
-```
-[Entry & Region Selection]
-  │  Select state from dropdown / URL route (e.g., Telangana)
-  │  Viewport auto-fits to state bounds; default layer and date initialize
-  │
-  ├────────────────────────────────────────┬────────────────────────────────────────┐
-  ▼                                        ▼                                        ▼
-[Single Layer Dashboard]                 [Custom Spatial Analysis]                [Split-Screen Comparison]
-  │                                        │                                        │
-  ├─ Select Layer Category                 ├─ Switch boundary to 'Custom'           ├─ Launch /analysis split view
-  │  (Vegetation, Soil, Weather, etc.)     ├─ Draw polygon on map canvas            ├─ Left Canvas: Select Layer/Date
-  ├─ Toggle Vector vs Raster mode          ├─ System calculates polygon area        ├─ Right Canvas: Select Layer/Date
-  ├─ Pick observation Date from slider     ├─ On-the-fly zonal reduction:           ├─ Drag central divider curtain
-  │                                        │  * Aggregates vector features          ├─ Linked synchronized panning
-  ├─ Spatial Interaction:                  │  * Or calls /getzstat for LULC %       ├─ Pixel inspection side-by-side
-  │  * Click District / Mandal Polygon     │                                        │
-  │    -> Opens Side Drawer                └─ Side Drawer displays custom           └─ Comparative time-series trends
-  │    -> MiniMap boundary preview            metrics & percentage charts
-  │    -> Layer statistics & Rank Card
-  │    -> Multi-year trend chart
-  │  * Click Raster Pixel
-  │    -> Pinpoint exact coordinate
-  │    -> Reverse-geocodes location
-  │    -> Fetches point Zarr trend
-  │
-  └─ Search District/Mandal via OSM
-```
 
 1. **State Selection**: Users enter via direct URL (for example, `/telangana`, `/odisha`, `/maharashtra`) or select a state from the startup modal. The interface updates its viewport bounds and loads region-specific configuration.
 2. **Layer and Date Selection**: Users explore thematic categories in the left panel, select an active indicator, toggle between Vector (administrative summary) and Raster (pixel-level inspection) views, and choose observation dates from a calendar slider.
@@ -520,20 +346,6 @@ The user workflow through DiCRA follows a consistent analytical progression:
 ## 15. Outputs and Results
 
 The platform generates four primary categories of analytical outputs:
-
-```
-                                 PLATFORM OUTPUTS
-                                         │
-        ┌────────────────────────────────┼────────────────────────────────┐
-        ▼                                ▼                                ▼
-[Cartographic Visualizations]   [Quantitative Summaries]       [Time-Series Analytics]
-  * Continuous Raster Shaders     * Zonal Metrics: Mean,         * Multi-Year Trend Lines
-    (Dynamic overview min/max)      Median, Min, Max               (1, 3, 5, 10 Years)
-  * Vector Choropleths            * Categorical Distributions    * Point & Zonal Trajectories
-    (District & Mandal polygons)    (Donut & Stacked % Charts)   * Anomaly & Deviance Traces
-  * Point Clusters & Markers      * State Ranking Scorecards     * Scientific Unit Formatting
-    (Fire points, Warehouses)       (Relative percentile bars)
-```
 
 1. **Cartographic Visualizations**:
    - Continuous raster layers rendered via dynamic WebGL shader color ramps.
@@ -587,30 +399,6 @@ The platform embeds several operational and methodological assumptions:
 ## 18. Technical Implementation Approach
 
 The system architecture combines modern web standards with cloud-native geospatial protocols to deliver responsive performance without dedicated server-side GIS rendering engines.
-
-```
-+-------------------------------------------------------------------------------+
-|                            CLIENT BROWSER ARCHITECTURE                        |
-|                                                                               |
-|  [React / TypeScript / Vite Application Core]                                 |
-|                                                                               |
-|  +-------------------------+  +-------------------------+  +---------------+  |
-|  |    MapLibre GL Canvas   |  |   Redux Toolkit State   |  | UI Component  |  |
-|  |  * WebGL Shader Engine  |  |  * drawerSlice          |  |   Framework   |  |
-|  |  * PMTiles Protocol     |  |  * rasterSlice          |  | * Radix UI    |  |
-|  |  * COG Tile Protocol    |  |  * vectorSlice          |  | * Tailwind CSS|  |
-|  |  * Dual Synchronizer    |  |  * statesSlice          |  | * ApexCharts  |  |
-|  +-------------------------+  +-------------------------+  +---------------+  |
-+-------------------------------------------------------------------------------+
-         │                                              │
-         │ HTTP GET Byte-Range Requests                 │ Encrypted REST Queries
-         ▼                                              ▼
-+------------------------------------+      +-----------------------------------+
-|     CLOUD STORAGE / COG & PMTILES  |      |         REST API SERVICE          |
-|  * S3 / Blob Object Storage        |      |  * JOSE / JWE Token Decryption    |
-|  * Static HTTP Byte-Range Server   |      |  * Zarr Multi-Dimensional Stores  |
-+------------------------------------+      +-----------------------------------+
-```
 
 ### Client-Side Architecture
 

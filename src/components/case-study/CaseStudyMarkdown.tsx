@@ -31,7 +31,7 @@ export const CaseStudyMarkdown = memo(function CaseStudyMarkdown({
           h2: ({ children }) => (
             <h3
               id={slugify(textOf(children))}
-              className="text-h3 mt-12 mb-4 scroll-mt-6 border-t border-[var(--ds-border)] pt-8 font-bold tracking-tight text-[var(--ds-text-primary)] first:mt-0 first:border-0 first:pt-0"
+              className="text-h3 sticky top-0 z-20 -mx-4 sm:-mx-6 px-4 sm:px-6 pt-4 pb-2 mb-3 mt-6 font-bold tracking-tight text-[var(--ds-text-primary)] bg-[var(--ds-surface)] first:mt-0 first:pt-5"
             >
               {children}
             </h3>

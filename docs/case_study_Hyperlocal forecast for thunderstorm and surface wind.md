@@ -1,5 +1,3 @@
-# Project Case Study: Hyperlocal Meteorological Operations and Decision Intelligence System
-
 ## 1. Abstract
 
 This case study examines the architecture, domain methodology, and analytical foundations of the Climate Decision Intelligence Meteorological Operations (CDI MetOps) system. Developed for high-consequence operational environments, particularly aerodrome management and defence aviation, the system addresses the operational challenge of detecting, tracking, and predicting localized convective weather hazards. The primary focus centres on two critical deliverables: short-range forecasting (0 to 24 hours) and high-resolution nowcasting (0 to 6 hours) of thunderstorm occurrence, storm cell movement vectors, storm intensity, and strong surface winds (SSW, defined at or above 25 knots).
@@ -105,17 +103,6 @@ The conceptual architecture of the system models the progression of atmospheric 
 
 The system is engineered to work with structured observational feeds, gridded satellite products, numerical prediction outputs, and vector GIS infrastructure. Within the current codebase, live data ingestion is modeled through validated Zod schema contracts and deterministic synthetic generators that mirror the exact physical distributions and data shapes specified for production deployment.
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         DATA SOURCES & ENTITY SHAPES                        │
-├────────────────────────┬──────────────────────────┬─────────────────────────┤
-│ Surface Obs (METAR)    │ Satellite Products (COG) │ Aerodrome GIS Vectors   │
-│ • Temp (°C), QNH (hPa) │ • INSAT-3D Probability   │ • Runway Centerlines    │
-│ • Wind (kt, dir)       │ • Hydro-Estimator (mm/h) │ • Range Rings (40-200km)│
-│ • Vis (km), Cloud Base │ • SSW Wind Speed (kt)    │ • Station Coordinates   │
-└────────────────────────┴──────────────────────────┴─────────────────────────┘
-```
-
 ### 7.1 Detailed Data Inventory
 
 | Dataset / Entity                            | Source Nature                              | Spatial Representation                                      | Temporal Horizon & Resolution                    | Variables & Units                                                                                                                                                                                            | Reference System / Format                                 | Intended System Purpose                                                                 |
@@ -132,41 +119,6 @@ The system is engineered to work with structured observational feeds, gridded sa
 ## 8. Methodology
 
 The core methodology of the CDI MetOps system governs how incoming observation and prediction streams are prepared, blended, spatially transformed, and rendered into an integrated operational display.
-
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        METHODOLOGY FLOW DIAGRAM                        │
-├────────────────────────────────────────────────────────────────────────┤
-│  [Nowcast Stream: 0-6h @ 15m]         [Short-Range NWP: 24h @ 1h]      │
-│                │                                   │                   │
-│                ▼                                   ▼                   │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │ Mathematical Blending Engine (hybridForecast.ts)                 │  │
-│  │ • Weight function: $w(t) = 1.0$ for $t \le 3h$                   │  │
-│  │ • Linear blend: $w(t) = (6 - t)/3$ for $3h < t < 6h$             │  │
-│  │ • NWP dominance: $w(t) = 0.0$ for $t \ge 6h$                    │  │
-│  └──────────────────────────────────┬───────────────────────────────┘  │
-│                                     │                                  │
-│                                     ▼                                  │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │ Single Synchronized 24-Step Hybrid Forecast Timeline             │  │
-│  │ • Continuous Numeric Variables (Weighted Linear Combination)     │  │
-│  │ • Categorical Variables (Majority-Weight Rule)                   │  │
-│  └──────────────────────────────────┬───────────────────────────────┘  │
-│                                     │                                  │
-│                                     ▼                                  │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │ Spatial Coordinate & Vector Transform                            │  │
-│  │ • Great-Circle Geodesic Projections for Storm Cell Centers       │  │
-│  │ • Polar-to-Cartesian Decomposition for Particle Fields           │  │
-│  └──────────────────────────────────┬───────────────────────────────┘  │
-│                                     │                                  │
-│                                     ▼                                  │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │ Tactical Cockpit HUD & Dual-Source WebGL Rendering Engine        │  │
-│  └──────────────────────────────────────────────────────────────────┘  │
-└────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Stage 1: Temporal Normalization and Hybrid Blending
 
@@ -219,18 +171,6 @@ O_{\text{shortrange}}(t) & \text{if } w(t) < 0.5
 $$
 
 At the midpoint $t = 4.5$ hours ($w = 0.5$), the system intentionally prioritizes the observational nowcast, reflecting the operational doctrine that recent empirical observations outweigh numerical model initialization during near-term convective evolution.
-
-```
-HYBRID BLENDING WEIGHT SCHEDULE:
-Weight w(t)
- 1.0 ├───────────┐
-     │           │ \
- 0.5 │  NOWCAST  │   \   MIXED TRANSITION
-     │  (100%)   │     \   (3h to 6h)
- 0.0 │           │       \─────────────── SHORT-RANGE NWP (100%)
-     └───┬───────┴───┬───┴───────────────┬───► Forecast Hour (t)
-        T+0         T+3                 T+6  ... T+24
-```
 
 ### 9.2 Geodesic Forward Point Calculation
 
@@ -288,35 +228,6 @@ To verify model accuracy and detect systematic drift across forecast cycles, the
 
 The execution flow of the system operates through a continuous, cyclic pipeline from raw data acquisition to tactical decision output:
 
-```
-[External Ingestion Feeds]
-       │ (AWS CSV, METAR text, INSAT HDF5/GeoTIFF, NWP GRIB2)
-       ▼
-[Ingestion & Parsing Pipeline]
-       │ • Deduplication and range validation
-       │ • Station polar-to-Cartesian decomposition ($U, V$)
-       │ • Cloud-Optimized GeoTIFF generation & S3 staging
-       ▼
-[REST & WebSocket Data Services]
-       │ • Dispatches short-range forecasts, nowcasts, and telemetry
-       │ • Emits real-time feed lag and ingestion health events
-       ▼
-[Client-Side State & Blending Engine]
-       │ • Redux store receives active airfield site and model selection
-       │ • hybridForecast.ts executes 24-step weight blending
-       │ • Computes Great-Circle storm projections and closing ETAs
-       ▼
-[GPU-Accelerated Spatial Rendering]
-       │ • In-browser WebAssembly/JavaScript GeoTIFF float decoding
-       │ • Dual-source WebGL double-buffering with instant buffer swap
-       │ • Deck.gl particle layer streams animated wind vector fields
-       ▼
-[Tactical Heads-Up Cockpit Interface]
-       │ • Status strip displays operational tier and Zulu/Local clocks
-       │ • Synchronized meteogram scrub bar links space and time
-       │ • Automated alert stream notifies of threshold breaches
-```
-
 ### Detailed Pipeline Stages:
 
 1. **Data Ingestion**: Ingests multi-source inputs across defined schedules (e.g., METAR every 30 minutes, satellite rasters every 15 minutes, IAF AWS every 1 to 10 minutes).
@@ -331,21 +242,6 @@ The execution flow of the system operates through a continuous, cyclic pipeline 
 ## 11. Spatial and Geospatial Methodology
 
 The geospatial architecture of the system is designed to preserve spatial accuracy across multiple scales, from continental weather patterns to individual aerodrome runways.
-
-```
-SPATIAL LAYERING STACK (Top to Bottom):
-┌─────────────────────────────────────────────────────────────┐
-│ 1. Vector Labels & Runways (Always on top: Neon Cyan Glow)  │
-├─────────────────────────────────────────────────────────────┤
-│ 2. Aerodrome Range Rings (40km, 80km, 120km, 200km)         │
-├─────────────────────────────────────────────────────────────┤
-│ 3. Deck.gl Wind Particle Vector Layer                       │
-├─────────────────────────────────────────────────────────────┤
-│ 4. Meteorological Rasters (Dual-Buffered GeoTIFFs)          │
-├─────────────────────────────────────────────────────────────┤
-│ 5. Base Tile Canvas (CARTO Dark Matter / Positron)          │
-└─────────────────────────────────────────────────────────────┘
-```
 
 ### Coordinate Reference System (CRS)
 
@@ -372,17 +268,6 @@ Standard web mapping engines experience a visual flash (exposing the basemap for
 
 Time in meteorological forecasting is a critical independent variable. The system manages three distinct operational time regimes:
 
-```
-TEMPORAL HORIZONS & UPDATE CADENCE:
-┌───────────────────────────┬───────────────────────────┬───────────────────────────┐
-│ NOWCASTING                │ HYBRID BLENDED            │ SHORT-RANGE FORECAST      │
-│ • Horizon: 0 to 6 hours   │ • Horizon: 0 to 24 hours  │ • Horizon: 0 to 24 hours  │
-│ • Step: 15 minutes        │ • Step: 60 minutes        │ • Step: 60 minutes        │
-│ • Ingestion: Every 5 min  │ • Transition: 3h to 6h    │ • Refresh: Every 30 min   │
-│ • Method: Sat/Radar Extrap│ • Method: Linear Blend    │ • Method: NWP Model + MOS │
-└───────────────────────────┴───────────────────────────┴───────────────────────────┘
-```
-
 ### Temporal Regimes
 
 1. **Past Historical Observations ($T - 24\text{h}$ to $T+0$)**: Ingested surface station logs and satellite captures utilized for sparkline trends, baseline calibration, and error validation metrics.
@@ -398,26 +283,6 @@ All temporal controls across the console are synchronized through a global timel
 ## 13. Decision and Interpretation Layer
 
 The system transforms raw physical observations into clear operational decision tiers. Operational controllers do not merely inspect raw numbers; they evaluate operational status through standardized flight safety rules.
-
-```
-OPERATIONAL STATUS CLASSIFICATION RULES:
-┌─────────────────────────────────────────────────────────────────────────┐
-│ Raw Telemetry: Storm Distance, Wind Velocity, Visibility, Ceiling       │
-└────────────────────────────────────┬────────────────────────────────────┘
-                                     │
-                                     ▼
-                     [Deterministic Evaluation Engine]
-                                     │
-        ┌────────────────────────────┼────────────────────────────┐
-        │                            │                            │
-        ▼                            ▼                            ▼
-┌──────────────┐             ┌──────────────┐             ┌──────────────┐
-│  RESTRICTED  │             │   CAUTION    │             │ OPERATIONAL  │
-│ • Storm <10km│             │ • Wind > 25kt│             │ • Normal     │
-│   & Severe   │             │ • Vis < 5km  │             │   Operating  │
-│              │             │ • Storm <25km│             │   Bounds     │
-└──────────────┘             └──────────────┘             └──────────────┘
-```
 
 ### Deterministic Aerodrome Operational Status
 
@@ -442,27 +307,6 @@ The system continuously evaluates horizontal visibility and cloud ceiling base h
 
 The console organizes user workflows through a peripheral Heads-Up Display (HUD) architecture, keeping the geospatial map canvas visible at all times.
 
-```
-┌──────────────────────────────────────────────────────────────────────────────────┐
-│  [TOP ANCHOR] Status Strip: Station Identity | UTC & Local Clocks | Model Switch │
-├──────────────────────────────────────────────────────────────────────────────────┤
-│ [LEFT PANEL]            │                               │ [FLOATING CONTROLS]    │
-│ Meteorological          │                               │  - Viewport Tools      │
-│ Parameters,             │                               │  - Layer Selectors     │
-│ Diagnostic Cards,       │               FOCAL           │                        │
-│ Station Summaries       │             AERODROME         │ [RIGHT DRAWER]         │
-│ (Collapsible)           │              CANVAS           │ Threat Cells & Alerts  │
-│                         │                               │ (Collapsible)          │
-│                         │                               │                        │
-│                         │                               │ [LEGEND CARD]          │
-│                         │                               │ Multi-layer Swatches   │
-├──────────────────────────────────────────────────────────────────────────────────┤
-│ [SOUTH ANCHOR] Global 24h/6h Timeline Scrubbing Bar                              │
-├──────────────────────────────────────────────────────────────────────────────────┤
-│ [BOTTOM DOCK] Full-Width Synchronized Meteogram Graph (Minimizable)              │
-└──────────────────────────────────────────────────────────────────────────────────┘
-```
-
 ### Operational Workflow Stages:
 
 1. **Initial Assessment**: The operator observes the North Status Strip, verifying active aerodrome identity (ICAO code), dual UTC/Local operational clocks, and overall aerodrome status (e.g., `OPERATIONAL` in green, `CAUTION` in amber, or `RESTRICTED` in red).
@@ -475,21 +319,7 @@ The console organizes user workflows through a peripheral Heads-Up Display (HUD)
 
 ## 15. Outputs and Results
 
-The system generates structured analytical and visual outputs designed for operational use:
-
-```
-PRIMARY SYSTEM DELIVERABLES & OUTPUTS:
-┌──────────────────────────────────────┬──────────────────────────────────────┐
-│ Operational Deliverable              │ System Output Representation         │
-├──────────────────────────────────────┼──────────────────────────────────────┤
-│ 1. Thunderstorm Occurrence           │ Binary flag (Yes/No) + Risk Badges   │
-│ 2. Thunderstorm Movement & Vector    │ Cell Bearing (°), Distance (km), ETA │
-│ 3. Thunderstorm Intensity            │ Categorical flag (High/Moderate)     │
-│ 4. Strong Surface Wind (SSW >=25 kt) │ Occurrence flag + Velocity Tiers     │
-│ 5. Hybrid Blended Timeline           │ Continuous 24-step multi-variable log│
-│ 6. Visual Raster & Particle Overlays │ Georeferenced heatmaps & streamtubes │
-└──────────────────────────────────────┴──────────────────────────────────────┘
-```
+The system generates structured analytical and visual outputs designed for operational use.
 
 ### Interpretation of Results
 
@@ -501,28 +331,6 @@ PRIMARY SYSTEM DELIVERABLES & OUTPUTS:
 ## 16. Validation and Reliability
 
 The system incorporates a dedicated Model Validation suite that continuously audits forecasting performance against ground truth observations.
-
-```
-VALIDATION & VERIFICATION FRAMEWORK:
-┌────────────────────────────────────────────────────────────────────────┐
-│ Truth Sources: Ingested METAR observations and AWS surface logs        │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│ Statistical Error Engine (ModelValidation.tsx)                         │
-│ • Continuous Parameters: RMSE, MAE, Bias                               │
-│ • Binary Classifiers: Confusion Matrix (TP, FP, FN, TN), F1-Score      │
-│ • Comparative Skill: Skill Score vs Persistence Baseline               │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│ Operational Feedback & Error Drift Tracking                            │
-│ • Rolling 24-hour error sparklines                                     │
-│ • Live sensor deviation logs from aerodrome watch officers             │
-└────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Validation Mechanisms Implemented in the System:
 
@@ -548,23 +356,6 @@ The interpretation of the system relies on several baseline operational assumpti
 ## 18. Technical Implementation Approach
 
 The technical architecture prioritizes client-side rendering performance, type-safe API contracts, and modular state management.
-
-```
-FRONTEND TECHNICAL ARCHITECTURE:
-┌─────────────────────────────────────────────────────────────────────────┐
-│ React 19 + TypeScript + Vite Application Shell                          │
-├─────────────────────────────────────────────────────────────────────────┤
-│ State Management: Redux Toolkit (Sites, Color Palettes) + Persist       │
-├─────────────────────────────────────────────────────────────────────────┤
-│ API Contract Validation: Zod Schemas (src/api/schemas.ts)               │
-├─────────────────────────────────────────────────────────────────────────┤
-│ Map Engine: MapLibre GL JS + Deck.gl (WebGL Particle Overlays)          │
-├─────────────────────────────────────────────────────────────────────────┤
-│ Scientific Raster Pipeline: geotiff.js + chroma-js + Canvas 2D          │
-├─────────────────────────────────────────────────────────────────────────┤
-│ UI Framework: Tailwind CSS + Radix UI Primitives + Framer Motion        │
-└─────────────────────────────────────────────────────────────────────────┘
-```
 
 ### High-Level Architectural Highlights:
 

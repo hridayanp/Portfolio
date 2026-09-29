@@ -1,5 +1,3 @@
-# Research Case Study: Serverless Automation Pipeline Builder for Event-Driven Workflows
-
 ## 1. Abstract
 
 This case study investigates the design, mechanics, and operational characteristics of a serverless workflow orchestration platform designed for event-driven automation. Conventional workflow orchestration systems often rely on long-running container clusters or persistent virtual machine infrastructure, introducing operational maintenance overhead and continuous idle resource costs. The platform under study addresses this challenge by implementing an entirely serverless execution model where pipeline authoring, state coordination, and isolated script execution are handled through ephemeral cloud functions, distributed key-value storage, and object stores.
@@ -101,27 +99,6 @@ All data objects are categorized into source inputs (scripts, environment defini
 ## 8. Methodology
 
 The end-to-end operation of the platform is divided into five logical stages. Each stage defines specific inputs, computational transformations, technical motivations, generated outputs, and its role in the overall system.
-
-```
-                    STAGE 1: ASSET INGESTION
-     [Script Files (.py)] + [Dependencies] ──> [Validation & S3/Dynamo Storage]
-                                                          │
-                                                          ▼
-                    STAGE 2: GRAPH COMPILATION
-     [Canvas Nodes & Edges] ──> [Depth-First Recursive Traversal] ──> [Hierarchical JSON Tree]
-                                                                                │
-                                                                                ▼
-                    STAGE 3: ASYNCHRONOUS DISPATCH
-     [Execution Trigger] ──> [Initialize Run Record] ──> [Async Lambda Invocation]
-                                                                    │
-                                                                    ▼
-                    STAGE 4: ORCHESTRATION & SANDBOX
-     [Recursive Orchestrator] <──> [Isolated Task Runner: /tmp workspace, pip, subprocess]
-                                              │
-                                              ▼
-                    STAGE 5: TELEMETRY & OBSERVABILITY
-     [S3 Log Upload] + [DynamoDB list_append] ──> [Frontend Polling & Timeline Display]
-```
 
 ### Stage 1: Task and Environment Asset Ingestion
 
@@ -242,54 +219,13 @@ where $M$ is the number of executed steps along the traversed branch.
 
 The following sequence traces the precise chronological flow of information across the system:
 
-```
-[User Browser]
-      │  1. Upload script & requirements (Base64)
-      ▼
-[API Gateway: /tasks]
-      │  2. Authenticate Cognito JWT & validate
-      ▼
-[Task Service]
-      ├──> 3a. S3: PutObject (tasks/{taskId}/script.py)
-      ├──> 3b. S3: PutObject (tasks/{taskId}/requirements.txt)
-      └──> 3c. DynamoDB: PutItem (tasks-table)
-      │
-[User Browser (Scheduler Flow)]
-      │  4. Drag-and-drop DAG assembly on React Flow canvas
-      │  5. Compile visual graph -> Recursive JSON Tree
-      │  6. POST /workflows -> DynamoDB (workflows-table)
-      │  7. POST /workflows/{id}/execute
-      ▼
-[API Gateway: /workflows/{id}/execute]
-      │  8. PutItem (workflow-logs-table, status: EXECUTING)
-      │  9. invokeAsync (workflowExecutor Lambda)
-      │  10. Return HTTP 200 { runId } immediately
-      ▼
-[Workflow Executor Lambda]
-      │  11. Read tasks tree from payload
-      │  12. Loop / Recurse on current task node
-      ▼
-[Python Task Runner Lambda]
-      │  13. Create isolated /tmp/{uuid} workspace
-      │  14. S3 GetObject -> script.py & requirements.txt
-      │  15. pip install -r requirements.txt -t /tmp/{uuid}/libs
-      │  16. Spawn subprocess: python3 script.py (with PYTHONPATH)
-      │  17. Capture stdout, stderr, duration, exit_code
-      │  18. S3 PutObject -> tasks/{taskId}/task.log
-      │  19. DynamoDB UpdateItem -> workflow-task-logs-table
-      │  20. Return { success, exitCode, duration, stdout, stderr }
-      ▼
-[Workflow Executor Lambda]
-      │  21. DynamoDB UpdateItem: list_append step to execution_path
-      │  22. Resolve branch: on_success vs on_failure vs on_completion
-      │  23. Recurse to child node (or complete if leaf)
-      │  24. On tree completion -> UpdateItem (workflow-logs-table, status: COMPLETED)
-      ▼
-[User Browser (Execution Monitor)]
-      │  25. Poll GET /workflows/logs every 3000ms
-      │  26. Update live timeline, task badges, durations
-      │  27. On user click: GET /tasks/{taskId}/logs -> Decode Base64 -> Render Terminal
-```
+1. **Asset Upload**: The user uploads Python scripts and dependency files via the web interface.
+2. **API & Storage Ingestion**: API Gateway authenticates the request, writing script binaries to S3 and task metadata to DynamoDB.
+3. **Graph Assembly & Compilation**: The user visually constructs a DAG on the React Flow canvas, which is compiled into a hierarchical JSON tree and persisted.
+4. **Execution Dispatch**: Triggering a run initializes an execution log record in DynamoDB and invokes the orchestrator Lambda asynchronously.
+5. **Sandboxed Task Execution**: Isolated Python runner instances download task assets, install dynamic requirements in temporary workspaces, execute subprocesses, and stream stdout/stderr logs to S3.
+6. **Recursive Resolution & Telemetry**: The orchestrator evaluates exit codes, records execution paths, resolves branch triggers, and updates the overall workflow status.
+7. **Client Observability**: The web dashboard polls execution state, dynamically rendering active timelines and terminal log views.
 
 ## 11. Spatial and Graph Topological Methodology
 
@@ -358,23 +294,6 @@ Execution events are tagged with UTC ISO-8601 timestamps (`YYYY-MM-DDTHH:mm:ss.s
 
 The platform transforms raw low-level operating system output into actionable, high-level operational intelligence through four structured layers:
 
-```
-[Layer 1: Raw OS Streams]
-Stdout, Stderr, Return Code (0, 1, 137, etc.)
-          │
-          ▼
-[Layer 2: Derived Step Telemetry]
-Success Boolean, Elapsed Wall-Clock Duration, ISO Timestamp
-          │
-          ▼
-[Layer 3: Decision & Branch Mapping]
-Selected Outcome: "on_success" vs "on_failure" vs "on_completion"
-          │
-          ▼
-[Layer 4: User Interpretation]
-Execution Timeline, Color-Coded Status Badges, Formatted Terminal Logs
-```
-
 1. **Raw Observation Layer**: Captures raw standard output, standard error messages, and process termination codes directly from the Python runner subprocess.
 2. **Derived Metric Layer**: Calculates task duration, status strings (`RUNNING`, `COMPLETED`, `FAILED`), and determines boolean success ($k = 0$).
 3. **Decision Classification Layer**: The orchestration engine applies branch selection rules to choose the corresponding downstream execution path.
@@ -388,44 +307,6 @@ Execution Timeline, Color-Coded Status Badges, Formatted Terminal Logs
 ## 14. User Interaction and Operational Workflow
 
 The conceptual journey of a user interacting with the platform proceeds as follows:
-
-```
-+-------------------------------------------------------------+
-| 1. Authentication & Project Initialization                  |
-|    - User logs in via AWS Cognito JWT                       |
-|    - Selects or creates an isolated Project container       |
-+-------------------------------------------------------------+
-                               │
-                               ▼
-+-------------------------------------------------------------+
-| 2. Environment & Task Registration                         |
-|    - Configures environment dependencies                    |
-|    - Uploads Python automation scripts and requirements     |
-+-------------------------------------------------------------+
-                               │
-                               ▼
-+-------------------------------------------------------------+
-| 3. Visual Workflow Construction                             |
-|    - Drags Task Nodes and Trigger Nodes onto canvas         |
-|    - Configures branch triggers (on_success / on_failure)   |
-|    - Compiles DAG into hierarchical execution tree          |
-+-------------------------------------------------------------+
-                               │
-                               ▼
-+-------------------------------------------------------------+
-| 4. Execution & Real-Time Monitoring                         |
-|    - Triggers execution via Job Hub                         |
-|    - Observes live timeline updates and active task badges  |
-|    - Inspects wall-clock run duration and step counts       |
-+-------------------------------------------------------------+
-                               │
-                               ▼
-+-------------------------------------------------------------+
-| 5. Post-Run Diagnostics & Verification                      |
-|    - Inspects completed execution path                      |
-|    - Opens S3 log viewer for raw stdout/stderr diagnostics  |
-+-------------------------------------------------------------+
-```
 
 1. **Authentication and Project Selection**: The user enters credentials through the authentication interface, receives a Cognito JWT token, and selects an active project from the Project Hub.
 2. **Task Ingestion**: The user navigates to Task Management, uploads Python scripts (such as data scrapers, ETL routines, or simulation scripts), and defines execution parameters.
@@ -492,34 +373,6 @@ The design and operational interpretation of the platform depend on several expl
 ## 18. Technical Implementation Approach
 
 The technical architecture is structured as a cloud-native serverless topology deployed on Amazon Web Services (AWS) using the Serverless Framework:
-
-```
-+-----------------------------------------------------------------------------------+
-| FRONTEND CLIENT (React 19 + TypeScript + Vite + Redux Toolkit + React Flow)      |
-+-----------------------------------------------------------------------------------+
-                                         │  HTTPS / JWT
-                                         ▼
-+-----------------------------------------------------------------------------------+
-| AWS HTTP API GATEWAY (CORS Enabled, JWT Authorizer via AWS Cognito)               |
-+-----------------------------------------------------------------------------------+
-         │                                       │
-         ▼                                       ▼
-+----------------------------------+   +--------------------------------------------+
-| AUTH MICROSERVICE                |   | PROJECTS & WORKFLOW MICROSERVICE           |
-| - Runtime: Node.js 22.x          |   | - Runtime: Node.js 22.x                    |
-| - Endpoints: signup, login,      |   | - Endpoints: /tasks, /project, /workflows  |
-|   confirm, signout               |   | - Asynchronous Dispatch: workflowExecutor  |
-+----------------------------------+   +--------------------------------------------+
-         │                                       │
-         ▼                                       ▼
-+----------------------------------+   +--------------------------------------------+
-| METADATA & PERSISTENCE LAYER     |   | TASK EXECUTION SANDBOX (pythonTaskRunner)  |
-| - AWS DynamoDB: 6 Tables         |   | - Runtime: Python 3.12                     |
-|   (projects, project-envs,       |   | - Memory: 512 MB, Timeout: 900s            |
-|    tasks, workflows, logs)       |   | - Scratch Space: /tmp/{uuid}               |
-| - AWS S3: task-files-bucket      |   | - Pip Dependency Isolation                 |
-+----------------------------------+   +--------------------------------------------+
-```
 
 ### Microservices Separation
 

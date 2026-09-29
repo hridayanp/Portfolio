@@ -1,5 +1,3 @@
-# Case Study: Uzbekistan Air Quality and Health Risk Geospatial System
-
 ## 1. Abstract
 
 This case study examines the conceptual framework, analytical methodology, and geospatial architecture of the Uzbekistan Air Quality and Health Risk system. The platform is designed to transform disparate ground-level air quality observations and satellite atmospheric measurements into continuous spatial rasters and composite health-risk indices across the thirteen administrative regions of Uzbekistan. By integrating multi-pollutant telemetry (PM2.5, PM10, NO2, SO2, O3, CO, NH3, VOCs) with regional exposure weighting and boundary clipping, the system constructs a standardized risk metric to assist environmental assessment. The platform operates as a client-side analytical dashboard that reads structured daily static datasets while also providing an in-browser WebAssembly Python execution environment for reproducible pipeline execution. The resulting outputs include five continuous raster layers, a thirteen-column ranked municipal risk matrix, and interactive temporal visualizations. This document details the end-to-end data pipeline, mathematical formulations, spatial interpolation techniques, and interpretation mechanics underlying the system.
@@ -203,38 +201,6 @@ Regional modifiers reflect localized environmental and dispersion conditions acr
 
 The system uses a four-step hybrid interpolation algorithm to generate smooth, continuous spatial fields:
 
-```
-[Point Observations (x, y, v)]
-             |
-             v
-+-----------------------------------------------------------+
-| Step 1: Linear Grid Interpolation (Delaunay Triangulation)|
-|         + Nearest-Neighbor Edge Fill for Convex Hull Gaps |
-+-----------------------------------------------------------+
-             |
-             v
-+-----------------------------------------------------------+
-| Step 2: cKDTree Distance Calculation                      |
-|         d_far = 90th percentile distance                  |
-|         w_near = clamp(1.0 - dist / d_far, 0.0, 1.0)      |
-+-----------------------------------------------------------+
-             |
-             v
-+-----------------------------------------------------------+
-| Step 3: Dual-Kernel Gaussian Smoothing                    |
-|         lin_smooth = GaussianFilter(grid, sigma = 10)     |
-|         nn_smooth = GaussianFilter(nn, sigma = 5)         |
-|         blended = w_near * lin_smooth +                   |
-|                   (1 - w_near) * GaussianFilter(nn, 15)   |
-+-----------------------------------------------------------+
-             |
-             v
-+-----------------------------------------------------------+
-| Step 4: Final Gaussian Relaxation Pass                    |
-|         output = GaussianFilter(blended, sigma = 4)       |
-+-----------------------------------------------------------+
-```
-
 1. **Bivariate Linear Surface Estimation:** Computes a piecewise linear triangular surface over the convex hull of station points using Delaunay triangulation (`scipy.interpolate.griddata(method="linear")`).
 2. **Nearest-Neighbor Fill:** Unsampled regions outside the convex hull are assigned values using a nearest-neighbor fill (`griddata(method="nearest")`).
 3. **Distance-Weighted Kernel Blending:** A KD-tree computes the Euclidean distance from every grid cell to the nearest observation point. A near-distance weighting factor ($w_{near}$) blends the smoothed linear grid with the smoothed nearest-neighbor grid.
@@ -244,52 +210,12 @@ The system uses a four-step hybrid interpolation algorithm to generate smooth, c
 
 The full operational lifecycle of a daily dataset proceeds in a structured sequence:
 
-```
-+-------------------------------------------------------------+
-| 1. Acquisition & Ingestion                                  |
-|    - Ground telemetry ingestion / Synthetic generation       |
-|    - Satellite raster alignment (Sentinel-5P NO2/SO2, MODIS)|
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 2. Quality Control & Formatting                             |
-|    - Coordinate clipping within bounding box                 |
-|    - Normalization against 5th/95th empirical bounds         |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 3. Index & Metric Computation                               |
-|    - EPA AQI breakpoint derivation                          |
-|    - Multi-pollutant composite weighting & geo-penalties   |
-|    - Regional aggregation to 13 administrative centroids    |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 4. Spatial Interpolation & Masking                          |
-|    - 2D grid generation (200 x 368 cells)                   |
-|    - Hybrid IDW interpolation with KD-Tree blending         |
-|    - Polygon boundary masking using uzb_country.geojson     |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 5. Artifact Export & Manifest Update                        |
-|    - Generation of overlay PNGs, stations.json, and CSV     |
-|    - Metadata recording (runtime, bounding box, sources)   |
-|    - Manifest registry update                               |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 6. Client Presentation & Visual Analysis                    |
-|    - Asynchronous JSON and image prefetching                |
-|    - MapLibre WebGL dual-slot raster rendering              |
-|    - 13-Column interactive table filtering and XLSX export  |
-+-------------------------------------------------------------+
-```
+1. **Acquisition & Ingestion:** The system captures multi-pollutant telemetry, satellite observational proxies, and administrative boundary files.
+2. **Quality Control & Formatting:** Applies coordinate clipping within national bounds and empirical normalization.
+3. **Index & Metric Computation:** Computes EPA AQI breakpoints, multi-pollutant composite weighting, and regional centroid aggregations.
+4. **Spatial Interpolation & Masking:** Generates the regular 2D scalar grid with KD-Tree blending and vector polygon clipping.
+5. **Artifact Export & Manifest Update:** Generates optimized overlay PNGs, station metadata JSON files, and manifest records.
+6. **Client Presentation & Visual Analysis:** Renders dual-slot MapLibre WebGL overlays and interactive sortable tables.
 
 ## 11. Spatial and Geospatial Methodology
 
@@ -347,31 +273,13 @@ To maintain high responsiveness during temporal scrubbing, the system executes b
 
 ## 13. Decision and Interpretation Layer
 
-The system transforms multi-pollutant numbers into actionable decision categories through structured classification rules.
+The system transforms multi-pollutant numbers into actionable decision categories through structured classification rules:
 
-```
-[Raw Observations] (e.g., PM2.5 = 107.8 µg/m³, NO2 = 47.1 µg/m³)
-        |
-        v
-[Derived Percentile Normalization] (Scale: 0 to 100)
-        |
-        v
-[Weighted Multi-Pollutant Index + Geo Penalty] (HealthRisk_raw)
-        |
-        v
-[National Percentile Rank] (0.0% to 100.0%)
-        |
-        v
-+-------------------------------------------------------------+
-| Categorical Classification & Operational Interpretation     |
-+-------------------------------------------------------------+
-| Low (0-20%)        : Standard background conditions         |
-| Moderate (20-40%)  : Acceptable air quality                 |
-| High (40-60%)      : Elevated risk for vulnerable groups    |
-| Very High (60-80%) : Broad health impact across population  |
-| Critical (80-100%) : Severe acute multi-pollutant exposure  |
-+-------------------------------------------------------------+
-```
+- **Low (0-20%):** Standard background conditions.
+- **Moderate (20-40%):** Acceptable air quality.
+- **High (40-60%):** Elevated risk for vulnerable groups.
+- **Very High (60-80%):** Broad health impact across population.
+- **Critical (80-100%):** Severe acute multi-pollutant exposure.
 
 ### Thresholds and Alerts
 
@@ -380,52 +288,13 @@ The system transforms multi-pollutant numbers into actionable decision categorie
 
 ## 14. User Interaction With the System
 
-The user workflow is designed for intuitive exploration across spatial, temporal, and tabular dimensions.
+The user workflow is designed for intuitive exploration across spatial, temporal, and tabular dimensions:
 
-```
-+-------------------------------------------------------------+
-| 1. Overview and Temporal Orientation                        |
-|    - Review top-level KPI cards (Avg AQI, Total Stations,   |
-|      Critical Count)                                        |
-|    - Select target date via calendar or scrub timeline     |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 2. Spatial Exploration                                      |
-|    - Switch between Map Layers (Health Risk, PM2.5, NO2,    |
-|      SO2, AOD)                                              |
-|    - Adjust raster opacity slider for basemap visibility    |
-|    - Zoom and pan across MapLibre viewport                  |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 3. Regional Inspection                                      |
-|    - Click regional station dot or select from sidebar      |
-|    - Map triggers smooth camera flyTo animation             |
-|    - Inspect detailed multi-pollutant popup card            |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 4. Tabular Analysis & Data Export                           |
-|    - Switch to "Health score table" tab                     |
-|    - Filter by severity category or search by city name     |
-|    - Sort across 13 columns (pollutants, AQI, risk ranks)   |
-|    - Export filtered records to CSV or Excel (.xlsx)        |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 5. Scenario Modeling (Pipeline Studio)                      |
-|    - Switch to "Pipeline Studio" tab                        |
-|    - Modify Python weights, baselines, or algorithms        |
-|    - Execute script in-browser via Pyodide WebWorker        |
-|    - Preview console logs and live generated artifacts      |
-|    - Hot-inject results into active dashboard state         |
-+-------------------------------------------------------------+
-```
+1. **Overview and Temporal Orientation**: Review top-level KPI cards and select target dates via calendar or scrub timeline.
+2. **Spatial Exploration**: Switch between map layers, adjust opacity sliders, and pan/zoom across the MapLibre viewport.
+3. **Regional Inspection**: Click regional stations to trigger camera animations and inspect detailed multi-pollutant scorecards.
+4. **Tabular Analysis & Data Export**: Filter, sort across 13 columns, and export data tables to CSV or Excel.
+5. **Scenario Modeling (Pipeline Studio)**: Modify algorithm parameters and run in-browser Pyodide WebAssembly models.
 
 ## 15. Outputs and Results
 
@@ -475,40 +344,7 @@ The analytical models in the system operate under several explicit assumptions:
 
 ## 18. Technical Implementation Approach
 
-The platform uses a modern, serverless architecture that separates data processing from high-performance client rendering.
-
-```
-+-------------------------------------------------------------+
-|                     Client Web Application                  |
-|  (React 19 + TypeScript + Vite + MapLibre GL + TailwindCSS) |
-+-------------------------------------------------------------+
-          |                                       |
-          | (1. Read Static Data)                 | (2. Launch Job)
-          v                                       v
-+-----------------------+              +----------------------+
-|  Static Asset Store   |              | Web Worker Sandbox   |
-|  (/data/<YYYYMMDD>/)  |              | (Pyodide CPython     |
-|   - Raster Overlays   |              |  Compiled to WASM)   |
-|   - stations.json     |              |  - NumPy, SciPy      |
-|   - pipeline_meta     |              |  - Pandas, Matplotlib|
-+-----------------------+              |  - Shapely, Pillow   |
-          |                            +----------------------+
-          |                                       |
-          |                                       | (3. Hot-Inject Run)
-          +-----------------> [ + ] <-------------+
-                               |
-                               v
-               +-------------------------------+
-               | Unified In-Memory Data Layer  |
-               | (services/dataService.ts)     |
-               +-------------------------------+
-                               |
-                               v
-               +-------------------------------+
-               | MapLibre GL WebGL Viewport    |
-               | Sortable Score Table & Scrubber|
-               +-------------------------------+
-```
+The platform uses a modern, serverless architecture that separates data processing from high-performance client rendering:
 
 ### 1. Static Single-Page Application
 

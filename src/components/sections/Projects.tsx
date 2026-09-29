@@ -71,7 +71,7 @@ export function Projects() {
           <CaseStudyDialog
             project={open}
             onClose={() => setOpenId(null)}
-            useAssetImage={USE_ASSET_IMAGES}
+            useAssetImage={false}
           />
         )}
       </AnimatePresence>
@@ -287,7 +287,7 @@ function ShowcaseCard({ project, onOpen }: { project: Project; onOpen: () => voi
         onClick={onOpen}
         aria-label={`Open case study: ${project.title}`}
         data-cursor="view"
-        className="relative block w-full overflow-hidden rounded-[14px] text-left focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
+        className="relative block w-full overflow-hidden rounded-3xl text-left focus-visible:ring-2 focus-visible:ring-[var(--ds-border-accent)] focus-visible:outline-none"
       >
         <Artboard project={project} />
 
@@ -400,12 +400,12 @@ function Artboard({ project }: { project: Project }) {
 
   if (USE_ASSET_IMAGES) {
     return (
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--ds-surface-2)]">
+      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-[var(--ds-surface-2)]">
         <img
           src={project.bannerImage}
           alt={`${project.title} interface`}
           loading="lazy"
-          className="size-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04] group-focus-within:scale-[1.04]"
+          className="size-full rounded-3xl object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04] group-focus-within:scale-[1.04]"
         />
       </div>
     )
@@ -414,7 +414,7 @@ function Artboard({ project }: { project: Project }) {
   return (
     <div
       aria-hidden
-      className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--ds-surface-2)]/40 transition-transform duration-700 ease-out group-hover:scale-[1.04] group-focus-within:scale-[1.04]"
+      className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-[var(--ds-surface-2)]/40 transition-transform duration-700 ease-out group-hover:scale-[1.04] group-focus-within:scale-[1.04]"
     >
       <span
         className="absolute bottom-0 left-0 translate-y-[12%] leading-[0.85] font-extrabold tracking-[-0.04em] whitespace-nowrap select-none"

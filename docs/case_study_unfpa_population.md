@@ -1,5 +1,3 @@
-# Demographic Intelligence and High-Resolution Landscape Dynamics in Data-Sparse Intercensal Regimes: A Case Study of the Odisha Platform
-
 ## 1. Abstract
 
 Decennial censuses provide the foundational ground truth for population statistics, yet their ten-year cadence creates critical information deficits in rapidly urbanising and resource-intensive regions. In India, where the 2021 decennial enumeration was postponed, sub-national governance, disaster risk reduction, and infrastructure planning have had to rely on increasingly outdated 2011 baseline data. This case study examines the Odisha Demographic and Data Intelligence Platform, an analytical system developed to estimate, project, and explain annual district- and sub-district-level population dynamics across all 30 districts of Odisha from 2011 through 2036.
@@ -272,43 +270,12 @@ Where $d_{\text{min}} = 3.0\text{ km}$. This guarantees that the five hotspots e
 
 The end-to-end data processing lifecycle is structured as follows:
 
-```
-[Raw Data Ingestion]
-  ├── Census 2011 Primary Abstract (Tabular)
-  ├── Landsat 5/7/8 & Sentinel-2 L2A (STAC / GEE APIs)
-  ├── VIIRS Nighttime Radiance & ESRI Land Cover (GeoTIFF)
-  └── OpenStreetMap & Industrial Registry (Vector)
-       │
-       ▼
-[Preprocessing & Feature Stack Generation]
-  ├── Cloud masking (3-5% threshold) & SLC-off gap correction
-  ├── Seasonal median compositing (Oct-Feb window)
-  └── Zonal extraction in UTM Zone 44N (30 Districts + Sub-districts)
-       │
-       ▼
-[Pipeline 1: Historical Estimation (2011-2025)]
-  ├── Feature correlation pruning (NDBI, Nightlights, Cropland retained)
-  ├── Supervised regression (CatBoost / LightGBM)
-  └── Dasymetric redistribution over settlement masks
-       │
-       ▼
-[Pipeline 2: Demographic Prediction (2026-2036)]
-  ├── Log-linear growth fitting on recent estimated series
-  ├── State aggregate reconciliation
-  └── Demographic indicator derivation (Density, YoY Growth, Urban/Rural)
-       │
-       ▼
-[Pipeline 3: Change Detection & Attribution (2016-2024)]
-  ├── Multi-spectral delta scoring (NDBI, NDVI, BSI, Built Mask)
-  ├── 1 km spatial aggregation + 3 km Non-Maximum Suppression
-  └── Proximity attribution against infrastructure and LULC transitions
-       │
-       ▼
-[Optimization & Client Delivery]
-  ├── Vector data conversion to PMTiles (district & sub-district)
-  ├── Categorical GHS-SMOD raster encoding to COGs (nearest-neighbor)
-  └── Browser rendering via MapLibre GL + Dynamic PDF Generation
-```
+1. **Raw Data Ingestion**: Census 2011 Primary Abstract (tabular), Landsat 5/7/8 & Sentinel-2 L2A (STAC/GEE APIs), VIIRS Nighttime Radiance & ESRI Land Cover (GeoTIFF), and OpenStreetMap & Industrial Registry (vector).
+2. **Preprocessing & Feature Stack Generation**: Cloud masking (3-5% threshold) & SLC-off gap correction, seasonal median compositing (Oct-Feb window), and zonal extraction in UTM Zone 44N (30 districts + sub-districts).
+3. **Pipeline 1: Historical Estimation (2011-2025)**: Feature correlation pruning (NDBI, nightlights, cropland retained), supervised regression (CatBoost / LightGBM), and dasymetric redistribution over settlement masks.
+4. **Pipeline 2: Demographic Prediction (2026-2036)**: Log-linear growth fitting on recent estimated series, state aggregate reconciliation, and demographic indicator derivation (density, YoY growth, urban/rural).
+5. **Pipeline 3: Change Detection & Attribution (2016-2024)**: Multi-spectral delta scoring (NDBI, NDVI, BSI, built mask), 1 km spatial aggregation + 3 km non-maximum suppression, and proximity attribution against infrastructure and LULC transitions.
+6. **Optimization & Client Delivery**: Vector data conversion to PMTiles (district & sub-district), categorical GHS-SMOD raster encoding to COGs (nearest-neighbor), and browser rendering via MapLibre GL + dynamic PDF generation.
 
 ## 11. Spatial and Geospatial Methodology
 
@@ -329,20 +296,11 @@ Geospatial data delivery uses a serverless cloud-native architecture:
 
 The platform operates across four distinct temporal frames:
 
-```
-2011                 2016             2024     2025     2026              2036
- │                    │                │        │        │                 │
- ├────────────────────┴────────────────┴────────┤        │                 │
- │   Historical ML Estimation (2011-2025)       │        │                 │
- │   [Landsat + VIIRS + Census 2011 Calibration]│        │                 │
- │                                              │        │                 │
- │                    ├────────────────────────┤│        │                 │
- │                    │ Sentinel-2 Change Anal. │        │                 │
- │                    │ (2016-2024 Post-Monsoon)│        │                 │
- │                                                       ├─────────────────┤
- │                                                       │ Forward Predict │
- │                                                       │ (2026-2036)     │
-```
+- **Historical ML Estimation (2011-2025)**: Landsat + VIIRS + Census 2011 calibration and yearly regression estimates.
+- **Sentinel-2 Change Analysis (2016-2024)**: Multi-spectral land-use change detection across post-monsoon dry season acquisitions.
+- **Forward Prediction (2026-2036)**: District-level log-linear extrapolation and state aggregate reconciliation.
+
+Additional temporal specifications include:
 
 - Calibration Base Year (2011): Anchored directly to official Primary Census Abstract tables.
 - Satellite-Estimated Period (2012 to 2025): Annual population series estimated via CatBoost and LightGBM models driven by annual satellite composites.
@@ -354,28 +312,10 @@ The platform operates across four distinct temporal frames:
 
 The platform translates raw Earth observations and statistical models into structured decision-support layers:
 
-```
-[Raw Observations]
-  ├── Landsat / Sentinel-2 Surface Reflectance
-  └── VIIRS Nighttime Radiance & Census Counts
-            │
-            ▼
-[Derived Indicators]
-  ├── NDBI, NDVI, BSI, VTLPI, Robust Change Scores
-  └── Exponential Growth Rates ($r_d$)
-            │
-            ▼
-[Classified Attributes]
-  ├── DEGURBA 8-Class Urbanisation Grids
-  ├── Urban / Rural Population Proportions
-  └── Settlement Tags (Residential, Industrial, Mining, Transport)
-            │
-            ▼
-[Decision-Support Outputs]
-  ├── District Density & Growth Trajectories
-  ├── Hotspot Attribution & Pre/Post Visual Comparisons
-  └── Automated PDF Policy Briefs
-```
+1. **Raw Observations**: Landsat / Sentinel-2 surface reflectance, VIIRS nighttime radiance, and Census counts.
+2. **Derived Indicators**: NDBI, NDVI, BSI, VTLPI, robust change scores, and exponential growth rates ($r_d$).
+3. **Classified Attributes**: DEGURBA 8-class urbanisation grids, urban / rural population proportions, and settlement tags (residential, industrial, mining, transport).
+4. **Decision-Support Outputs**: District density & growth trajectories, hotspot attribution & pre/post visual comparisons, and automated PDF policy briefs.
 
 - Directly Observed: Census 2011 baseline counts, raw multispectral reflectance bands, geographic boundary coordinates.
 - Analytically Derived: Annual spectral indices, zonal feature means, robust normalised change deltas.
