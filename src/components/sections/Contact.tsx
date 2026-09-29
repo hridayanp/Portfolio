@@ -4,6 +4,7 @@ import { FloatingShapes, type FloatingShape } from "@/components/decor/FloatingS
 import { MagneticButton } from "@/components/primitives/MagneticButton"
 import { MaskedText } from "@/components/primitives/MaskedText"
 import { Section } from "@/components/primitives/Section"
+import { ProjectInquiryForm } from "./ProjectInquiryForm"
 
 const shapes: FloatingShape[] = [
   { kind: "sphere", hue: "blue", size: 120, top: "10%", left: "84%", depth: 0.8, desktopOnly: true },
@@ -63,9 +64,7 @@ export function Contact() {
         </div>
 
         {!hasChannels && (
-          <p className="text-body-s border-hairline text-ink-3 rounded-lg border border-dashed px-md py-sm">
-            Contact links are being updated and will appear here shortly.
-          </p>
+          <ProjectInquiryForm />
         )}
 
         <dl className="mt-md grid w-full max-w-[760px] gap-md sm:grid-cols-3">
