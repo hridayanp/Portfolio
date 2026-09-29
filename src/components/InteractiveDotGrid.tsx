@@ -27,7 +27,7 @@ import { usePointerFine } from "@/hooks/usePointerFine"
 const GRID_SIZE = 28 // px — matches --ds-grid-size
 const DOT_RADIUS = 1.25 // px — matches --ds-grid-radius
 const INFLUENCE_RADIUS = 180 // px — how far the cursor's field reaches
-const MAX_DISPLACEMENT = 10 // px — maximum dot shift at closest distance
+const MAX_DISPLACEMENT = 15 // px — maximum dot shift at closest distance
 const MAX_SCALE = 1.6 // maximum scale of dots near cursor (subtle)
 const SPRING_STIFFNESS = 0.06 // spring lerp factor (lower = more inertia)
 

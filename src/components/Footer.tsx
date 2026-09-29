@@ -13,7 +13,7 @@ export function Footer() {
     <footer className="border-hairline bg-sunk relative w-full border-t">
       <div className="overflow-hidden pt-xl">
         <Marquee
-          speed={-40}
+          speed={40}
           ariaLabel={identity.fullName}
           trackClassName="items-center"
         >
