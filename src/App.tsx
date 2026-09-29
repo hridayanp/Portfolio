@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar"
+import { InteractiveDotGrid } from "@/components/InteractiveDotGrid"
 import { CustomCursor } from "@/components/CustomCursor"
 import { ScrollProgress } from "@/components/primitives/ScrollProgress"
 import { Hero } from "@/components/sections/Hero"
@@ -29,6 +30,7 @@ export function App() {
     // Deliberately transparent: the dot-grid canvas and the ambient vignette
     // are painted on <body>, so an opaque shell here would hide them.
     <div className="text-ink relative min-h-screen w-full">
+      <InteractiveDotGrid />
       <ScrollProgress />
       <CustomCursor />
       <Navbar />

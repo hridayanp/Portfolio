@@ -479,6 +479,22 @@
     overflow-x: clip;
   }
 
+  /* When the interactive Canvas dot grid is mounted (fine pointer, no
+     reduced-motion), the Canvas replaces the body's dot layer.
+     The ambient radial gradient is kept; only the repeating dot pattern
+     is removed to avoid double-rendering. */
+  html.interactive-dots-active body {
+    background-image:
+      radial-gradient(
+        circle at 50% 20%,
+        var(--ds-ambient) 0%,
+        var(--ds-ambient-fade) 70%
+      );
+    background-size: 100% 100%;
+    background-attachment: fixed;
+  }
+
+
   h1,
   h2,
   h3,
