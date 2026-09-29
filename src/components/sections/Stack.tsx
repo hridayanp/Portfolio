@@ -147,7 +147,7 @@ export function Stack() {
 
       <div className="relative flex flex-col gap-lg">
         {/* ---- Section header ---- */}
-        <header className="mx-auto flex w-full max-w-[860px] flex-col items-center text-center">
+        <div className="mx-auto flex w-full max-w-[860px] flex-col items-center text-center">
           <span className="eyebrow mb-6 inline-flex items-center gap-2 rounded-pill border border-[var(--ds-border)] bg-[var(--ds-surface)]/80 px-3.5 py-1 tracking-wider text-[var(--ds-text-secondary)] shadow-[var(--shadow-xs)] backdrop-blur-md">
             <span
               aria-hidden
@@ -175,7 +175,7 @@ export function Stack() {
             aria-hidden
             className="mt-6 block size-2.5 rounded-full bg-[var(--ds-text-primary)]/80 shadow-[0_0_0_4px_var(--ds-accent-tint)]"
           />
-        </header>
+        </div>
 
         {/* ---- Filter control row ---- */}
         <div
